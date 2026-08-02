@@ -16,4 +16,3 @@ https://github.com/libsidplayfp/libsidplayfp
 the SNES is 8-bit): https://github.com/libgme/game-music-emu
 * libshout, a library for streaming to an Icecast server:
 https://gitlab.xiph.org/xiph/icecast-libshout
-* nlohmann/json, a JSON library for C++: https://github.com/nlohmann/json
