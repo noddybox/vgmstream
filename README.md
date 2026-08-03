@@ -2,7 +2,7 @@
 
 Written as I couldn't get an transcoding stream for SID files to work, then
 thought it would be nice to support other video game formats, of the older
-variety.  Hence I decided to see if I could write a streamer that transcoded    
+variety.  Hence I decided to see if I could write a streamer that transcoded
 video game music files to MP3 to be consumed by Icecast 2.
 
 # Thanks        
