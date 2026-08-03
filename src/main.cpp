@@ -83,5 +83,6 @@ int main(int argc, char *argv[])
     	return 1;
     }
 
+    VGMLOG("Exiting");
     return 0;
 }

@@ -206,7 +206,7 @@ namespace vgmstream
 	    return;
 	}
 
-	VGMLOG("Successfully read configuration from %s\n", path.c_str());
+	VGMLOG("Successfully read configuration from %s", path.c_str());
 	open_ok = true;
     }
 

@@ -38,7 +38,7 @@ namespace vgmstream
 	    static const Log& Instance();
 
 	    // Write to the log.  Done using C-style printf arguments as it
-	    // uses syslog().
+	    // uses syslog().  Don't pass new-line terminated strings.
 	    //
 	    void Write(const char *format, ...) const;
 
