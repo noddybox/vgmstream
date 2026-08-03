@@ -32,6 +32,11 @@ LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
 CFLAGS_GME	:=	$(shell pkgconf --cflags libgme)
 LIBS_GME	:=	$(shell pkgconf --libs libgme)
 
+# Switches for pthreads
+#
+CFLAGS_PTHREAD	:=	-pthread
+LIBS_PTHREAD	:=	-pthread
+
 # Combines the flags
 CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME)
 LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME)
@@ -44,6 +49,7 @@ TARGET		=	vgmstream
 #
 SOURCES		=	main.cpp		\
 			log.cpp			\
+			config.cpp		\
 			util.cpp
 
 # Objects
@@ -61,6 +67,7 @@ clean:
 %.o: %.cpp
 	$(CXX) $(CFLAGS_VGM) -c -o $@ $<
 
-main.o: main.cpp log.h
+main.o: main.cpp log.h util.h config.h
 log.o: log.cpp log.h
 util.o: util.cpp util.h
+config.o: config.cpp config.h log.h

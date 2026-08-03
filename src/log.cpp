@@ -28,23 +28,31 @@
 
 namespace vgmstream
 {
-    std::string Log::m_name;
+    Log *Log::m_instance = 0;
 
-    bool Log::m_is_daemon = false;
+    const Log& Log::Instance()
+    {
+    	return *m_instance;
+    }
 
     void Log::SetLog(const std::string& name, bool is_daemon)
+    {
+	m_instance = new Log(name, is_daemon);
+    }
+
+    Log::Log(const std::string& name, bool is_daemon)
     {
 	m_name = name;
     	m_is_daemon = is_daemon;
 
-	if (is_daemon)
+	if (m_is_daemon)
 	{
 	    openlog(name.c_str(), LOG_CONS|LOG_PID, LOG_USER);
 	}
     }
 
 
-    void Log::Write(const char *format, ...)
+    void Log::Write(const char *format, ...) const
     {
 	va_list ap;
 

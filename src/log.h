@@ -28,22 +28,31 @@ namespace vgmstream
     {
     	public:
 
-	    // Setup logging.  name is the name of the program as passed in
-	    // argv[].  If is_daemon, log to syslog, otherwise stdout.
+	    // Setup logging and create the instance.  name is the name of the
+	    // program as passed in argv[].  If isDaemon, log to syslog,
+	    // otherwise stdout.
 	    //
 	    static void SetLog(const std::string& name, bool is_daemon);
+
+	    // Get the instance
+	    static const Log& Instance();
 
 	    // Write to the log.  Done using C-style printf arguments as it
 	    // uses syslog().
 	    //
-	    static void Write(const char *format, ...);
+	    void Write(const char *format, ...) const;
 
 	private:
-	    static std::string	m_name;
-	    static bool		m_is_daemon;
+	    static Log		*m_instance;
 
-	    Log();
+	    std::string		m_name;
+	    bool		m_is_daemon;
+
+	    Log(const std::string& name, bool is_daemon);
     };
 };
+
+// Convenience LOG macro
+#define VGMLOG vgmstream::Log::Instance().Write
 
 #endif

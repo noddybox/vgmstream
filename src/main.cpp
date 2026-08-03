@@ -20,6 +20,7 @@
 #include <cstdlib>
 
 #include "log.h"
+#include "config.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
 		      << " [-c file] [-d]"
 		      << std::endl;
 
-	    std::exit(1);
+	    return 1;
 	}
 
 	arg++;
@@ -77,7 +78,10 @@ int main(int argc, char *argv[])
 
     vgmstream::Log::SetLog(name, make_daemon);
 
-    vgmstream::Log::Write("Reading config from %s", config_file.c_str());
+    if (!vgmstream::Config::Open(config_file))
+    {
+    	return 1;
+    }
 
     return 0;
 }
