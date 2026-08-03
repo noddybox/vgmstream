@@ -14,12 +14,23 @@ video game music files to MP3 to be consumed by Icecast 2.
 https://github.com/libsidplayfp/libsidplayfp
 * libgme, a library for decoding a variety of old 8-bit music formats (yes,
 the SNES is 8-bit): https://github.com/libgme/game-music-emu
-* libshout, a library for streaming to an Icecast server:
+* libshout, a library for streaming to an Icecast 2 server:
 https://gitlab.xiph.org/xiph/icecast-libshout
 
 # License
 
 `vgmstream` is released under version 3 of GNU General Public License.
+
+# Building
+
+Building should work fine on any POSIX system with access to the required
+3rd party libraries, `pkgconf` set up to tell the build how to use them and
+a C++ compiler.  To build simply `cd src` and then `make`.  If it works this
+will generate a `vgmstream` executable, which can be moved anywhere you see fit.
+
+An commented config file can be found in the `docs` directory.  Use this as
+a template, and either save the result to `/etc/vgmstreamrc` if you want to
+use the default location, or anywhere if you supply it via the `-d` switch.
 
 # Usage
 
@@ -42,7 +53,17 @@ left as is - only the first white space separator is used to differentiate
 the setting with its value.  Blank lines and lines starting with a `#`
 character are ignored.
 
+Any flag setting support the following values:
+
+* Enable setting: yes, on, true, 1
+* Disable setting: no, off, false, 0
+
 |**Setting**|**Optional**|**Description**|
 |-|-|-|
-|`icecast.url`|N|The URL of the endpoint on Icecast to connect to.|
-|`icecast.password`|N|The password to connect as a **source**  in Icecast.|
+|`icecast.url`|N|The URL of the endpoint on Icecast 2 to connect to.|
+|`icecast.password`|N|The password to connect as a **source**  in Icecast 2.|
+|`icecast.public`|Y|Flag to say whether to make the stream public.  The default is to not.|
+|`playlist.file`|N|The location of the playlist file, with each line being a path to a file # to stream.|
+|`playlist.shuffle`|Y|Whether to shuffle the entries in the file or not.  The default is to shuffle.|
+|`playlist.repeat`|Y|Whether to repeat the playlist.  It will be reshuffled if `playlist.shuffle` is enabled when the end is reached.  Default is to repeat.|
+|`mp3.bitrate`|Y|The bitrate to encode MP3 as.  Default is `vbr` (variable bit rate).  Either specifiy `vbr` or the kbps value, e.g. `320`.|
