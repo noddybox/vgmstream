@@ -21,6 +21,7 @@
 
 #include "log.h"
 #include "config.h"
+#include "playlist.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -79,6 +80,15 @@ int main(int argc, char *argv[])
     vgmstream::Log::SetLog(name, make_daemon);
 
     if (!vgmstream::Config::Open(config_file))
+    {
+    	return 1;
+    }
+
+    bool playlist_ok;
+
+    vgmstream::Playlist playlist(playlist_ok);
+
+    if (!playlist_ok)
     {
     	return 1;
     }

@@ -50,6 +50,7 @@ TARGET		=	vgmstream
 SOURCES		=	main.cpp		\
 			log.cpp			\
 			config.cpp		\
+			playlist.cpp		\
 			util.cpp
 
 # Objects
@@ -67,7 +68,8 @@ clean:
 %.o: %.cpp
 	$(CXX) $(CFLAGS_VGM) -c -o $@ $<
 
-main.o: main.cpp log.h util.h config.h
+main.o: main.cpp log.h util.h config.h playlist.h
 log.o: log.cpp log.h
 util.o: util.cpp util.h
 config.o: config.cpp config.h log.h
+playlist.o: playlist.cpp playlist.h config.h log.h

@@ -29,7 +29,7 @@ namespace vgmstream
 
 	    // Get the single instance
 	    //
-	    const Config& Instance();
+	    static const Config& Instance();
 
 	    // Open the passed configuration creating the instance.  Returns
 	    // true if the file is OK, otherwise false on error.  The error
