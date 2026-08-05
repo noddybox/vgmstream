@@ -44,3 +44,12 @@ playlist.repeat		yes
 # Optional.  The bitrate to encode MP3 as.  Default is vbr (variable bit rate). 
 # Either specifiy "vbr" or the kbps value, e.g. 320.
 mp3.bitrate		vbr
+
+#
+# Miscellaneous options
+#
+
+# Optional.  If this is set don't stream the resulting MP3, but save it to
+# this directory.  The MP3 will be called the name of the source file, without
+# its extension, and .mp3 added.
+misc.outputdir		/path/to/directory

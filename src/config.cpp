@@ -82,6 +82,16 @@ namespace vgmstream
     	return m_mp3_bitrate;
     }
 
+    const std::string Config::MiscOutputDir() const
+    {
+    	return m_output_dir;
+    }
+
+    bool Config::MiscOutputDirSet() const
+    {
+    	return !m_output_dir.empty();
+    }
+
     Config::Config(const std::string& path, bool& open_ok)
     {
 	open_ok = false;
