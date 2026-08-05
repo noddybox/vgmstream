@@ -78,7 +78,7 @@ namespace vgmstream
 
 	if (m_playlist.size() == 0)
 	{
-	    VGMLOG("Empty playlist file %s", path);
+	    VGMLOG("Empty playlist file %s", path.c_str());
 	    return false;
 	}
 

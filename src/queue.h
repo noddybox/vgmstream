@@ -30,16 +30,39 @@ namespace vgmstream
 
 	    // Construct a queue.
 	    //
-	    Queue();
+	    Queue()
+	    {
+		pthread_mutex_init(&m_mutex, 0);
+	    }
 
 	    // Get the next entry from the queue.  Returns false if there
 	    // is nothing on the queue, otherwise true and stores the head
 	    // of the queue in head.
 	    //
-	    bool Pop(T& head);
+	    bool Pop(T& head)
+	    {
+		pthread_mutex_lock(&m_mutex);
+
+		if (m_queue.size() == 0)
+		{
+		    pthread_mutex_unlock(&m_mutex);
+		    return false;
+		}
+
+		head = m_queue.front();
+		m_queue.pop();
+
+		pthread_mutex_unlock(&m_mutex);
+		return true;
+	    }
 
 	    // Push an entry onto the queue.
-	    void Push(T& entry);
+	    void Push(T& entry)
+	    {
+		pthread_mutex_lock(&m_mutex);
+		m_queue.push(entry);
+		pthread_mutex_unlock(&m_mutex);
+	    }
 
 	private:
 
@@ -47,34 +70,6 @@ namespace vgmstream
 	    pthread_mutex_t	m_mutex;
     };
 
-    template <typename T> Queue<T>::Queue()
-    {
-    	pthread_mutex_init(&m_mutex, 0);
-    }
-
-    template <typename T> bool Queue<T>::Pop(T& head)
-    {
-	pthread_mutex_lock(&m_mutex);
-
-    	if (m_queue.size() == 0)
-	{
-	    pthread_mutex_unlock(&m_mutex);
-	    return false;
-	}
-
-	head = m_queue.front();
-	m_queue.pop();
-
-	pthread_mutex_unlock(&m_mutex);
-	return true;
-    }
-
-    template <typename T> void Queue<T>::Push(T& entry)
-    {
-	pthread_mutex_lock(&m_mutex);
-	m_queue.push(entry);
-	pthread_mutex_unlock(&m_mutex);
-    }
 };
 
 #endif
