@@ -51,6 +51,7 @@ SOURCES		=	main.cpp		\
 			log.cpp			\
 			config.cpp		\
 			playlist.cpp		\
+			wavfile.cpp		\
 			util.cpp
 
 # Objects
@@ -73,3 +74,4 @@ log.o: log.cpp log.h
 util.o: util.cpp util.h
 config.o: config.cpp config.h log.h
 playlist.o: playlist.cpp playlist.h config.h log.h
+wavfile.o: wavfile.cpp wavfile.h
