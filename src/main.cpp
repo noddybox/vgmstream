@@ -22,6 +22,7 @@
 #include "log.h"
 #include "config.h"
 #include "playlist.h"
+#include "queue.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -92,6 +93,9 @@ int main(int argc, char *argv[])
     {
     	return 1;
     }
+
+    vgmstream::Queue<std::string> file_queue;
+    vgmstream::Queue<std::vector<unsigned char>> result_queue;
 
     VGMLOG("Exiting");
     return 0;
