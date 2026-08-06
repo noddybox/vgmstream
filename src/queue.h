@@ -22,6 +22,8 @@
 #include <queue>
 #include <pthread.h>
 
+#include "util.h"
+
 namespace vgmstream
 {
     template <typename T> class Queue
@@ -32,7 +34,10 @@ namespace vgmstream
 	    //
 	    Queue()
 	    {
-		pthread_mutex_init(&m_mutex, 0);
+		if (pthread_mutex_init(&m_mutex, 0) != 0)
+		{
+		    Util::OSError("pthread_mutex_init");
+		}
 	    }
 
 	    // Get the next entry from the queue.  Returns false if there

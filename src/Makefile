@@ -32,14 +32,21 @@ LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
 CFLAGS_GME	:=	$(shell pkgconf --cflags libgme)
 LIBS_GME	:=	$(shell pkgconf --libs libgme)
 
+# Switches for libmagic
+#
+CFLAGS_MAGIC	:=	$(shell pkgconf --cflags libmagic)
+LIBS_MAGIC	:=	$(shell pkgconf --libs libmagic)
+
 # Switches for pthreads
 #
 CFLAGS_PTHREAD	:=	-pthread
 LIBS_PTHREAD	:=	-pthread
 
 # Combines the flags
-CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) $(CFLAGS_PTHREAD)
-LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) $(LIBS_PTHREAD)
+CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) \
+			$(CFLAGS_MAGIC) $(CFLAGS_PTHREAD) 
+LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) \
+			$(LIBS_MAGIC) $(LIBS_PTHREAD)
 
 # The target
 #
@@ -52,6 +59,7 @@ SOURCES		=	main.cpp		\
 			config.cpp		\
 			playlist.cpp		\
 			wavfile.cpp		\
+			thread.cpp		\
 			util.cpp
 
 # Objects
@@ -75,3 +83,4 @@ util.o: util.cpp util.h
 config.o: config.cpp config.h log.h
 playlist.o: playlist.cpp playlist.h config.h log.h
 wavfile.o: wavfile.cpp wavfile.h
+thread.o: thread.cpp thread.h util.h
