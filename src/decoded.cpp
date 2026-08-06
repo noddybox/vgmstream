@@ -18,12 +18,12 @@
 //
 #include <cstring>
 
-#include "wavfile.h"
+#include "decoded.h"
 
 namespace vgmstream
 {
 
-    WavFile::WavFile() : m_name(""),
+    Decoded::Decoded() : m_name(""),
 			 m_composer(""),
 			 m_album(""),
 			 m_year(1980),
@@ -33,72 +33,72 @@ namespace vgmstream
     {
     }
 
-    const std::string& WavFile::Name() const
+    const std::string& Decoded::Name() const
     {
     	return m_name;
     }
 
-    const void WavFile::Name(const std::string& value)
+    const void Decoded::Name(const std::string& value)
     {
     	m_name = value;
     }
 
-    const std::string& WavFile::Composer() const
+    const std::string& Decoded::Composer() const
     {
     	return m_composer;
     }
 
-    const void WavFile::Composer(const std::string& value)
+    const void Decoded::Composer(const std::string& value)
     {
     	m_composer = value;
     }
 
-    const std::string& WavFile::Album() const
+    const std::string& Decoded::Album() const
     {
     	return m_album;
     }
 
-    const void WavFile::Album(const std::string& value)
+    const void Decoded::Album(const std::string& value)
     {
     	m_album = value;
     }
 
-    unsigned int WavFile::Year() const
+    unsigned int Decoded::Year() const
     {
     	return m_year;
     }
 
-    const void WavFile::Year(unsigned int value)
+    const void Decoded::Year(unsigned int value)
     {
     	m_year = value;
     }
 
-    unsigned int WavFile::Frequency() const
+    unsigned int Decoded::Frequency() const
     {
     	return m_freq;
     }
 
-    const void WavFile::Frequency(unsigned int value)
+    const void Decoded::Frequency(unsigned int value)
     {
     	m_freq = value;
     }
 
-    std::size_t WavFile::Size() const
+    std::size_t Decoded::Size() const
     {
     	return m_size;
     }
 
-    const void WavFile::Size(std::size_t value)
+    const void Decoded::Size(std::size_t value)
     {
     	m_size = value;
     }
 
-    unsigned char *WavFile::Buffer() const
+    unsigned char *Decoded::Buffer() const
     {
     	return m_buff;
     }
 
-    const void WavFile::Buffer(unsigned char *value)
+    const void Decoded::Buffer(unsigned char *value)
     {
 	if (m_buff)
 	{

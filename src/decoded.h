@@ -16,20 +16,20 @@
 //
 // WAV file representation
 //
-#ifndef VGMSTREAM_WAVFILE_H
-#define VGMSTREAM_WAVFILE_H
+#ifndef VGMSTREAM_DECODED_H
+#define VGMSTREAM_DECODED_H
 
 #include <string>
 #include <cstdlib>
 
 namespace vgmstream
 {
-    class WavFile
+    class Decoded
     {
     	public:
 
-	    // Construct a WavFile
-	    WavFile();
+	    // Construct
+	    Decoded();
 
 	    // Get and set properties
 

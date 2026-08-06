@@ -69,6 +69,15 @@ namespace vgmstream
 		pthread_mutex_unlock(&m_mutex);
 	    }
 
+	    // The size of the queue
+	    std::size_t Size()
+	    {
+		pthread_mutex_lock(&m_mutex);
+		std::size_t size = m_queue.size();
+		pthread_mutex_unlock(&m_mutex);
+		return size;
+	    }
+
 	private:
 
 	    std::queue<T>	m_queue;

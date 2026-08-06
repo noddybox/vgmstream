@@ -58,7 +58,7 @@ SOURCES		=	main.cpp		\
 			log.cpp			\
 			config.cpp		\
 			playlist.cpp		\
-			wavfile.cpp		\
+			decoded.cpp		\
 			thread.cpp		\
 			util.cpp
 
@@ -82,5 +82,5 @@ log.o: log.cpp log.h
 util.o: util.cpp util.h
 config.o: config.cpp config.h log.h
 playlist.o: playlist.cpp playlist.h config.h log.h
-wavfile.o: wavfile.cpp wavfile.h
+decoded.o: decoded.cpp decoded.h
 thread.o: thread.cpp thread.h util.h

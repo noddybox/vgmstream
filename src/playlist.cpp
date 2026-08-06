@@ -20,8 +20,7 @@
 #include <fstream>
 #include <algorithm>
 #include <random>
-
-#include <ctime>
+#include <chrono>
 
 #include "playlist.h"
 #include "config.h"
@@ -29,7 +28,9 @@
 
 namespace vgmstream
 {
-    Playlist::Playlist(bool& ok) : m_rnd(std::time(0))
+    Playlist::Playlist(bool& ok)
+    	: m_rnd(std::chrono::system_clock::to_time_t
+			(std::chrono::system_clock::now()))
     {
     	ok = Read();
     }
