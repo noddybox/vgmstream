@@ -60,8 +60,8 @@ Any flag setting support the following values:
 
 |**Setting**|**Optional**|**Description**|
 |-|-|-|
-|`icecast.url`|N|The URL of the endpoint on Icecast 2 to connect to.|
-|`icecast.password`|N|The password to connect as a **source**  in Icecast 2.|
+|`icecast.url`|Depends|The URL of the endpoint on Icecast 2 to connect to.  Can be missing if `misc.outputdir` is set.|
+|`icecast.password`|Depends|The password to connect as a **source**  in Icecast 2.  Can be missing if `misc.outputdir` is set.|
 |`icecast.public`|Y|Flag to say whether to make the stream public.  The default is to not.|
 |`playlist.file`|N|The location of the playlist file, with each line being a path to a file # to stream.|
 |`playlist.shuffle`|Y|Whether to shuffle the entries in the file or not.  The default is to shuffle.|

@@ -186,6 +186,10 @@ namespace vgmstream
 			    }
 			}
 		    }
+		    else if (setting == "misc.outputdir")
+		    {
+			m_output_dir = value;
+		    }
 		    else
 		    {
 		    	VGMLOG("Unknown setting `%s`", setting.c_str());
@@ -197,13 +201,13 @@ namespace vgmstream
 
 	file.close();
 
-	if (m_icecast_url.empty())
+	if (m_icecast_url.empty() && m_output_dir.empty())
 	{
 	    VGMLOG("Missing config for icecast.url");
 	    return;
 	}
 
-	if (m_icecast_password.empty())
+	if (m_icecast_password.empty() && m_output_dir.empty())
 	{
 	    VGMLOG("Missing config for icecast.password");
 	    return;

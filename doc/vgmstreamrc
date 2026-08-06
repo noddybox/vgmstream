@@ -11,11 +11,12 @@
 # Icecast 2 settings
 #
 
-# The URL to the Icecast 2 mount point
+# The URL to the Icecast 2 mount point.  Optional is misc.outputdir is set.
 icecast.url		http://server:port/endpoint
 
 # The password for a source in Icecast 2, that will be the string in the
-# <source-password> element in the <authentication> section.
+# <source-password> element in the <authentication> section.  Optional if
+# misc.outputdir is set.
 icecast.password	your_secret_source_password
 
 # Optional.  Whether to make the stream public.  The default is to not.
