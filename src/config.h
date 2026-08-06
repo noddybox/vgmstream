@@ -49,6 +49,8 @@ namespace vgmstream
 	    int			Mp3Bitrate() const;
 	    const std::string	MiscOutputDir() const;
 
+	    bool		IcecastUrlSet() const;
+	    bool		IcecastPasswordSet() const;
 	    bool		MiscOutputDirSet() const;
 
 	private:

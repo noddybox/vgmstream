@@ -87,6 +87,16 @@ namespace vgmstream
     	return m_output_dir;
     }
 
+    bool Config::IcecastUrlSet() const
+    {
+    	return !m_icecast_url.empty();
+    }
+
+    bool Config::IcecastPasswordSet() const
+    {
+    	return !m_icecast_password.empty();
+    }
+
     bool Config::MiscOutputDirSet() const
     {
     	return !m_output_dir.empty();
