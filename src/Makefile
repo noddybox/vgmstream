@@ -17,25 +17,20 @@
 # Makefile
 #
 
-# The location of the LAME library
+# Switches for the LAME library
 #
 CFLAGS_LAME	:=	$(shell pkgconf --cflags lame)
 LIBS_LAME	:=	$(shell pkgconf --libs lame)
 
-# The location of the libsidplayfp library
+# Switches for the libsidplayfp library
 #
 CFLAGS_SIDPLAY	:=	$(shell pkgconf --cflags libsidplayfp)
 LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
 
-# The location of the libgme library
+# Switches for the libgme library
 #
 CFLAGS_GME	:=	$(shell pkgconf --cflags libgme)
 LIBS_GME	:=	$(shell pkgconf --libs libgme)
-
-# Switches for libmagic
-#
-CFLAGS_MAGIC	:=	$(shell pkgconf --cflags libmagic)
-LIBS_MAGIC	:=	$(shell pkgconf --libs libmagic)
 
 # Switches for pthreads
 #
@@ -44,9 +39,9 @@ LIBS_PTHREAD	:=	-pthread
 
 # Combines the flags
 CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) \
-			$(CFLAGS_MAGIC) $(CFLAGS_PTHREAD) 
+			$(CFLAGS_PTHREAD) 
 LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) \
-			$(LIBS_MAGIC) $(LIBS_PTHREAD)
+			$(LIBS_PTHREAD)
 
 # The target
 #
@@ -60,6 +55,7 @@ SOURCES		=	main.cpp		\
 			playlist.cpp		\
 			decoded.cpp		\
 			thread.cpp		\
+			filetype.cpp		\
 			util.cpp
 
 # Objects
@@ -84,3 +80,4 @@ config.o: config.cpp config.h log.h
 playlist.o: playlist.cpp playlist.h config.h log.h
 decoded.o: decoded.cpp decoded.h
 thread.o: thread.cpp thread.h util.h
+filetype.o: filetype.cpp filetype.h log.h
