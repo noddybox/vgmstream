@@ -22,7 +22,10 @@
 #include "log.h"
 #include "config.h"
 #include "playlist.h"
+#include "decoder.h"
+#include "decoded.h"
 #include "queue.h"
+#include "sourcefile.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -94,8 +97,14 @@ int main(int argc, char *argv[])
     	return 1;
     }
 
-    vgmstream::Queue<std::string> file_queue;
+    vgmstream::Queue<vgmstream::SourceFile> source_queue;
     vgmstream::Queue<std::vector<unsigned char>> result_queue;
+
+    vgmstream::Decoder decoder(playlist, source_queue);
+
+    while(decoder.Alive())
+    {
+    }
 
     VGMLOG("Exiting");
     return 0;

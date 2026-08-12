@@ -18,11 +18,11 @@
 //
 #include <cctype>
 
-#include "filetype.h"
+#include "sourcefile.h"
 
 namespace vgmstream
 {
-    FileType::StringTypeMap FileType::ext_map =
+    SourceFile::StringTypeMap SourceFile::ext_map =
     {
 	{"AY",		eType::AY},
 	{"GBS",		eType::Gameboy},
@@ -39,7 +39,7 @@ namespace vgmstream
 	{"PSID",	eType::SID}
     };
 
-    FileType::FileType(const std::string& m_path)
+    SourceFile::SourceFile(const std::string& m_path)
     {
     	m_type = eType::Unknown;
 
@@ -63,12 +63,17 @@ namespace vgmstream
 	m_type = iter->second;
     }
 
-    FileType::eType FileType::Type() const
+    SourceFile::eType SourceFile::Type() const
     {
     	return m_type;
     }
 
-    void FileType::ToUpper(std::string& s)
+    const unsigned char *SourceFile::Contents() const
+    {
+    	return m_contents.data();
+    }
+
+    void SourceFile::ToUpper(std::string& s)
     {
     	for(std::string::iterator i = s.begin(); i != s.end(); ++i)
 	{

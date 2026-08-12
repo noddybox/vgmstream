@@ -55,7 +55,8 @@ SOURCES		=	main.cpp		\
 			playlist.cpp		\
 			decoded.cpp		\
 			thread.cpp		\
-			filetype.cpp		\
+			sourcefile.cpp		\
+			decoder.cpp		\
 			util.cpp
 
 # Objects
@@ -73,11 +74,13 @@ clean:
 %.o: %.cpp
 	$(CXX) $(CFLAGS_VGM) -c -o $@ $<
 
-main.o: main.cpp log.h util.h config.h playlist.h queue.h
-log.o: log.cpp log.h
-util.o: util.cpp util.h
 config.o: config.cpp config.h log.h
-playlist.o: playlist.cpp playlist.h config.h log.h
 decoded.o: decoded.cpp decoded.h
+decoder.o: decoder.cpp decoder.h
+log.o: log.cpp log.h
+main.o: main.cpp log.h config.h playlist.h decoder.h thread.h \
+ sourcefile.h queue.h util.h
+playlist.o: playlist.cpp playlist.h config.h log.h
+sourcefile.o: sourcefile.cpp sourcefile.h
 thread.o: thread.cpp thread.h util.h
-filetype.o: filetype.cpp filetype.h log.h
+util.o: util.cpp util.h

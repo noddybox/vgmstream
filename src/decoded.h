@@ -54,6 +54,9 @@ namespace vgmstream
 	    unsigned char *Buffer() const; 
 	    const void Buffer(unsigned char *value); 
 
+	    // The desired default frequency
+	    static unsigned int DesiredFrequency();
+
 	private:
 
 	    std::string		m_name;

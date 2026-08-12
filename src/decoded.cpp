@@ -27,7 +27,7 @@ namespace vgmstream
 			 m_composer(""),
 			 m_album(""),
 			 m_year(1980),
-			 m_freq(44100),
+			 m_freq(DesiredFrequency()),
 			 m_size(0),
 			 m_buff(0)
     {
@@ -109,5 +109,10 @@ namespace vgmstream
 	m_buff = new unsigned char[m_size];
 
     	std::memcpy(m_buff, value, m_size);
+    }
+
+    unsigned int Decoded::DesiredFrequency()
+    {
+    	return 44100u;
     }
 };

@@ -14,22 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Source file class
 //
 #ifndef VGMSTREAM_FILETYPE_H
 #define VGMSTREAM_FILETYPE_H
 
 #include <map>
+#include <vector>
 #include <string>
 
 namespace vgmstream
 {
-    class FileType
+    class SourceFile
     {
     	public:
 
 	    enum eType
 	    {
+		NotExist,
 		Unknown,
 		AY,
 		Gameboy,
@@ -45,17 +47,21 @@ namespace vgmstream
 
 	    // Construct a file type for the passed file
 	    //
-	    FileType(const std::string& path);
+	    SourceFile(const std::string& path);
 
 	    // The type of file
 	    eType Type() const;
+
+	    // The contents of the file
+	    const unsigned char *Contents() const;
 
 	private:
 
 	    typedef std::map<std::string, eType> StringTypeMap;
 	    static StringTypeMap ext_map;
 
-	    eType		m_type;
+	    eType			m_type;
+	    std::vector<unsigned char>	m_contents;
 
 	    void ToUpper(std::string& s);
 

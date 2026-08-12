@@ -16,52 +16,37 @@
 //
 // Thread base class
 //
-#ifndef VGMSTREAM_THREAD_H
-#define VGMSTREAM_THREAD_H
+#ifndef VGMSTREAM_DECODER_H
+#define VGMSTREAM_DECODER_H
 
-#include <pthread.h>
+#include <string>
+
+#include "thread.h"
+#include "playlist.h"
+#include "sourcefile.h"
+#include "queue.h"
 
 namespace vgmstream
 {
-    class Thread
+    class Decoder : public Thread
     {
     	public:
 
-	    // Implementors should call this from their constructor.
-	    Thread();
+	    // Constructor
+	    Decoder(Playlist& playlist, Queue<SourceFile>& output);
 
 	    // Destructor.
-	    virtual ~Thread();
-
-	    // Cancel the thread; immediately if possible.
-	    void Cancel();
-
-	    // If the thread is alive
-	    bool Alive() const;
+	    virtual ~Decoder();
 
 	protected:
 
-	    // Implementors should call this to create the thread once
-	    // initialisation is complete.
-	    void CreateThread();
-
-	    // Implementors must implement this with their thread code.
-	    virtual void ThreadCode() = 0;
-
-	    // Implementors must call this when exiting the thread.
-	    void Exiting();
-
-	    // Implementors can call this to see if the thread is being
-	    // cancelled.
-	    bool Cancelled() const;
+	    void ThreadCode();
 
 	private:
 
-	    pthread_t	m_thread;
-	    bool	m_cancelled;
-	    bool	m_alive;
+	    Playlist		m_playlist;
+	    Queue<SourceFile>&	m_output;
 
-	    static void *ThreadWrapper(void *object_pointer);
     };
 };
 

@@ -16,60 +16,28 @@
 //
 // Thread base class
 //
-#include "thread.h"
-#include "util.h"
+#include "decoder.h"
 
 namespace vgmstream
 {
-    Thread::Thread() : m_cancelled(false), m_alive(false)
+    Decoder::Decoder(Playlist& playlist,
+		     Queue<SourceFile>& output) : Thread(),
+    						  m_playlist(playlist),
+						  m_output(output)
+    {
+	CreateThread();
+    }
+
+    Decoder::~Decoder()
     {
     }
 
-    Thread::~Thread()
+    void Decoder::ThreadCode()
     {
-    	Cancel();
-    }
-
-    void Thread::Cancel()
-    {
-    	pthread_cancel(m_thread);
-	m_cancelled = true;
-	m_alive = false;
-    }
-
-    void Thread::CreateThread()
-    {
-    	if (pthread_create(&m_thread, 0, ThreadWrapper,
-			   static_cast<void*>(this)) != 0)
+    	while(!Cancelled())
 	{
-	    Util::OSError("pthread_create");
 	}
 
-	m_alive = true;
-    }
-
-    void *Thread::ThreadWrapper(void *object_pointer)
-    {
-    	Thread *t = static_cast<Thread*>(object_pointer);
-
-	t->ThreadCode();
-
-	return 0;
-    }
-
-    bool Thread::Cancelled() const
-    {
-    	return m_cancelled;
-    }
-
-    bool Thread::Alive() const
-    {
-    	return m_alive;
-    }
-
-    void Thread::Exiting()
-    {
-    	m_alive = false;
-	pthread_exit(0);
+	Exiting();
     }
 };
