@@ -80,12 +80,10 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 # Rules
 #
-.PHONY: depend
-
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $(TARGET) $(OBJECTS) $(LIBS_VGM)
 
-depend:
+depend.mak: $(SOURCES) $(HEADERS) Makefile
 	$(CXX) -MM $(SOURCES) > depend.mak
 
 clean:
