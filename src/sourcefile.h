@@ -16,10 +16,9 @@
 //
 // Source file class
 //
-#ifndef VGMSTREAM_FILETYPE_H
-#define VGMSTREAM_FILETYPE_H
+#ifndef VGMSTREAM_SOURCEFILE_H
+#define VGMSTREAM_SOURCEFILE_H
 
-#include <map>
 #include <vector>
 #include <string>
 
@@ -28,43 +27,20 @@ namespace vgmstream
     class SourceFile
     {
     	public:
-
-	    enum eType
-	    {
-		NotExist,
-		Unknown,
-		AY,
-		Gameboy,
-	    	Genesis,
-	    	PCEngine,
-		MSX,
-		NES,
-		POKEY,
-		SNES,
-		MasterSystem,
-		SID
-	    };
-
-	    // Construct a file type for the passed file
+	    // Construct a source file for the passed path
 	    //
 	    SourceFile(const std::string& path);
 
-	    // The type of file
-	    eType Type() const;
+	    // Whether the file was read OK
+	    //
+	    bool ReadOk() const;
 
 	    // The contents of the file
 	    const unsigned char *Contents() const;
 
 	private:
-
-	    typedef std::map<std::string, eType> StringTypeMap;
-	    static StringTypeMap ext_map;
-
-	    eType			m_type;
+	    bool			m_readOk;
 	    std::vector<unsigned char>	m_contents;
-
-	    void ToUpper(std::string& s);
-
     };
 };
 

@@ -14,45 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Interface to libsidplyfp
 //
-#include <fstream>
-#include <iostream>
+#ifndef VGMSTREAM_SIDAPI_H
+#define VGMSTREAM_SIDAPI_H
+
+#include <string>
 
 #include "sourcefile.h"
+#include "decoded.h"
 
 namespace vgmstream
 {
-    SourceFile::SourceFile(const std::string& m_path)
+    class SidApi
     {
-	m_readOk = false;
+    	public:
 
-	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
+	    // Construct an interface to libsidplyfp.  Returns whether it was
+	    // initialised from the file in ok.
+	    //
+	    SidApi(const std::string& path, int track, bool& ok);
 
-	if (!in)
-	{
-	    return;
-	}
+	    // Clean up
+	    ~SidApi();
 
-	unsigned char byte;
+	    // Get the default track for the file
+	    int DefaultTrack() const;
 
-	while(in >> byte)
-	{
-	    m_contents.push_back(byte);
-	}
+	    // Get the number of tracks in the file
+	    int TrackCount() const;
 
-	in.close();
+	    // Get the result of decoding.  Returns true if decoding worked.
+	    bool Decode(Decoded& result);
 
-	m_readOk = true;
-    }
+	private:
 
-    bool SourceFile::ReadOk() const
-    {
-    	return m_readOk;
-    }
+	    int			m_default_track;
+	    int			m_track_count;
 
-    const unsigned char *SourceFile::Contents() const
-    {
-    	return m_contents.data();
-    }
+    };
 };
+
+#endif

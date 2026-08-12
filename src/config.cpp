@@ -72,6 +72,11 @@ namespace vgmstream
     	return m_playlist_repeat;
     }
 
+    int Config::DecoderDefaultLength() const
+    {
+    	return m_decoder_default_length;
+    }
+
     bool Config::Mp3IsVBR() const
     {
     	return m_mp3_is_VBR;
@@ -102,7 +107,18 @@ namespace vgmstream
     	return !m_output_dir.empty();
     }
 
-    Config::Config(const std::string& path, bool& open_ok)
+    Config::Config(const std::string& path, bool& open_ok) :
+			m_icecast_url(""),
+			m_icecast_password(""),
+			m_icecast_public(false),
+			m_playlist_file(""),
+			m_playlist_shuffle(true),
+			m_playlist_repeat(true),
+			m_decoder_default_length(120),
+			m_decoder_loop(2),
+			m_mp3_is_VBR(true),
+			m_mp3_bitrate(0),
+			m_output_dir("")
     {
 	open_ok = false;
 
@@ -171,6 +187,30 @@ namespace vgmstream
 		    {
 		    	if (!ParseFlag(value, m_playlist_repeat))
 			{
+			    return;
+			}
+		    }
+		    else if (setting == "decoder.default_length")
+		    {
+			try
+			{
+			    m_decoder_default_length = std::stoi(value);
+			}
+			catch (...)
+			{
+			    VGMLOG("Illegal number `%s`", value.c_str());
+			    return;
+			}
+		    }
+		    else if (setting == "decoder.loop")
+		    {
+			try
+			{
+			    m_decoder_loop = std::stoi(value);
+			}
+			catch (...)
+			{
+			    VGMLOG("Illegal number `%s`", value.c_str());
 			    return;
 			}
 		    }

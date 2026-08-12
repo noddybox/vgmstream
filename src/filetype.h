@@ -14,45 +14,52 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Guess the file type from the extension
 //
-#include <fstream>
-#include <iostream>
+#ifndef VGMSTREAM_FILETYPE_H
+#define VGMSTREAM_FILETYPE_H
 
-#include "sourcefile.h"
+#include <map>
+#include <string>
 
 namespace vgmstream
 {
-    SourceFile::SourceFile(const std::string& m_path)
+    class FileType
     {
-	m_readOk = false;
+    	public:
 
-	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
+	    enum eType
+	    {
+		NotExist,
+		Unknown,
+		AY,
+		Gameboy,
+	    	Genesis,
+	    	PCEngine,
+		MSX,
+		NES,
+		POKEY,
+		SNES,
+		MasterSystem,
+		SID
+	    };
 
-	if (!in)
-	{
-	    return;
-	}
+	    // Construct a file type for the passed file
+	    //
+	    FileType(const std::string& path);
 
-	unsigned char byte;
+	    // The type of file
+	    eType Type() const;
 
-	while(in >> byte)
-	{
-	    m_contents.push_back(byte);
-	}
+	private:
 
-	in.close();
+	    typedef std::map<std::string, eType> StringTypeMap;
+	    static StringTypeMap ext_map;
 
-	m_readOk = true;
-    }
+	    eType			m_type;
 
-    bool SourceFile::ReadOk() const
-    {
-    	return m_readOk;
-    }
-
-    const unsigned char *SourceFile::Contents() const
-    {
-    	return m_contents.data();
-    }
+	    void ToUpper(std::string& s);
+    };
 };
+
+#endif

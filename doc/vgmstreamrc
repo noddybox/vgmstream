@@ -39,6 +39,18 @@ playlist.shuffle	yes
 playlist.repeat		yes
 
 #
+# Decoder settings
+#
+
+# Optional.  The default number of seconds to make the decoded music.  Defaults
+# to 120 seconds.
+decoder.default_length	120
+
+# Optional.  The default number of times to play the looped section of an input
+# file if defined.  Defaults to 2.
+decoder.loop		2
+
+#
 # MP3 settings
 #
 

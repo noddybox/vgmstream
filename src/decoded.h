@@ -20,10 +20,12 @@
 #define VGMSTREAM_DECODED_H
 
 #include <string>
+#include <vector>
 #include <cstdlib>
 
 namespace vgmstream
 {
+    // A decoded file is a stero WAV file with signed 16-bit samples
     class Decoded
     {
     	public:
@@ -48,11 +50,14 @@ namespace vgmstream
 	    unsigned int Frequency() const; 
 	    const void Frequency(unsigned int value); 
 
+	    // Note this is the number of samples, not bytes
 	    std::size_t Size() const; 
-	    const void Size(std::size_t value); 
 
-	    unsigned char *Buffer() const; 
-	    const void Buffer(unsigned char *value); 
+	    // Note this is the number of bytes, not samples
+	    std::size_t ByteSize() const; 
+
+	    const short *Buffer() const; 
+	    const void AddToBuffer(const short *mem, std::size_t len); 
 
 	    // The desired default frequency
 	    static unsigned int DesiredFrequency();
@@ -64,8 +69,7 @@ namespace vgmstream
 	    std::string		m_album;
 	    unsigned int	m_year;
 	    unsigned int	m_freq;
-	    std::size_t		m_size;
-	    unsigned char	*m_buff;
+	    std::vector<short>	m_buff;
     };
 };
 

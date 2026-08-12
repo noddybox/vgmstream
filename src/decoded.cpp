@@ -28,8 +28,7 @@ namespace vgmstream
 			 m_album(""),
 			 m_year(1980),
 			 m_freq(DesiredFrequency()),
-			 m_size(0),
-			 m_buff(0)
+			 m_buff()
     {
     }
 
@@ -85,30 +84,25 @@ namespace vgmstream
 
     std::size_t Decoded::Size() const
     {
-    	return m_size;
+    	return m_buff.size();
     }
 
-    const void Decoded::Size(std::size_t value)
+    std::size_t Decoded::ByteSize() const
     {
-    	m_size = value;
+    	return m_buff.size() * sizeof(short);
     }
 
-    unsigned char *Decoded::Buffer() const
+    const short *Decoded::Buffer() const
     {
-    	return m_buff;
+    	return m_buff.data();
     }
 
-    const void Decoded::Buffer(unsigned char *value)
+    const void Decoded::AddToBuffer(const short *mem, std::size_t len)
     {
-	if (m_buff)
+    	while(len--)
 	{
-	    delete[] m_buff;
-	    m_buff = 0;
+	    m_buff.push_back(*mem++);
 	}
-
-	m_buff = new unsigned char[m_size];
-
-    	std::memcpy(m_buff, value, m_size);
     }
 
     unsigned int Decoded::DesiredFrequency()

@@ -45,6 +45,8 @@ namespace vgmstream
 	    const std::string	PlaylistFile() const;
 	    bool		PlaylistShuffle() const;
 	    bool		PlaylistRepeat() const;
+	    int			DecoderDefaultLength() const;
+	    int			DecoderLoop() const;
 	    bool		Mp3IsVBR() const;
 	    int			Mp3Bitrate() const;
 	    const std::string	MiscOutputDir() const;
@@ -65,6 +67,8 @@ namespace vgmstream
 	    std::string	m_playlist_file;
 	    bool	m_playlist_shuffle;
 	    bool	m_playlist_repeat;
+	    int		m_decoder_default_length;
+	    int		m_decoder_loop;
 	    bool	m_mp3_is_VBR;
 	    int		m_mp3_bitrate;
 	    std::string	m_output_dir;

@@ -14,45 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Interface to libgme
 //
-#include <fstream>
-#include <iostream>
+#ifndef VGMSTREAM_GMEAPI_H
+#define VGMSTREAM_GMEAPI_H
+
+#include <string>
+
+#include <gme/gme.h>
 
 #include "sourcefile.h"
+#include "decoded.h"
 
 namespace vgmstream
 {
-    SourceFile::SourceFile(const std::string& m_path)
+    class GmeApi
     {
-	m_readOk = false;
+    	public:
 
-	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
+	    // Construct an interface to libgme.  Returns whether it was
+	    // initialised from the file in ok.
+	    //
+	    GmeApi(const std::string& path, int track, bool& ok);
 
-	if (!in)
-	{
-	    return;
-	}
+	    // Clean up
+	    ~GmeApi();
 
-	unsigned char byte;
+	    // Get the number of tracks in the file
+	    int TrackCount() const;
 
-	while(in >> byte)
-	{
-	    m_contents.push_back(byte);
-	}
+	    // Get the result of decoding.  Returns true if decoding worked.
+	    bool Decode(Decoded& result);
 
-	in.close();
+	private:
 
-	m_readOk = true;
-    }
+	    Music_Emu		*m_emu;
+	    gme_info_t		*m_info;
+	    int			m_track_count;
 
-    bool SourceFile::ReadOk() const
-    {
-    	return m_readOk;
-    }
+	    bool Error(const gme_err_t message) const;
 
-    const unsigned char *SourceFile::Contents() const
-    {
-    	return m_contents.data();
-    }
+    };
 };
+
+#endif

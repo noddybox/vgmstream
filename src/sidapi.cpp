@@ -14,45 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Interface to libgme
 //
-#include <fstream>
-#include <iostream>
+#include <algorithm>
 
-#include "sourcefile.h"
+#include "sidapi.h"
+#include "log.h"
 
 namespace vgmstream
 {
-    SourceFile::SourceFile(const std::string& m_path)
+    SidApi::SidApi(const std::string& path, int track, bool& ok)
     {
-	m_readOk = false;
-
-	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
-
-	if (!in)
-	{
-	    return;
-	}
-
-	unsigned char byte;
-
-	while(in >> byte)
-	{
-	    m_contents.push_back(byte);
-	}
-
-	in.close();
-
-	m_readOk = true;
+    	ok = false;
+	m_track_count = 0;
+	m_default_track = 0;
     }
 
-    bool SourceFile::ReadOk() const
+    SidApi::~SidApi()
     {
-    	return m_readOk;
     }
 
-    const unsigned char *SourceFile::Contents() const
+    int SidApi::DefaultTrack() const
     {
-    	return m_contents.data();
+    	return m_default_track;
+    }
+
+    int SidApi::TrackCount() const
+    {
+    	return m_track_count;
+    }
+
+    bool SidApi::Decode(Decoded& result)
+    {
+    	return false;
     }
 };

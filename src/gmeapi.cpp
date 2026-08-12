@@ -14,45 +14,71 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// File type class
+// Interface to libgme
 //
-#include <fstream>
-#include <iostream>
+#include <algorithm>
 
-#include "sourcefile.h"
+#include "gmeapi.h"
+#include "log.h"
 
 namespace vgmstream
 {
-    SourceFile::SourceFile(const std::string& m_path)
+    GmeApi::GmeApi(const std::string& path, int track, bool& ok)
     {
-	m_readOk = false;
+    	ok = false;
 
-	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
-
-	if (!in)
+	if (Error(gme_open_file(path.c_str(),
+				&m_emu,
+				Decoded::DesiredFrequency())))
 	{
 	    return;
 	}
 
-	unsigned char byte;
+	m_track_count = gme_track_count(m_emu);
 
-	while(in >> byte)
+	track = std::max(track, m_track_count - 1);
+
+	if (Error(gme_track_info(m_emu, &m_info, 0)))
 	{
-	    m_contents.push_back(byte);
+	    return;
 	}
 
-	in.close();
-
-	m_readOk = true;
+	ok = true;
     }
 
-    bool SourceFile::ReadOk() const
+    GmeApi::~GmeApi()
     {
-    	return m_readOk;
+    	if (m_info)
+	{
+	    gme_free_info(m_info);
+	    m_info = 0;
+	}
+
+    	if (m_emu)
+	{
+	    gme_delete(m_emu);
+	    m_emu = 0;
+	}
     }
 
-    const unsigned char *SourceFile::Contents() const
+    int GmeApi::TrackCount() const
     {
-    	return m_contents.data();
+    	return m_track_count;
+    }
+
+    bool GmeApi::Decode(Decoded& result)
+    {
+    	return false;
+    }
+
+    bool GmeApi::Error(const gme_err_t message) const
+    {
+    	if (message == 0)
+	{
+	    return false;
+	}
+
+	VGMLOG("Error returned by libgme: %s", message);
+	return true;
     }
 };

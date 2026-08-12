@@ -56,8 +56,23 @@ SOURCES		=	main.cpp		\
 			decoded.cpp		\
 			thread.cpp		\
 			sourcefile.cpp		\
+			filetype.cpp		\
 			decoder.cpp		\
+			gmeapi.cpp		\
+			sidapi.cpp		\
 			util.cpp
+
+HEADERS		=	log.h			\
+			config.h		\
+			playlist.h		\
+			decoded.h		\
+			thread.h		\
+			sourcefile.h		\
+			filetype.h		\
+			decoder.h		\
+			gmeapi.h		\
+			sidapi.h		\
+			util.h
 
 # Objects
 #
@@ -65,22 +80,18 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 # Rules
 #
+.PHONY: depend
+
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $(TARGET) $(OBJECTS) $(LIBS_VGM)
+
+depend:
+	$(CXX) -MM $(SOURCES) > depend.mak
 
 clean:
 	rm -f $(TARGET) core $(OBJECTS)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS_VGM) -c -o $@ $<
+	$(CXX) $(CFLAGS_VGM) -g -c -o $@ $<
 
-config.o: config.cpp config.h log.h
-decoded.o: decoded.cpp decoded.h
-decoder.o: decoder.cpp decoder.h
-log.o: log.cpp log.h
-main.o: main.cpp log.h config.h playlist.h decoder.h thread.h \
- sourcefile.h queue.h util.h
-playlist.o: playlist.cpp playlist.h config.h log.h
-sourcefile.o: sourcefile.cpp sourcefile.h
-thread.o: thread.cpp thread.h util.h
-util.o: util.cpp util.h
+include depend.mak

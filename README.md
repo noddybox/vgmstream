@@ -66,5 +66,7 @@ Any flag setting support the following values:
 |`playlist.file`|N|The location of the playlist file, with each line being a path to a file # to stream.|
 |`playlist.shuffle`|Y|Whether to shuffle the entries in the file or not.  The default is to shuffle.|
 |`playlist.repeat`|Y|Whether to repeat the playlist.  It will be reshuffled if `playlist.shuffle` is enabled when the end is reached.  Default is to repeat.|
+|`decoder.default_length`|Y|The default number of seconds if the file has no length information.  Defaults to 120 seconds.|
+|`decoder.loop`|Y|If the input defines a loop length, the number of times the looped section is played.  Defaults to 2.
 |`mp3.bitrate`|Y|The bitrate to encode MP3 as.  Default is `vbr` (variable bit rate).  Either specifiy `vbr` or the kbps value, e.g. `320`.|
 |`misc.outputdir`|Y|If set output generated MP3 files to this directory.  Files will be called the same as the source file, with it's extension replaced with .mp3|

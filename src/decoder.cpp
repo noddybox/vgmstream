@@ -16,7 +16,16 @@
 //
 // Thread base class
 //
+#include <gme/gme.h>
+
 #include "decoder.h"
+#include "gmeapi.h"
+#include "sidapi.h"
+#include "decoded.h"
+#include "filetype.h"
+#include "sourcefile.h"
+#include "log.h"
+#include "config.h"
 
 namespace vgmstream
 {
@@ -34,8 +43,75 @@ namespace vgmstream
 
     void Decoder::ThreadCode()
     {
-    	while(!Cancelled())
+	bool done = false;
+	const Config& config = Config::Instance();
+
+    	while(!Cancelled() && !done)
 	{
+	    std::string filename;
+
+	    if (!m_playlist.Next(filename))
+	    {
+	    	if (config.PlaylistRepeat() && !config.MiscOutputDirSet())
+		{
+		    m_playlist.ReRead();
+		}
+		else
+		{
+		    done = true;
+		}
+	    }
+
+	    if (!done)
+	    {
+	    	FileType type(filename);
+		bool is_gme = false;
+		bool is_sid = false;
+
+		switch (type.Type())
+		{
+		    case FileType::eType::NotExist:
+			VGMLOG("Unable to open file %s", filename.c_str());
+			break;
+
+		    case FileType::eType::Unknown:
+			VGMLOG("Unable to determine filetype of %s",
+				    filename.c_str());
+			break;
+
+		    case FileType::eType::SID:
+		    	is_sid = true;
+			break;
+
+		    default:
+		    	is_gme = true;
+			break;
+		}
+
+		if (is_gme)
+		{
+		    bool ok = false;
+		    Decoded decoded;
+
+		    GmeApi gme(filename, 0, ok);
+
+		    if (ok)
+		    {
+		    }
+		}
+
+		if (is_sid)
+		{
+		    bool ok = false;
+		    Decoded decoded;
+
+		    SidApi sid(filename, 0, ok);
+
+		    if (ok)
+		    {
+		    }
+		}
+	    }
 	}
 
 	Exiting();

@@ -55,7 +55,8 @@ namespace vgmstream
 
     bool Playlist::Read()
     {
-	std::string path(Config::Instance().PlaylistFile());
+	const Config& config = Config::Instance();
+	std::string path(config.PlaylistFile());
 
     	std::ifstream file(path);
 
@@ -83,7 +84,7 @@ namespace vgmstream
 	    return false;
 	}
 
-	if (Config::Instance().PlaylistShuffle())
+	if (config.PlaylistShuffle())
 	{
 	    std::shuffle(m_playlist.begin(),
 			 m_playlist.end(),
