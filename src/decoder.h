@@ -23,7 +23,7 @@
 
 #include "thread.h"
 #include "playlist.h"
-#include "sourcefile.h"
+#include "decoded.h"
 #include "queue.h"
 
 namespace vgmstream
@@ -33,7 +33,7 @@ namespace vgmstream
     	public:
 
 	    // Constructor
-	    Decoder(Playlist& playlist, Queue<SourceFile>& output);
+	    Decoder(Playlist& playlist, Queue<Decoded>& output);
 
 	    // Destructor.
 	    virtual ~Decoder();
@@ -45,7 +45,7 @@ namespace vgmstream
 	private:
 
 	    Playlist		m_playlist;
-	    Queue<SourceFile>&	m_output;
+	    Queue<Decoded>&	m_output;
 
     };
 };

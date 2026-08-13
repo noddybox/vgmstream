@@ -32,13 +32,15 @@ namespace vgmstream
     {
     	public:
 
-	    // Construct an interface to libgme.  Returns whether it was
-	    // initialised from the file in ok.
+	    // Construct an interface to libgme using the supplied file.
 	    //
-	    GmeApi(const std::string& path, int track, bool& ok);
+	    GmeApi(const std::string& path, int track);
 
 	    // Clean up
 	    ~GmeApi();
+
+	    // Whether the decoder initialised OK
+	    bool Initialised() const;
 
 	    // Get the number of tracks in the file
 	    int TrackCount() const;
@@ -48,6 +50,7 @@ namespace vgmstream
 
 	private:
 
+	    bool		m_initialised;
 	    Music_Emu		*m_emu;
 	    gme_info_t		*m_info;
 	    int			m_track_count;

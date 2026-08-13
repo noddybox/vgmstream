@@ -21,7 +21,6 @@
 #include "decoder.h"
 #include "gmeapi.h"
 #include "sidapi.h"
-#include "decoded.h"
 #include "filetype.h"
 #include "sourcefile.h"
 #include "log.h"
@@ -30,7 +29,7 @@
 namespace vgmstream
 {
     Decoder::Decoder(Playlist& playlist,
-		     Queue<SourceFile>& output) : Thread(),
+		     Queue<Decoded>& output) : Thread(),
     						  m_playlist(playlist),
 						  m_output(output)
     {
@@ -90,25 +89,31 @@ namespace vgmstream
 
 		if (is_gme)
 		{
-		    bool ok = false;
-		    Decoded decoded;
+		    GmeApi gme(filename, 0);
 
-		    GmeApi gme(filename, 0, ok);
-
-		    if (ok)
+		    if (gme.Initialised())
 		    {
+			Decoded decoded;
+
+			if (gme.Decode(decoded))
+			{
+			    m_output.Push(decoded);
+			}
 		    }
 		}
 
 		if (is_sid)
 		{
-		    bool ok = false;
-		    Decoded decoded;
+		    SidApi sid(filename, 0);
 
-		    SidApi sid(filename, 0, ok);
-
-		    if (ok)
+		    if (sid.Initialised())
 		    {
+			Decoded decoded;
+
+			if (sid.Decode(decoded))
+			{
+			    m_output.Push(decoded);
+			}
 		    }
 		}
 	    }

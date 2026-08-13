@@ -98,9 +98,11 @@ int main(int argc, char *argv[])
     }
 
     vgmstream::Queue<vgmstream::SourceFile> source_queue;
+    vgmstream::Queue<vgmstream::Decoded> decoded_queue;
     vgmstream::Queue<std::vector<unsigned char>> result_queue;
+    vgmstream::Queue<std::vector<unsigned char>> stream_queue;
 
-    vgmstream::Decoder decoder(playlist, source_queue);
+    vgmstream::Decoder decoder(playlist, decoded_queue);
 
     while(decoder.Alive())
     {

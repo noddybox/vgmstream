@@ -30,13 +30,15 @@ namespace vgmstream
     {
     	public:
 
-	    // Construct an interface to libsidplyfp.  Returns whether it was
-	    // initialised from the file in ok.
+	    // Construct an interface to libsidplyfp using the supplied file.
 	    //
-	    SidApi(const std::string& path, int track, bool& ok);
+	    SidApi(const std::string& path, int track);
 
 	    // Clean up
 	    ~SidApi();
+
+	    // Whether the API was initialised OK
+	    bool Initialised() const;
 
 	    // Get the default track for the file
 	    int DefaultTrack() const;
@@ -49,6 +51,7 @@ namespace vgmstream
 
 	private:
 
+	    bool		m_initialised;
 	    int			m_default_track;
 	    int			m_track_count;
 

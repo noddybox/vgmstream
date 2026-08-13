@@ -23,9 +23,9 @@
 
 namespace vgmstream
 {
-    GmeApi::GmeApi(const std::string& path, int track, bool& ok)
+    GmeApi::GmeApi(const std::string& path, int track)
     {
-    	ok = false;
+    	m_initialised = false;
 
 	if (Error(gme_open_file(path.c_str(),
 				&m_emu,
@@ -43,7 +43,7 @@ namespace vgmstream
 	    return;
 	}
 
-	ok = true;
+	m_initialised = true;
     }
 
     GmeApi::~GmeApi()
@@ -59,6 +59,11 @@ namespace vgmstream
 	    gme_delete(m_emu);
 	    m_emu = 0;
 	}
+    }
+
+    bool GmeApi::Initialised() const
+    {
+    	return m_initialised;
     }
 
     int GmeApi::TrackCount() const

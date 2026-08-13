@@ -23,15 +23,20 @@
 
 namespace vgmstream
 {
-    SidApi::SidApi(const std::string& path, int track, bool& ok)
+    SidApi::SidApi(const std::string& path, int track)
     {
-    	ok = false;
+    	m_initialised = false;
 	m_track_count = 0;
 	m_default_track = 0;
     }
 
     SidApi::~SidApi()
     {
+    }
+
+    bool SidApi::Initialised() const
+    {
+    	return m_initialised;
     }
 
     int SidApi::DefaultTrack() const
