@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Thread base class
+// Decoder thread class
 //
 #include <gme/gme.h>
 
@@ -36,10 +36,6 @@ namespace vgmstream
 	CreateThread();
     }
 
-    Decoder::~Decoder()
-    {
-    }
-
     void Decoder::ThreadCode()
     {
 	bool done = false;
@@ -48,8 +44,9 @@ namespace vgmstream
     	while(!Cancelled() && !done)
 	{
 	    std::string filename;
+	    int track;
 
-	    if (!m_playlist.Next(filename))
+	    if (!m_playlist.Next(filename, track))
 	    {
 	    	if (config.PlaylistRepeat() && !config.MiscOutputDirSet())
 		{
@@ -89,7 +86,7 @@ namespace vgmstream
 
 		if (is_gme)
 		{
-		    GmeApi gme(filename, 0);
+		    GmeApi gme(filename, track == -1 ? 0 : track);
 
 		    if (gme.Initialised())
 		    {
@@ -99,6 +96,16 @@ namespace vgmstream
 			{
 			    m_output.Push(decoded);
 			}
+			else
+			{
+			    VGMLOG("Failed to decode %s with GME",
+			    				filename.c_str());
+			}
+		    }
+		    else
+		    {
+			VGMLOG("Failed to initialise GME for %s",
+			    				filename.c_str());
 		    }
 		}
 
@@ -114,11 +121,19 @@ namespace vgmstream
 			{
 			    m_output.Push(decoded);
 			}
+			else
+			{
+			    VGMLOG("Failed to decode %s with SID player",
+			    				filename.c_str());
+			}
+		    }
+		    else
+		    {
+			VGMLOG("Failed to initialise SID player for %s",
+			    				filename.c_str());
 		    }
 		}
 	    }
 	}
-
-	Exiting();
     }
 };

@@ -31,14 +31,14 @@ namespace vgmstream
 
 	    // Construct a list from the configured file path.  Sets ok to true
 	    // if the file is read OK.
-	    //
 	    Playlist(bool& ok);
 
 	    // Get the next path from the playlist if there is one.  Returns
-	    // true if there is next one, false if we;ve reached the end of
-	    // the list.
-	    //
-	    bool Next(std::string& path);
+	    // true if there is next one, false if we've reached the end of
+	    // the list.  If there is a ":track_number" on the end of the
+	    // file it is stripped off and the number returned in track.
+	    // If there is no track it is set to -1.
+	    bool Next(std::string& path, int &track);
 
 	    // Re-read the playlist
 	    void ReRead();

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Thread base class
+// Decoder thread class
 //
 #ifndef VGMSTREAM_DECODER_H
 #define VGMSTREAM_DECODER_H
@@ -34,9 +34,6 @@ namespace vgmstream
 
 	    // Constructor
 	    Decoder(Playlist& playlist, Queue<Decoded>& output);
-
-	    // Destructor.
-	    virtual ~Decoder();
 
 	protected:
 

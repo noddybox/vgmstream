@@ -14,37 +14,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Source file class
+// MP3 encoding thread
 //
-#ifndef VGMSTREAM_SOURCEFILE_H
-#define VGMSTREAM_SOURCEFILE_H
+#include <unistd.h>
 
-#include <vector>
-#include <string>
+#include <gme/gme.h>
+
+#include "mp3encoder.h"
+#include "config.h"
 
 namespace vgmstream
 {
-    class SourceFile
+    MP3Encoder::MP3Encoder(Queue<Decoded>& input,
+		           Queue<std::vector<unsigned char>>& output)
+			   	: Thread(),
+				  m_input(input),
+				  m_output(output)
     {
-    	public:
-	    // Construct a source file for the passed path
-	    //
-	    SourceFile(const std::string& path);
+	CreateThread();
+    }
 
-	    // Whether the file was read OK
-	    bool ReadOk() const;
+    void MP3Encoder::ThreadCode()
+    {
+	const Config& config = Config::Instance();
 
-	    // The size of the file
-	    std::size_t Size() const;
+    	while(!Cancelled())
+	{
+	    Decoded decoded;
 
-	    // The contents of the file
-	    const unsigned char *Contents() const;
-
-	private:
-	    bool			m_readOk;
-	    std::size_t			m_size;
-	    std::vector<unsigned char>	m_contents;
-    };
+	    while (!m_input.Pop(decoded))
+	    {
+	    	::sleep(1);
+	    }
+	}
+    }
 };
-
-#endif

@@ -19,6 +19,8 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <unistd.h>
+
 #include "log.h"
 #include "config.h"
 #include "playlist.h"
@@ -26,6 +28,7 @@
 #include "decoded.h"
 #include "queue.h"
 #include "sourcefile.h"
+#include "mp3encoder.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -99,14 +102,28 @@ int main(int argc, char *argv[])
 
     vgmstream::Queue<vgmstream::SourceFile> source_queue;
     vgmstream::Queue<vgmstream::Decoded> decoded_queue;
-    vgmstream::Queue<std::vector<unsigned char>> result_queue;
     vgmstream::Queue<std::vector<unsigned char>> stream_queue;
 
     vgmstream::Decoder decoder(playlist, decoded_queue);
+    vgmstream::MP3Encoder encoder(decoded_queue, stream_queue);
 
     while(decoder.Alive())
     {
+    	::sleep(1);
     }
+
+    // Wait for outputs once decoder has exited
+    while(decoded_queue.Size() > 0)
+    {
+    	::sleep(1);
+    }
+
+    while(stream_queue.Size() > 0)
+    {
+    	::sleep(1);
+    }
+
+    encoder.Cancel();
 
     VGMLOG("Exiting");
     return 0;

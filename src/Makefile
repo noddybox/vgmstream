@@ -60,6 +60,7 @@ SOURCES		=	main.cpp		\
 			decoder.cpp		\
 			gmeapi.cpp		\
 			sidapi.cpp		\
+			mp3encoder.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -72,6 +73,7 @@ HEADERS		=	log.h			\
 			decoder.h		\
 			gmeapi.h		\
 			sidapi.h		\
+			mp3encoder.h		\
 			util.h
 
 # Objects

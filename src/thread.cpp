@@ -53,6 +53,8 @@ namespace vgmstream
     	Thread *t = static_cast<Thread*>(object_pointer);
 
 	t->ThreadCode();
+	t->m_alive = false;
+	pthread_exit(0);
 
 	return 0;
     }
@@ -65,11 +67,5 @@ namespace vgmstream
     bool Thread::Alive() const
     {
     	return m_alive;
-    }
-
-    void Thread::Exiting()
-    {
-    	m_alive = false;
-	pthread_exit(0);
     }
 };

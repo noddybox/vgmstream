@@ -22,6 +22,7 @@
 #include <cctype>
 
 #include "config.h"
+#include "util.h"
 #include "log.h"
 
 namespace vgmstream
@@ -75,6 +76,11 @@ namespace vgmstream
     int Config::DecoderDefaultLength() const
     {
     	return m_decoder_default_length;
+    }
+
+    int Config::DecoderLoop() const
+    {
+    	return m_decoder_loop;
     }
 
     bool Config::Mp3IsVBR() const
@@ -167,8 +173,10 @@ namespace vgmstream
 		    }
 		    else if (setting == "icecast.public")
 		    {
-		    	if (!ParseFlag(value, m_icecast_public))
+		    	if (!Util::ParseBool(value, m_icecast_public))
 			{
+			    VGMLOG("Bad flag '%s' on setting '%s'",
+			    		value.c_str(), setting.c_str());
 			    return;
 			}
 		    }
@@ -178,39 +186,37 @@ namespace vgmstream
 		    }
 		    else if (setting == "playlist.shuffle")
 		    {
-		    	if (!ParseFlag(value, m_playlist_shuffle))
+		    	if (!Util::ParseBool(value, m_playlist_shuffle))
 			{
+			    VGMLOG("Bad flag '%s' on setting '%s'",
+			    		value.c_str(), setting.c_str());
 			    return;
 			}
 		    }
 		    else if (setting == "playlist.repeat")
 		    {
-		    	if (!ParseFlag(value, m_playlist_repeat))
+		    	if (!Util::ParseBool(value, m_playlist_repeat))
 			{
+			    VGMLOG("Bad flag '%s' on setting '%s'",
+			    		value.c_str(), setting.c_str());
 			    return;
 			}
 		    }
 		    else if (setting == "decoder.default_length")
 		    {
-			try
+			if (!Util::ParseInt(value, m_decoder_default_length))
 			{
-			    m_decoder_default_length = std::stoi(value);
-			}
-			catch (...)
-			{
-			    VGMLOG("Illegal number `%s`", value.c_str());
+			    VGMLOG("Bad number '%s' on setting '%s'",
+			    		value.c_str(), setting.c_str());
 			    return;
 			}
 		    }
 		    else if (setting == "decoder.loop")
 		    {
-			try
+			if (!Util::ParseInt(value, m_decoder_loop))
 			{
-			    m_decoder_loop = std::stoi(value);
-			}
-			catch (...)
-			{
-			    VGMLOG("Illegal number `%s`", value.c_str());
+			    VGMLOG("Bad number '%s' on setting '%s'",
+			    		value.c_str(), setting.c_str());
 			    return;
 			}
 		    }
@@ -225,13 +231,10 @@ namespace vgmstream
 			{
 			    m_mp3_is_VBR = false;
 
-			    try
+			    if (!Util::ParseInt(value, m_mp3_bitrate))
 			    {
-				m_mp3_bitrate = std::stoi(value);
-			    }
-			    catch (...)
-			    {
-				VGMLOG("Illegal number `%s`", value.c_str());
+				VGMLOG("Bad number '%s' on setting '%s'",
+					    value.c_str(), setting.c_str());
 				return;
 			    }
 			}
@@ -271,26 +274,5 @@ namespace vgmstream
 
 	VGMLOG("Successfully read configuration from %s", path.c_str());
 	open_ok = true;
-    }
-
-    bool Config::ParseFlag(const std::string& flag_text, bool& flag)
-    {
-	if (flag_text == "yes" || flag_text == "1" ||
-		flag_text == "on" || flag_text == "true")
-	{
-	    flag = true;
-	    return true;
-	}
-
-	if (flag_text == "no" || flag_text == "0" ||
-		flag_text == "off" || flag_text == "false")
-	{
-	    flag = false;
-	    return true;
-	}
-
-	VGMLOG("Failed to parse flag `%s`", flag_text.c_str());
-
-    	return false;
     }
 };

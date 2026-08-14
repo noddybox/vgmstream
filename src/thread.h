@@ -48,9 +48,6 @@ namespace vgmstream
 	    // Implementors must implement this with their thread code.
 	    virtual void ThreadCode() = 0;
 
-	    // Implementors must call this when exiting the thread.
-	    void Exiting();
-
 	    // Implementors can call this to see if the thread is being
 	    // cancelled.
 	    bool Cancelled() const;

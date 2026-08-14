@@ -30,16 +30,21 @@ namespace vgmstream
 
 	    // Return the basename of the passed C string.  Returns a pointer
 	    // into the passed pointer.
-	    //
 	    static const char *Basename(const char *path);
 
 	    // Report an error for an OS call.  This function exits.
-	    //
 	    static void OSError(const char *function);
 
 	    // Make the process a daemon.
-	    //
 	    static void MakeDaemon();
+
+	    // Convert the passed string into a number.  Returns false if the
+	    // number cannot be parsed.
+	    static bool ParseInt(const std::string& str, int& value);
+
+	    // Convert the passed string into a boolean.  Returns false if the
+	    // flag cannot be parsed. 
+	    static bool ParseBool(const std::string& str, bool& value);
 
 	private:
 	    Util();

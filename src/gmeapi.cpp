@@ -19,12 +19,20 @@
 #include <algorithm>
 
 #include "gmeapi.h"
+#include "config.h"
 #include "log.h"
+
+namespace
+{
+    const int BUFFER_SIZE = 1024;
+};
 
 namespace vgmstream
 {
     GmeApi::GmeApi(const std::string& path, int track)
     {
+	const Config& config = Config::Instance();
+
     	m_initialised = false;
 
 	if (Error(gme_open_file(path.c_str(),
@@ -38,10 +46,25 @@ namespace vgmstream
 
 	track = std::max(track, m_track_count - 1);
 
-	if (Error(gme_track_info(m_emu, &m_info, 0)))
+	if (Error(gme_track_info(m_emu, &m_info, track)))
 	{
 	    return;
 	}
+
+	if (m_info->length <= 0)
+	{
+	    m_info->length = m_info->intro_length +
+	    			m_info->loop_length * config.DecoderLoop();
+	}
+
+	if (m_info->length <= 0)
+	{
+	    m_info->length = config.DecoderDefaultLength() * 1000;
+	}
+
+	gme_enable_accuracy(m_emu, 1);
+
+	gme_start_track(m_emu, track);
 
 	m_initialised = true;
     }
@@ -73,7 +96,23 @@ namespace vgmstream
 
     bool GmeApi::Decode(Decoded& result)
     {
-    	return false;
+	while(!gme_track_ended(m_emu))
+	{
+	    short buffer[BUFFER_SIZE];
+
+	    if (Error(gme_play(m_emu, BUFFER_SIZE, buffer)))
+	    {
+	    	return false;
+	    }
+
+	    result.AddToBuffer(buffer, BUFFER_SIZE);
+	}
+
+	result.Name(m_info->song);
+	result.Composer(m_info->author);
+	result.Album(m_info->game);
+
+    	return true;
     }
 
     bool GmeApi::Error(const gme_err_t message) const

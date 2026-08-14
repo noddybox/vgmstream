@@ -118,4 +118,35 @@ namespace vgmstream
 	    OSError("dup2");
 	}
     }
+
+    bool Util::ParseInt(const std::string& str, int& value)
+    {
+	try
+	{
+	    value = std::stoi(str);
+	    return true;
+	}
+	catch (...)
+	{
+	    return false;
+	}
+    }
+
+
+    bool Util::ParseBool(const std::string& str, bool& flag)
+    {
+	if (str == "yes" || str == "1" || str == "on" || str == "true")
+	{
+	    flag = true;
+	    return true;
+	}
+
+	if (str == "no" || str == "0" || str == "off" || str == "false")
+	{
+	    flag = false;
+	    return true;
+	}
+
+    	return false;
+    }
 };

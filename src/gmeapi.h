@@ -23,7 +23,6 @@
 
 #include <gme/gme.h>
 
-#include "sourcefile.h"
 #include "decoded.h"
 
 namespace vgmstream

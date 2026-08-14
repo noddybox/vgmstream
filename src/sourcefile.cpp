@@ -26,6 +26,7 @@ namespace vgmstream
     SourceFile::SourceFile(const std::string& m_path)
     {
 	m_readOk = false;
+	m_size = 0;
 
 	std::ifstream in(m_path, std::ios_base::in | std::ios_base::binary);
 
@@ -38,12 +39,18 @@ namespace vgmstream
 
 	while(in >> byte)
 	{
+	    m_size++;
 	    m_contents.push_back(byte);
 	}
 
 	in.close();
 
 	m_readOk = true;
+    }
+
+    std::size_t SourceFile::Size() const
+    {
+    	return m_size;
     }
 
     bool SourceFile::ReadOk() const

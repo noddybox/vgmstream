@@ -24,6 +24,7 @@
 
 #include "playlist.h"
 #include "config.h"
+#include "util.h"
 #include "log.h"
 
 namespace vgmstream
@@ -35,7 +36,7 @@ namespace vgmstream
     	ok = Read();
     }
 
-    bool Playlist::Next(std::string& next)
+    bool Playlist::Next(std::string& next, int& track)
     {
     	if (m_playlist.size() == 0)
 	{
@@ -43,7 +44,22 @@ namespace vgmstream
 	}
 
 	next = m_playlist[0];
+	track = -1;
 	m_playlist.erase(m_playlist.begin());
+
+	std::size_t pos = next.find_last_of(':');
+
+	if (pos != std::string::npos)
+	{
+	    std::string track_no(next.substr(pos + 1));
+
+	    if (!Util::ParseInt(track_no, track))
+	    {
+	    	VGMLOG("Bad track number on playlist entry '%s'", next.c_str());
+	    }
+
+	    next = next.substr(0, pos);
+	}
 
 	return true;
     }
