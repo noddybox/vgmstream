@@ -37,11 +37,16 @@ LIBS_GME	:=	$(shell pkgconf --libs libgme)
 CFLAGS_PTHREAD	:=	-pthread
 LIBS_PTHREAD	:=	-pthread
 
+# General switches
+#
+CFLAGS_GENERAL	:=	-std=c++17
+LIBS_GENERAL	:=	
+
 # Combines the flags
 CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) \
-			$(CFLAGS_PTHREAD) 
+			$(CFLAGS_PTHREAD) $(CFLAGS_GENERAL)
 LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) \
-			$(LIBS_PTHREAD)
+			$(LIBS_PTHREAD) $(LIBS_GENERAL)
 
 # The target
 #
