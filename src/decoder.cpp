@@ -111,7 +111,7 @@ namespace vgmstream
 
 		if (is_sid)
 		{
-		    SidApi sid(filename, 0);
+		    SidApi sid(filename, track);
 
 		    if (sid.Initialised())
 		    {

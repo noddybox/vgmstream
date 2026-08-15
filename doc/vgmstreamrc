@@ -59,6 +59,19 @@ decoder.loop		2
 mp3.bitrate		vbr
 
 #
+# SID settings
+#
+
+# Optional.  The path to the Commodore 64 KERNEL ROM image.
+sid.kernel		/path/to/ROM
+
+# Optional.  The path to the Commodore 64 CHARGEN ROM image.
+sid.chargen		/path/to/ROM
+
+# Optional.  The path to the Commodore 64 BASIC ROM image.
+sid.basic		/path/to/ROM
+
+#
 # Miscellaneous options
 #
 

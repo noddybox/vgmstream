@@ -93,6 +93,21 @@ namespace vgmstream
     	return m_mp3_bitrate;
     }
 
+    const std::string Config::SidKernel() const
+    {
+    	return m_sid_kernel;
+    }
+
+    const std::string Config::SidChargen() const
+    {
+    	return m_sid_chargen;
+    }
+
+    const std::string Config::SidBasic() const
+    {
+    	return m_sid_basic;
+    }
+
     const std::string Config::MiscOutputDir() const
     {
     	return m_output_dir;
@@ -238,6 +253,18 @@ namespace vgmstream
 				return;
 			    }
 			}
+		    }
+		    else if (setting == "sid.kernel")
+		    {
+		    	m_sid_kernel = value;
+		    }
+		    else if (setting == "sid.chargen")
+		    {
+		    	m_sid_chargen = value;
+		    }
+		    else if (setting == "sid.basic")
+		    {
+		    	m_sid_basic = value;
 		    }
 		    else if (setting == "misc.outputdir")
 		    {

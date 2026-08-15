@@ -70,6 +70,9 @@ Any flag setting support the following values:
 |`decoder.loop`|Y|If the input defines a loop length, the number of times the looped section is played.  Defaults to 2.
 |`mp3.bitrate`|Y|The bitrate to encode MP3 as.  Default is `vbr` (variable bit rate).  Either specifiy `vbr` or the kbps value, e.g. `320`.|
 |`misc.outputdir`|Y|If set output generated MP3 files to this directory.  Files will be called the same as the source file, with it's extension replaced with .mp3|
+|`sid.kernel`|Y|If set defines the path to the C64 kernel ROM.  This improves the SID support.|
+|`sid.chargen`|Y|If set defines the path to the C64 chargen ROM.  This improves the SID support.|
+|`sid.basic`|Y|If set defines the path to the C64 BASIC ROM.  This improves the SID support.|
 
 # Playlist file
 

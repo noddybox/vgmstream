@@ -30,8 +30,9 @@ namespace vgmstream
     {
     	public:
 
-	    // Construct an interface to libsidplyfp using the supplied file.
-	    //
+	    // Construct an interface to libsidplyfp using the supplied file
+	    // and the picked subtune.  The default subtune will be used
+	    // if track is -1 if there is one, else the first is chosen.
 	    SidApi(const std::string& path, int track);
 
 	    // Clean up

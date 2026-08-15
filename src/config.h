@@ -53,6 +53,10 @@ namespace vgmstream
 	    bool		Mp3IsVBR() const;
 	    int			Mp3Bitrate() const;
 
+	    const std::string	SidKernel() const;
+	    const std::string	SidChargen() const;
+	    const std::string	SidBasic() const;
+
 	    const std::string	MiscOutputDir() const;
 
 	    bool		IcecastUrlSet() const;
@@ -68,13 +72,21 @@ namespace vgmstream
 	    std::string	m_icecast_url;
 	    std::string	m_icecast_password;
 	    bool	m_icecast_public;
+
 	    std::string	m_playlist_file;
 	    bool	m_playlist_shuffle;
 	    bool	m_playlist_repeat;
+
 	    int		m_decoder_default_length;
 	    int		m_decoder_loop;
+
 	    bool	m_mp3_is_VBR;
 	    int		m_mp3_bitrate;
+
+	    std::string	m_sid_kernel;
+	    std::string	m_sid_chargen;
+	    std::string	m_sid_basic;
+
 	    std::string	m_output_dir;
     };
 };
