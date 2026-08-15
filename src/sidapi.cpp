@@ -16,18 +16,61 @@
 //
 // Interface to libgme
 //
-#include <algorithm>
+#include <sidplayfp/sidplayfp.h>
+#include <sidplayfp/SidTune.h>
+#include <sidplayfp/SidInfo.h>
+#include <sidplayfp/builders/sidlite.h>
 
 #include "sidapi.h"
+#include "config.h"
 #include "log.h"
 
 namespace vgmstream
 {
+    SourceFile	*SidApi::m_kernel;
+    SourceFile	*SidApi::m_chargen;
+    SourceFile	*SidApi::m_basic;
+
     SidApi::SidApi(const std::string& path, int track)
     {
     	m_initialised = false;
 	m_track_count = 0;
 	m_default_track = 0;
+
+	const Config& config(Config::Instance());
+
+	if (config.SidKernelSet() && m_kernel == 0)
+	{
+	    m_kernel = new SourceFile(config.SidKernel());
+
+	    if (!m_kernel->ReadOk())
+	    {
+	    	VGMLOG("Failed to read kernel ROM from %s",
+				config.SidKernel().c_str());
+	    }
+	}
+
+	if (config.SidChargenSet() && m_chargen == 0)
+	{
+	    m_chargen = new SourceFile(config.SidChargen());
+
+	    if (!m_chargen->ReadOk())
+	    {
+	    	VGMLOG("Failed to read chargen ROM from %s",
+				config.SidChargen().c_str());
+	    }
+	}
+
+	if (config.SidBasicSet() && m_basic == 0)
+	{
+	    m_basic = new SourceFile(config.SidBasic());
+
+	    if (!m_basic->ReadOk())
+	    {
+	    	VGMLOG("Failed to read BASIC ROM from %s",
+				config.SidBasic().c_str());
+	    }
+	}
     }
 
     SidApi::~SidApi()

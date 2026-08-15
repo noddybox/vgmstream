@@ -10,7 +10,7 @@ filetype.o: filetype.cpp filetype.h
 decoder.o: decoder.cpp decoder.h thread.h playlist.h decoded.h queue.h \
  util.h gmeapi.h sidapi.h sourcefile.h filetype.h log.h config.h
 gmeapi.o: gmeapi.cpp gmeapi.h decoded.h config.h log.h
-sidapi.o: sidapi.cpp sidapi.h sourcefile.h decoded.h log.h
+sidapi.o: sidapi.cpp sidapi.h sourcefile.h decoded.h config.h log.h
 mp3encoder.o: mp3encoder.cpp mp3encoder.h thread.h decoded.h queue.h \
  util.h config.h
 util.o: util.cpp util.h

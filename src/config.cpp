@@ -128,6 +128,21 @@ namespace vgmstream
     	return !m_output_dir.empty();
     }
 
+    bool Config::SidKernelSet() const
+    {
+    	return !m_sid_kernel.empty();
+    }
+
+    bool Config::SidChargenSet() const
+    {
+    	return !m_sid_chargen.empty();
+    }
+
+    bool Config::SidBasicSet() const
+    {
+    	return !m_sid_basic.empty();
+    }
+
     Config::Config(const std::string& path, bool& open_ok) :
 			m_icecast_url(""),
 			m_icecast_password(""),

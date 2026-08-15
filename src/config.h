@@ -62,6 +62,9 @@ namespace vgmstream
 	    bool		IcecastUrlSet() const;
 	    bool		IcecastPasswordSet() const;
 	    bool		MiscOutputDirSet() const;
+	    bool		SidKernelSet () const;
+	    bool		SidChargenSet() const;
+	    bool		SidBasicSet() const;
 
 	private:
 
