@@ -29,6 +29,7 @@
 #include "queue.h"
 #include "sourcefile.h"
 #include "mp3encoder.h"
+#include "streamer.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
 
     vgmstream::Decoder decoder(playlist, decoded_queue);
     vgmstream::MP3Encoder encoder(decoded_queue, stream_queue);
+    vgmstream::Streamer streamer(stream_queue);
 
     while(decoder.Alive())
     {
@@ -124,6 +126,7 @@ int main(int argc, char *argv[])
     }
 
     encoder.Cancel();
+    streamer.RequestStop();
 
     VGMLOG("Exiting");
     return 0;

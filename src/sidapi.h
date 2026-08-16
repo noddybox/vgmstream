@@ -56,7 +56,7 @@ namespace vgmstream
 	    int			m_default_track;
 	    int			m_track_count;
 
-	    static SourceFile	*m_kernel;
+	    static SourceFile	*m_kernal;
 	    static SourceFile	*m_chargen;
 	    static SourceFile	*m_basic;
 

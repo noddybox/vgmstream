@@ -27,7 +27,7 @@
 
 namespace vgmstream
 {
-    SourceFile	*SidApi::m_kernel;
+    SourceFile	*SidApi::m_kernal;
     SourceFile	*SidApi::m_chargen;
     SourceFile	*SidApi::m_basic;
 
@@ -39,14 +39,14 @@ namespace vgmstream
 
 	const Config& config(Config::Instance());
 
-	if (config.SidKernelSet() && m_kernel == 0)
+	if (config.SidKernalSet() && m_kernal == 0)
 	{
-	    m_kernel = new SourceFile(config.SidKernel());
+	    m_kernal = new SourceFile(config.SidKernal());
 
-	    if (!m_kernel->ReadOk())
+	    if (!m_kernal->ReadOk())
 	    {
-	    	VGMLOG("Failed to read kernel ROM from %s",
-				config.SidKernel().c_str());
+	    	VGMLOG("Failed to read kernal ROM from %s",
+				config.SidKernal().c_str());
 	    }
 	}
 

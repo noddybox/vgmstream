@@ -62,10 +62,10 @@ mp3.bitrate		vbr
 # SID settings
 #
 
-# Optional.  The path to the Commodore 64 KERNEL ROM image.
-sid.kernel		/path/to/ROM
+# Optional.  The path to the Commodore 64 kernal ROM image.
+sid.kernal		/path/to/ROM
 
-# Optional.  The path to the Commodore 64 CHARGEN ROM image.
+# Optional.  The path to the Commodore 64 chargen ROM image.
 sid.chargen		/path/to/ROM
 
 # Optional.  The path to the Commodore 64 BASIC ROM image.

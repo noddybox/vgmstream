@@ -53,7 +53,7 @@ namespace vgmstream
 	    bool		Mp3IsVBR() const;
 	    int			Mp3Bitrate() const;
 
-	    const std::string	SidKernel() const;
+	    const std::string	SidKernal() const;
 	    const std::string	SidChargen() const;
 	    const std::string	SidBasic() const;
 
@@ -62,7 +62,7 @@ namespace vgmstream
 	    bool		IcecastUrlSet() const;
 	    bool		IcecastPasswordSet() const;
 	    bool		MiscOutputDirSet() const;
-	    bool		SidKernelSet () const;
+	    bool		SidKernalSet () const;
 	    bool		SidChargenSet() const;
 	    bool		SidBasicSet() const;
 
@@ -86,7 +86,7 @@ namespace vgmstream
 	    bool	m_mp3_is_VBR;
 	    int		m_mp3_bitrate;
 
-	    std::string	m_sid_kernel;
+	    std::string	m_sid_kernal;
 	    std::string	m_sid_chargen;
 	    std::string	m_sid_basic;
 

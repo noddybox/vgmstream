@@ -1,5 +1,5 @@
 main.o: main.cpp log.h config.h playlist.h decoder.h thread.h decoded.h \
- queue.h util.h sourcefile.h mp3encoder.h
+ queue.h util.h sourcefile.h mp3encoder.h streamer.h
 log.o: log.cpp log.h
 config.o: config.cpp config.h util.h log.h
 playlist.o: playlist.cpp playlist.h config.h util.h log.h
@@ -13,4 +13,6 @@ gmeapi.o: gmeapi.cpp gmeapi.h decoded.h config.h log.h
 sidapi.o: sidapi.cpp sidapi.h sourcefile.h decoded.h config.h log.h
 mp3encoder.o: mp3encoder.cpp mp3encoder.h thread.h decoded.h queue.h \
  util.h config.h
+streamer.o: streamer.cpp streamer.h thread.h decoded.h queue.h util.h \
+ config.h
 util.o: util.cpp util.h
