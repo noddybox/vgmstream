@@ -14,40 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Stream output to Icecast 2 thread
+// Interface to libmp3lame
 //
-#ifndef VGMSTREAM_STREAMER_H
-#define VGMSTREAM_STREAMER_H
+#ifndef VGMSTREAM_LAMEAPI_H
+#define VGMSTREAM_LAMEAPI_H
 
 #include <vector>
-#include <string>
 
-#include "thread.h"
-#include "mp3file.h"
-#include "queue.h"
+#include "decoded.h"
 
 namespace vgmstream
 {
-    class Streamer : public Thread
+    class LameApi
     {
     	public:
 
-	    // Constructor
-	    Streamer(Queue<Mp3File>& input);
+	    // Construct an interface and do the encoding.
+	    // If it works Initialised() will return true and Data() will
+	    // return the encoded data.
+	    LameApi(Decoded& pcm);
 
-	    // Request the streamer to quit once there is nothing left to
-	    // stream
-	    void RequestStop();
+	    // Whether the API was initialised OK
+	    bool Initialised() const;
 
-	protected:
+	    // The size of the encoded data
+	    std::size_t Size() const;
 
-	    void ThreadCode();
+	    // The encoded data
+	    const char *Data() const;
 
 	private:
 
-	    Queue<Mp3File>&	m_input;
-	    bool		m_stop;
-
+	    bool		m_initialised;
+	    std::vector<char>	m_data;
     };
 };
 

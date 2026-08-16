@@ -30,6 +30,7 @@
 #include "sourcefile.h"
 #include "mp3encoder.h"
 #include "streamer.h"
+#include "mp3file.h"
 #include "util.h"
 
 int main(int argc, char *argv[])
@@ -101,9 +102,8 @@ int main(int argc, char *argv[])
     	return 1;
     }
 
-    vgmstream::Queue<vgmstream::SourceFile> source_queue;
     vgmstream::Queue<vgmstream::Decoded> decoded_queue;
-    vgmstream::Queue<std::vector<unsigned char>> stream_queue;
+    vgmstream::Queue<vgmstream::Mp3File> stream_queue;
 
     vgmstream::Decoder decoder(playlist, decoded_queue);
     vgmstream::MP3Encoder encoder(decoded_queue, stream_queue);

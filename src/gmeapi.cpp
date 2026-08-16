@@ -105,7 +105,7 @@ namespace vgmstream
 	    	return false;
 	    }
 
-	    result.AddToBuffer(buffer, BUFFER_SIZE);
+	    result.AddToData(buffer, BUFFER_SIZE);
 	}
 
 	result.Name(m_info->song);

@@ -16,17 +16,21 @@
 //
 // MP3 encoding thread
 //
+#include <fstream>
+#include <iostream>
+
 #include <unistd.h>
 
 #include "streamer.h"
+#include "mp3file.h"
 #include "config.h"
+#include "log.h"
 
 namespace vgmstream
 {
-    Streamer::Streamer(Queue<std::vector<unsigned char>>& input)
-			   	: Thread(),
-				  m_input(input),
-				  m_stop(false)
+    Streamer::Streamer(Queue<Mp3File>& input) : Thread(),
+						m_input(input),
+						m_stop(false)
     {
 	CreateThread();
     }
@@ -37,16 +41,41 @@ namespace vgmstream
 
     	while(!Cancelled())
 	{
-	    std::vector<unsigned char> output;
+	    Mp3File output;
 
 	    while (!m_input.Pop(output))
 	    {
 		if (m_stop)
 		{
+		    VGMLOG("Streamer told to stop");
 		    return;
 		}
 
 	    	::sleep(1);
+	    }
+
+	    if (config.MiscOutputDirSet())
+	    {
+		std::string filename =
+			config.MiscOutputDir() + "/" + output.Entry().Mp3Name();
+
+		VGMLOG("Saving MP3 to %s", filename.c_str());
+
+	    	std::ofstream file (filename, std::ios::out | std::ios::binary);
+
+		if (file)
+		{
+		    file.write(output.Data(), output.Size());
+		    file.close();
+		}
+		else
+		{
+		    VGMLOG("Failed to create %s", filename.c_str());
+		}
+	    }
+	    else
+	    {
+	    	VGMLOG("TODO: icecast output");
 	    }
 	}
     }

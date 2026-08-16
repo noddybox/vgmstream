@@ -32,6 +32,9 @@ namespace vgmstream
 	    // into the passed pointer.
 	    static const char *Basename(const char *path);
 
+	    // Basename variant for std::string.
+	    static std::string Basename(const std::string& path);
+
 	    // Report an error for an OS call.  This function exits.
 	    static void OSError(const char *function);
 

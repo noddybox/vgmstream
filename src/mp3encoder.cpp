@@ -21,15 +21,15 @@
 #include <gme/gme.h>
 
 #include "mp3encoder.h"
+#include "lameapi.h"
 #include "config.h"
 
 namespace vgmstream
 {
     MP3Encoder::MP3Encoder(Queue<Decoded>& input,
-		           Queue<std::vector<unsigned char>>& output)
-			   	: Thread(),
-				  m_input(input),
-				  m_output(output)
+		           Queue<Mp3File>& output) : Thread(),
+						     m_input(input),
+						     m_output(output)
     {
 	CreateThread();
     }
@@ -45,6 +45,15 @@ namespace vgmstream
 	    while (!m_input.Pop(decoded))
 	    {
 	    	::sleep(1);
+	    }
+
+	    LameApi lame(decoded);
+
+	    if (lame.Initialised())
+	    {
+		Mp3File mp3(decoded.Entry(), lame.Data(), lame.Size());
+
+		m_output.Push(mp3);
 	    }
 	}
     }

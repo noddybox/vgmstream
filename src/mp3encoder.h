@@ -24,6 +24,7 @@
 
 #include "thread.h"
 #include "decoded.h"
+#include "mp3file.h"
 #include "queue.h"
 
 namespace vgmstream
@@ -34,7 +35,7 @@ namespace vgmstream
 
 	    // Constructor
 	    MP3Encoder(Queue<Decoded>& input,
-		       Queue<std::vector<unsigned char>>& output);
+		       Queue<Mp3File>& output);
 
 	protected:
 
@@ -42,8 +43,8 @@ namespace vgmstream
 
 	private:
 
-	    Queue<Decoded>& 			m_input;
-	    Queue<std::vector<unsigned char>>&	m_output;
+	    Queue<Decoded>& 	m_input;
+	    Queue<Mp3File>&	m_output;
 
     };
 };

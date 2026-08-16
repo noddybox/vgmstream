@@ -58,6 +58,7 @@ SOURCES		=	main.cpp		\
 			log.cpp			\
 			config.cpp		\
 			playlist.cpp		\
+			playlistentry.cpp	\
 			decoded.cpp		\
 			thread.cpp		\
 			sourcefile.cpp		\
@@ -67,11 +68,14 @@ SOURCES		=	main.cpp		\
 			sidapi.cpp		\
 			mp3encoder.cpp		\
 			streamer.cpp		\
+			lameapi.cpp		\
+			mp3file.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
 			config.h		\
 			playlist.h		\
+			playlistentry.h		\
 			decoded.h		\
 			thread.h		\
 			sourcefile.h		\
@@ -81,6 +85,8 @@ HEADERS		=	log.h			\
 			sidapi.h		\
 			mp3encoder.h		\
 			streamer.h		\
+			lameapi.h		\
+			mp3file.h		\
 			util.h
 
 # Objects

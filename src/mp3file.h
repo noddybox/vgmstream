@@ -14,40 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Stream output to Icecast 2 thread
+// MP3 encoded file
 //
-#ifndef VGMSTREAM_STREAMER_H
-#define VGMSTREAM_STREAMER_H
+#ifndef VGMSTREAM_MP3FILE_H
+#define VGMSTREAM_MP3FILE_H
 
 #include <vector>
-#include <string>
 
-#include "thread.h"
-#include "mp3file.h"
-#include "queue.h"
+#include "playlistentry.h"
 
 namespace vgmstream
 {
-    class Streamer : public Thread
+    class Mp3File
     {
     	public:
 
-	    // Constructor
-	    Streamer(Queue<Mp3File>& input);
+	    // Construct an empty MP3 file based on the passed playlist entry
+	    // and passed memory
+	    Mp3File(const PlaylistEntry& entry,
+		    const char *memory,
+		    std::size_t size);
 
-	    // Request the streamer to quit once there is nothing left to
-	    // stream
-	    void RequestStop();
+	    // Construct an empty object
+	    Mp3File();
 
-	protected:
+	    // The originating playlist entry
+	    const PlaylistEntry& Entry() const;
 
-	    void ThreadCode();
+	    // Get the size of the MP3 data
+	    std::size_t Size() const;
+
+	    // Get a pointer to the MP3 data
+	    const char *Data() const;
 
 	private:
 
-	    Queue<Mp3File>&	m_input;
-	    bool		m_stop;
-
+	    PlaylistEntry	m_entry;
+	    std::vector<char>	m_data;
     };
 };
 

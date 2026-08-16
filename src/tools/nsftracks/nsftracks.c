@@ -32,6 +32,8 @@
 #define FALSE 0
 #endif
 
+static const char *name;
+
 static void Error(const char *p)
 {
     perror(p);
@@ -97,29 +99,23 @@ static char *ReadChunk(FILE *fp, const char *name)
     }
 }
 
-int main(int argc, char *argv[])
+static void ProcessFile(const char *path)
 {
-    if (argc != 2)
-    {
-    	fprintf(stderr, "%s: usage %s file\n", argv[0], argv[0]);
-	return EXIT_FAILURE;
-    }
-
-    FILE *fp = fopen(argv[1], "rb");
+    FILE *fp = fopen(path, "rb");
 
     if (!fp)
     {
-    	Error(argv[1]);
+	fprintf(stderr, "%s: can't open %s\n", name, path);
+    	return;
     }
 
     char magic[5] = {0};
 
     if (fread(magic, 1, 4, fp) != 4)
     {
-    	fprintf(stderr, "%s: failed to read magic bytes from %s\n",
-				argv[0], argv[1]);
+    	fprintf(stderr, "%s: failed to read magic bytes from %s\n", name, path);
 	fclose(fp);
-	return EXIT_FAILURE;
+	return;
     }
 
     int tracks = 0;
@@ -148,8 +144,8 @@ int main(int argc, char *argv[])
 
 	if (error)
 	{
-	    fprintf(stderr, "%s: %s not an NES audio file\n", argv[0], argv[1]);
-	    return EXIT_FAILURE;
+	    fprintf(stderr, "%s: %s not an NES audio file\n", name, path);
+	    return;
 	}
     }
     else if (strcmp("NSFE", magic) == 0)
@@ -161,8 +157,8 @@ int main(int argc, char *argv[])
 	if (!info)
 	{
 	    fprintf(stderr, "%s: Failed to read INFO chunk from %s\n",
-	    				argv[0], argv[1]);
-	    return EXIT_FAILURE;
+	    				name, path);
+	    return;
 	}
 
 	tracks = info[8];
@@ -170,14 +166,39 @@ int main(int argc, char *argv[])
     }
     else
     {
-    	fprintf(stderr, "%s: %s not an NES audio file\n", argv[0], argv[1]);
+    	fprintf(stderr, "%s: %s not an NES audio file\n", name, path);
 	fclose(fp);
-	return EXIT_FAILURE;
+	return;
     }
 
     for(int f = 0; f < tracks; f++)
     {
-    	printf("%s:%d\n", argv[1], f);
+    	printf("%s:%d\n", path, f);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    name = strstr(argv[0], "/");
+
+    if (name)
+    {
+    	name++;
+    }
+    else
+    {
+    	name = argv[0];
+    }
+
+    if (argc < 2)
+    {
+    	fprintf(stderr, "%s: usage %s file [...file]\n", name, name);
+	return EXIT_FAILURE;
+    }
+
+    for(int f = 1; f < argc; f++)
+    {
+    	ProcessFile(argv[f]);
     }
 
     return EXIT_SUCCESS;

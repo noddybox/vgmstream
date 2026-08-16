@@ -36,30 +36,15 @@ namespace vgmstream
     	ok = Read();
     }
 
-    bool Playlist::Next(std::string& next, int& track)
+    bool Playlist::Next(PlaylistEntry& entry)
     {
     	if (m_playlist.size() == 0)
 	{
 	    return false;
 	}
 
-	next = m_playlist[0];
-	track = -1;
+	entry.Filename(m_playlist[0]);
 	m_playlist.erase(m_playlist.begin());
-
-	std::size_t pos = next.find_last_of(':');
-
-	if (pos != std::string::npos)
-	{
-	    std::string track_no(next.substr(pos + 1));
-
-	    if (!Util::ParseInt(track_no, track))
-	    {
-	    	VGMLOG("Bad track number on playlist entry '%s'", next.c_str());
-	    }
-
-	    next = next.substr(0, pos);
-	}
 
 	return true;
     }

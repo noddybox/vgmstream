@@ -23,6 +23,8 @@
 #include <vector>
 #include <cstdlib>
 
+#include "playlistentry.h"
+
 namespace vgmstream
 {
     // A decoded file is a stero WAV file with signed 16-bit samples
@@ -32,23 +34,27 @@ namespace vgmstream
 
 	    // Construct
 	    Decoded();
+	    Decoded(const PlaylistEntry& entry);
 
 	    // Get and set properties
 
+	    const PlaylistEntry& Entry() const; 
+	    void Entry(const PlaylistEntry& value); 
+
 	    const std::string& Name() const; 
-	    const void Name(const std::string& value); 
+	    void Name(const std::string& value); 
 
 	    const std::string& Composer() const; 
-	    const void Composer(const std::string& value); 
+	    void Composer(const std::string& value); 
 
 	    const std::string& Album() const; 
-	    const void Album(const std::string& value); 
+	    void Album(const std::string& value); 
 
-	    unsigned int Year() const; 
-	    const void Year(unsigned int value); 
+	    const std::string& Year() const; 
+	    void Year(const std::string& value); 
 
 	    unsigned int Frequency() const; 
-	    const void Frequency(unsigned int value); 
+	    void Frequency(unsigned int value); 
 
 	    // Note this is the number of samples, not bytes
 	    std::size_t Size() const; 
@@ -56,18 +62,22 @@ namespace vgmstream
 	    // Note this is the number of bytes, not samples
 	    std::size_t ByteSize() const; 
 
-	    const short *Buffer() const; 
-	    const void AddToBuffer(const short *mem, std::size_t len); 
+	    // Pointer to the buffer
+	    const short *Data() const;
+
+	    // Add to the data
+	    void AddToData(const short *mem, std::size_t len); 
 
 	    // The desired default frequency
 	    static unsigned int DesiredFrequency();
 
 	private:
 
+	    PlaylistEntry	m_entry;
 	    std::string		m_name;
 	    std::string		m_composer;
 	    std::string		m_album;
-	    unsigned int	m_year;
+	    std::string		m_year;
 	    unsigned int	m_freq;
 	    std::vector<short>	m_buff;
     };

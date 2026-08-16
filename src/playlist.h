@@ -23,6 +23,8 @@
 #include <string>
 #include <random>
 
+#include "playlistentry.h"
+
 namespace vgmstream
 {
     class Playlist
@@ -33,12 +35,10 @@ namespace vgmstream
 	    // if the file is read OK.
 	    Playlist(bool& ok);
 
-	    // Get the next path from the playlist if there is one.  Returns
+	    // Get the next entry from the playlist if there is one.  Returns
 	    // true if there is next one, false if we've reached the end of
-	    // the list.  If there is a ":track_number" on the end of the
-	    // file it is stripped off and the number returned in track.
-	    // If there is no track it is set to -1.
-	    bool Next(std::string& path, int &track);
+	    // the list.
+	    bool Next(PlaylistEntry& entry);
 
 	    // Re-read the playlist
 	    void ReRead();

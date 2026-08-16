@@ -40,6 +40,11 @@ namespace vgmstream
 	return path;
     }
 
+    std::string Util::Basename(const std::string& path)
+    {
+	return std::string(Basename(path.c_str()));
+    }
+
     void Util::OSError(const char *function)
     {
     	std::perror(function);

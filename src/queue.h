@@ -62,7 +62,7 @@ namespace vgmstream
 	    }
 
 	    // Push an entry onto the queue.
-	    void Push(T& entry)
+	    void Push(const T& entry)
 	    {
 		pthread_mutex_lock(&m_mutex);
 		m_queue.push(entry);

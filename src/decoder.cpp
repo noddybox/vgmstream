@@ -43,10 +43,9 @@ namespace vgmstream
 
     	while(!Cancelled() && !done)
 	{
-	    std::string filename;
-	    int track;
+	    PlaylistEntry entry;
 
-	    if (!m_playlist.Next(filename, track))
+	    if (!m_playlist.Next(entry))
 	    {
 	    	if (config.PlaylistRepeat() && !config.MiscOutputDirSet())
 		{
@@ -60,19 +59,20 @@ namespace vgmstream
 
 	    if (!done)
 	    {
-	    	FileType type(filename);
+	    	FileType type(entry.Filename());
 		bool is_gme = false;
 		bool is_sid = false;
 
 		switch (type.Type())
 		{
 		    case FileType::eType::NotExist:
-			VGMLOG("Unable to open file %s", filename.c_str());
+			VGMLOG("Unable to open file %s",
+					entry.Filename().c_str());
 			break;
 
 		    case FileType::eType::Unknown:
 			VGMLOG("Unable to determine filetype of %s",
-				    filename.c_str());
+				    entry.Filename().c_str());
 			break;
 
 		    case FileType::eType::SID:
@@ -86,11 +86,12 @@ namespace vgmstream
 
 		if (is_gme)
 		{
-		    GmeApi gme(filename, track == -1 ? 0 : track);
+		    GmeApi gme(entry.Filename(),
+			       entry.HasTrack() ? 0 : entry.Track());
 
 		    if (gme.Initialised())
 		    {
-			Decoded decoded;
+			Decoded decoded(entry);
 
 			if (gme.Decode(decoded))
 			{
@@ -99,23 +100,23 @@ namespace vgmstream
 			else
 			{
 			    VGMLOG("Failed to decode %s with GME",
-			    				filename.c_str());
+						    entry.Filename().c_str());
 			}
 		    }
 		    else
 		    {
 			VGMLOG("Failed to initialise GME for %s",
-			    				filename.c_str());
+						    entry.Filename().c_str());
 		    }
 		}
 
 		if (is_sid)
 		{
-		    SidApi sid(filename, track);
+		    SidApi sid(entry.Filename(), entry.Track());
 
 		    if (sid.Initialised())
 		    {
-			Decoded decoded;
+			Decoded decoded(entry);
 
 			if (sid.Decode(decoded))
 			{
@@ -124,13 +125,13 @@ namespace vgmstream
 			else
 			{
 			    VGMLOG("Failed to decode %s with SID player",
-			    				filename.c_str());
+						    entry.Filename().c_str());
 			}
 		    }
 		    else
 		    {
 			VGMLOG("Failed to initialise SID player for %s",
-			    				filename.c_str());
+						    entry.Filename().c_str());
 		    }
 		}
 	    }

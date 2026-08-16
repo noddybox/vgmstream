@@ -26,10 +26,30 @@ namespace vgmstream
     Decoded::Decoded() : m_name(""),
 			 m_composer(""),
 			 m_album(""),
-			 m_year(1980),
+			 m_year(""),
 			 m_freq(DesiredFrequency()),
 			 m_buff()
     {
+    }
+
+    Decoded::Decoded(const PlaylistEntry& entry) : m_entry(entry),
+						   m_name(""),
+						   m_composer(""),
+						   m_album(""),
+						   m_year(""),
+						   m_freq(DesiredFrequency()),
+						   m_buff()
+    {
+    }
+
+    const PlaylistEntry& Decoded::Entry() const
+    {
+    	return m_entry;
+    }
+
+    void Decoded::Entry(const PlaylistEntry& value)
+    {
+    	m_entry = value;
     }
 
     const std::string& Decoded::Name() const
@@ -37,7 +57,7 @@ namespace vgmstream
     	return m_name;
     }
 
-    const void Decoded::Name(const std::string& value)
+    void Decoded::Name(const std::string& value)
     {
     	m_name = value;
     }
@@ -47,7 +67,7 @@ namespace vgmstream
     	return m_composer;
     }
 
-    const void Decoded::Composer(const std::string& value)
+    void Decoded::Composer(const std::string& value)
     {
     	m_composer = value;
     }
@@ -57,17 +77,17 @@ namespace vgmstream
     	return m_album;
     }
 
-    const void Decoded::Album(const std::string& value)
+    void Decoded::Album(const std::string& value)
     {
     	m_album = value;
     }
 
-    unsigned int Decoded::Year() const
+    const std::string& Decoded::Year() const
     {
     	return m_year;
     }
 
-    const void Decoded::Year(unsigned int value)
+    void Decoded::Year(const std::string& value)
     {
     	m_year = value;
     }
@@ -77,7 +97,7 @@ namespace vgmstream
     	return m_freq;
     }
 
-    const void Decoded::Frequency(unsigned int value)
+    void Decoded::Frequency(unsigned int value)
     {
     	m_freq = value;
     }
@@ -92,17 +112,14 @@ namespace vgmstream
     	return m_buff.size() * sizeof(short);
     }
 
-    const short *Decoded::Buffer() const
+    const short *Decoded::Data() const
     {
     	return m_buff.data();
     }
 
-    const void Decoded::AddToBuffer(const short *mem, std::size_t len)
+    void Decoded::AddToData(const short *mem, std::size_t len)
     {
-    	while(len--)
-	{
-	    m_buff.push_back(*mem++);
-	}
+	m_buff.insert(m_buff.end(), mem, mem + len);
     }
 
     unsigned int Decoded::DesiredFrequency()
