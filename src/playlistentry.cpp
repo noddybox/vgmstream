@@ -53,7 +53,7 @@ namespace vgmstream
 
 	std::string basename = Util::Basename(m_filename);
 
-	pos = filename.find_last_of('.');
+	pos = basename.find_last_of('.');
 
 	if (pos != std::string::npos)
 	{
