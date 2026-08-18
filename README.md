@@ -30,7 +30,7 @@ will generate a `vgmstream` executable, which can be moved anywhere you see fit.
 
 An commented config file can be found in the `docs` directory.  Use this as
 a template, and either save the result to `/etc/vgmstreamrc` if you want to
-use the default location, or anywhere if you supply it via the `-d` switch.
+use the default location, or anywhere if you supply it via the `-c` switch.
 
 # Usage
 
