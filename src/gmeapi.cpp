@@ -64,7 +64,12 @@ namespace vgmstream
 
 	gme_enable_accuracy(m_emu, 1);
 
-	gme_start_track(m_emu, track);
+	if (Error(gme_start_track(m_emu, track)))
+	{
+	    return;
+	}
+
+	gme_set_fade(m_emu, m_info->length);
 
 	m_initialised = true;
     }
