@@ -93,6 +93,8 @@ int main(int argc, char *argv[])
     	return 1;
     }
 
+    const vgmstream::Config config = vgmstream::Config::Instance();
+
     bool playlist_ok;
 
     vgmstream::Playlist playlist(playlist_ok);
@@ -114,19 +116,31 @@ int main(int argc, char *argv[])
     	::sleep(1);
     }
 
-    // Wait for outputs once decoder has exited
-    while(decoded_queue.Size() > 0)
+    // Wait for outputs once decoder has exited if we are saving MP3 files
+    if (config.MiscOutputDirSet())
     {
-    	::sleep(1);
-    }
+	VGMLOG("Waiting for decoded queue to empty");
 
-    while(stream_queue.Size() > 0)
-    {
-    	::sleep(1);
+	while(decoded_queue.Size() > 0)
+	{
+	    ::sleep(1);
+	}
+
+	VGMLOG("Waiting for streaming queue to empty");
+
+	while(stream_queue.Size() > 0)
+	{
+	    ::sleep(1);
+	}
     }
 
     encoder.Cancel();
-    streamer.RequestStop();
+    streamer.Cancel();
+
+    while(encoder.Alive() || streamer.Alive())
+    {
+    	::sleep(1);
+    }
 
     VGMLOG("Exiting");
     return 0;

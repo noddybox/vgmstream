@@ -87,6 +87,7 @@ HEADERS		=	log.h			\
 			streamer.h		\
 			lameapi.h		\
 			mp3file.h		\
+			mtvar.h			\
 			util.h
 
 # Objects
@@ -102,7 +103,7 @@ depend.mak: $(SOURCES) $(HEADERS) Makefile
 	$(CXX) -MM $(SOURCES) > depend.mak
 
 clean:
-	rm -f $(TARGET) core $(OBJECTS)
+	rm -f $(TARGET) core $(OBJECTS) depend.mak
 
 %.o: %.cpp
 	$(CXX) $(CFLAGS_VGM) -g -c -o $@ $<

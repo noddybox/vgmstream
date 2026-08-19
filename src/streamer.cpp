@@ -29,8 +29,7 @@
 namespace vgmstream
 {
     Streamer::Streamer(Queue<Mp3File>& input) : Thread(),
-						m_input(input),
-						m_stop(false)
+						m_input(input)
     {
 	CreateThread();
     }
@@ -43,45 +42,33 @@ namespace vgmstream
 	{
 	    Mp3File output;
 
-	    while (!m_input.Pop(output))
+	    if (m_input.Pop(output))
 	    {
-		if (m_stop)
+		if (config.MiscOutputDirSet())
 		{
-		    VGMLOG("Streamer told to stop");
-		    return;
-		}
-
-	    	::sleep(1);
-	    }
-
-	    if (config.MiscOutputDirSet())
-	    {
-		std::string filename =
+		    std::string filename =
 			config.MiscOutputDir() + "/" + output.Entry().Mp3Name();
 
-		VGMLOG("Saving MP3 to %s", filename.c_str());
+		    VGMLOG("Saving MP3 to %s", filename.c_str());
 
-	    	std::ofstream file (filename, std::ios::out | std::ios::binary);
+		    std::ofstream file (filename, std::ios::out |
+		    				  std::ios::binary);
 
-		if (file)
-		{
-		    file.write(output.Data(), output.Size());
-		    file.close();
+		    if (file)
+		    {
+			file.write(output.Data(), output.Size());
+			file.close();
+		    }
+		    else
+		    {
+			VGMLOG("Failed to create %s", filename.c_str());
+		    }
 		}
 		else
 		{
-		    VGMLOG("Failed to create %s", filename.c_str());
+		    VGMLOG("TODO: icecast output");
 		}
 	    }
-	    else
-	    {
-	    	VGMLOG("TODO: icecast output");
-	    }
 	}
-    }
-
-    void Streamer::RequestStop()
-    {
-    	m_stop = true;
     }
 };

@@ -14,36 +14,53 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Stream output to Icecast 2 thread
+// Thread-safe wrapper around a variable
 //
-#ifndef VGMSTREAM_STREAMER_H
-#define VGMSTREAM_STREAMER_H
+#ifndef VGMSTREAM_MTVAR_H
+#define VGMSTREAM_MTVAR_H
 
-#include <vector>
-#include <string>
+#include <queue>
+#include <pthread.h>
 
-#include "thread.h"
-#include "mp3file.h"
-#include "queue.h"
+#include "util.h"
 
 namespace vgmstream
 {
-    class Streamer : public Thread
+    template <typename T> class MTVar
     {
     	public:
 
-	    // Constructor
-	    Streamer(Queue<Mp3File>& input);
+	    // Construct a queue.
+	    MTVar(T initial) : m_value(initial)
+	    {
+		if (pthread_mutex_init(&m_mutex, 0) != 0)
+		{
+		    Util::OSError("pthread_mutex_init");
+		}
+	    }
 
-	protected:
+	    // Get the value of the variable
+	    T Get()
+	    {
+		pthread_mutex_lock(&m_mutex);
+		T result = m_value;
+		pthread_mutex_unlock(&m_mutex);
+		return result;
+	    }
 
-	    void ThreadCode();
+	    // Set the value of the variable
+	    void Set(const T& value)
+	    {
+		pthread_mutex_lock(&m_mutex);
+		m_value = value;
+		pthread_mutex_unlock(&m_mutex);
+	    }
 
 	private:
-
-	    Queue<Mp3File>&	m_input;
-
+	    T			m_value;
+	    pthread_mutex_t	m_mutex;
     };
+
 };
 
 #endif

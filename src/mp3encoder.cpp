@@ -42,18 +42,16 @@ namespace vgmstream
 	{
 	    Decoded decoded;
 
-	    while (!m_input.Pop(decoded))
+	    if (m_input.Pop(decoded))
 	    {
-	    	::sleep(1);
-	    }
+		LameApi lame(decoded);
 
-	    LameApi lame(decoded);
+		if (lame.Initialised())
+		{
+		    Mp3File mp3(decoded.Entry(), lame.Data(), lame.Size());
 
-	    if (lame.Initialised())
-	    {
-		Mp3File mp3(decoded.Entry(), lame.Data(), lame.Size());
-
-		m_output.Push(mp3);
+		    m_output.Push(mp3);
+		}
 	    }
 	}
     }

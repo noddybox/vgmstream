@@ -31,34 +31,41 @@ namespace vgmstream
     	public:
 
 	    // Construct a queue.
-	    //
 	    Queue()
 	    {
 		if (pthread_mutex_init(&m_mutex, 0) != 0)
 		{
 		    Util::OSError("pthread_mutex_init");
 		}
+
+		if (pthread_cond_init(&m_event, 0) != 0)
+		{
+		    Util::OSError("pthread_cond_init");
+		}
 	    }
 
 	    // Get the next entry from the queue.  Returns false if there
-	    // is nothing on the queue, otherwise true and stores the head
-	    // of the queue in head.
-	    //
+	    // is nothing on the queue but we need to return anyway.
 	    bool Pop(T& head)
 	    {
 		pthread_mutex_lock(&m_mutex);
 
 		if (m_queue.size() == 0)
 		{
-		    pthread_mutex_unlock(&m_mutex);
-		    return false;
+		    pthread_cond_wait(&m_event, &m_mutex);
 		}
 
-		head = m_queue.front();
-		m_queue.pop();
+		bool result = false;
+
+		if (m_queue.size() > 0)
+		{
+		    head = m_queue.front();
+		    m_queue.pop();
+		    result = true;
+		}
 
 		pthread_mutex_unlock(&m_mutex);
-		return true;
+		return result;
 	    }
 
 	    // Push an entry onto the queue.
@@ -66,6 +73,7 @@ namespace vgmstream
 	    {
 		pthread_mutex_lock(&m_mutex);
 		m_queue.push(entry);
+		pthread_cond_signal(&m_event);
 		pthread_mutex_unlock(&m_mutex);
 	    }
 
@@ -82,6 +90,7 @@ namespace vgmstream
 
 	    std::queue<T>	m_queue;
 	    pthread_mutex_t	m_mutex;
+	    pthread_cond_t	m_event;
     };
 
 };

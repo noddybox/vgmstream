@@ -40,6 +40,9 @@ namespace vgmstream
 	    // the list.
 	    bool Next(PlaylistEntry& entry);
 
+	    // Current size of playlist
+	    std::size_t Size() const;
+
 	    // Re-read the playlist
 	    void ReRead();
 

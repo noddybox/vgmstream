@@ -63,6 +63,8 @@ namespace vgmstream
 		bool is_gme = false;
 		bool is_sid = false;
 
+		VGMLOG("Encoding %s", entry.Filename().c_str());
+
 		switch (type.Type())
 		{
 		    case FileType::eType::NotExist:
@@ -95,6 +97,8 @@ namespace vgmstream
 
 			if (gme.Decode(decoded))
 			{
+			    VGMLOG("Saving decoded file %s",
+			    		entry.Filename().c_str());
 			    m_output.Push(decoded);
 			}
 			else
