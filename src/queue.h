@@ -45,7 +45,8 @@ namespace vgmstream
 	    }
 
 	    // Get the next entry from the queue.  Returns false if there
-	    // is nothing on the queue but we need to return anyway.
+	    // is nothing on the queue but we need to return as the thread
+	    // is being cancelled.
 	    bool Pop(T& head)
 	    {
 		pthread_mutex_lock(&m_mutex);

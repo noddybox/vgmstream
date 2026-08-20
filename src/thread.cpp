@@ -21,7 +21,7 @@
 
 namespace vgmstream
 {
-    Thread::Thread() : m_cancelled(false), m_alive(false)
+    Thread::Thread() : m_alive(false)
     {
     }
 
@@ -33,8 +33,12 @@ namespace vgmstream
     void Thread::Cancel()
     {
     	pthread_cancel(m_thread);
-	m_cancelled = true;
-	m_alive = false;
+	pthread_join(m_thread, 0);
+    }
+
+    bool Thread::Alive()
+    {
+    	return m_alive.Get();
     }
 
     void Thread::CreateThread()
@@ -45,7 +49,7 @@ namespace vgmstream
 	    Util::OSError("pthread_create");
 	}
 
-	m_alive = true;
+	m_alive.Set(true);
     }
 
     void *Thread::ThreadWrapper(void *object_pointer)
@@ -53,19 +57,9 @@ namespace vgmstream
     	Thread *t = static_cast<Thread*>(object_pointer);
 
 	t->ThreadCode();
-	t->m_alive = false;
+	t->m_alive.Set(false);
 	pthread_exit(0);
 
 	return 0;
-    }
-
-    bool Thread::Cancelled() const
-    {
-    	return m_cancelled;
-    }
-
-    bool Thread::Alive() const
-    {
-    	return m_alive;
     }
 };

@@ -134,13 +134,10 @@ int main(int argc, char *argv[])
 	}
     }
 
+    VGMLOG("Cancelling encoder and streaming threads");
+
     encoder.Cancel();
     streamer.Cancel();
-
-    while(encoder.Alive() || streamer.Alive())
-    {
-    	::sleep(1);
-    }
 
     VGMLOG("Exiting");
     return 0;

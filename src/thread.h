@@ -21,6 +21,8 @@
 
 #include <pthread.h>
 
+#include "mtvar.h"
+
 namespace vgmstream
 {
     class Thread
@@ -33,11 +35,11 @@ namespace vgmstream
 	    // Destructor.
 	    virtual ~Thread();
 
-	    // Cancel the thread; immediately if possible.
+	    // Cancel the thread; waits for the thread to exit
 	    void Cancel();
 
-	    // If the thread is alive
-	    bool Alive() const;
+	    // Is the thread alive
+	    bool Alive();
 
 	protected:
 
@@ -48,15 +50,10 @@ namespace vgmstream
 	    // Implementors must implement this with their thread code.
 	    virtual void ThreadCode() = 0;
 
-	    // Implementors can call this to see if the thread is being
-	    // cancelled.
-	    bool Cancelled() const;
-
 	private:
 
+	    MTVar<bool>	m_alive;
 	    pthread_t	m_thread;
-	    bool	m_cancelled;
-	    bool	m_alive;
 
 	    static void *ThreadWrapper(void *object_pointer);
     };

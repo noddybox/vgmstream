@@ -37,8 +37,9 @@ namespace vgmstream
     void MP3Encoder::ThreadCode()
     {
 	const Config& config = Config::Instance();
+	bool done = false;
 
-    	while(!Cancelled())
+    	while(!done)
 	{
 	    Decoded decoded;
 
@@ -52,6 +53,10 @@ namespace vgmstream
 
 		    m_output.Push(mp3);
 		}
+	    }
+	    else
+	    {
+	    	done = true;
 	    }
 	}
     }
