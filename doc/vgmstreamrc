@@ -71,6 +71,9 @@ sid.chargen		/path/to/ROM
 # Optional.  The path to the Commodore 64 BASIC ROM image.
 sid.basic		/path/to/ROM
 
+# Optional.  The path to the HVSC song length database
+sid.songlength		/path/to/Songlengths.md5
+
 #
 # Miscellaneous options
 #

@@ -43,12 +43,12 @@ namespace vgmstream
 	return ok;
     }
 
-    const std::string Config::IcecastUrl() const
+    const std::string& Config::IcecastUrl() const
     {
     	return m_icecast_url;
     }
 
-    const std::string Config::IcecastPassword() const
+    const std::string& Config::IcecastPassword() const
     {
     	return m_icecast_password;
     }
@@ -58,7 +58,7 @@ namespace vgmstream
     	return m_icecast_public;
     }
 
-    const std::string Config::PlaylistFile() const
+    const std::string& Config::PlaylistFile() const
     {
     	return m_playlist_file;
     }
@@ -93,22 +93,27 @@ namespace vgmstream
     	return m_mp3_bitrate;
     }
 
-    const std::string Config::SidKernal() const
+    const std::string& Config::SidKernal() const
     {
     	return m_sid_kernal;
     }
 
-    const std::string Config::SidChargen() const
+    const std::string& Config::SidChargen() const
     {
     	return m_sid_chargen;
     }
 
-    const std::string Config::SidBasic() const
+    const std::string& Config::SidBasic() const
     {
     	return m_sid_basic;
     }
 
-    const std::string Config::MiscOutputDir() const
+    const std::string& Config::SidSonglength() const
+    {
+    	return m_sid_songlength;
+    }
+
+    const std::string& Config::MiscOutputDir() const
     {
     	return m_output_dir;
     }
@@ -143,6 +148,11 @@ namespace vgmstream
     	return !m_sid_basic.empty();
     }
 
+    bool Config::SidSonglengthSet() const
+    {
+    	return !m_sid_songlength.empty();
+    }
+
     Config::Config(const std::string& path, bool& open_ok) :
 			m_icecast_url(""),
 			m_icecast_password(""),
@@ -150,10 +160,14 @@ namespace vgmstream
 			m_playlist_file(""),
 			m_playlist_shuffle(true),
 			m_playlist_repeat(true),
-			m_decoder_default_length(120),
+			m_decoder_default_length(180),
 			m_decoder_loop(2),
 			m_mp3_is_VBR(true),
 			m_mp3_bitrate(0),
+			m_sid_kernal(""),
+			m_sid_chargen(""),
+			m_sid_basic(""),
+			m_sid_songlength(""),
 			m_output_dir("")
     {
 	open_ok = false;
@@ -280,6 +294,10 @@ namespace vgmstream
 		    else if (setting == "sid.basic")
 		    {
 		    	m_sid_basic = value;
+		    }
+		    else if (setting == "sid.songlength")
+		    {
+		    	m_sid_songlength = value;
 		    }
 		    else if (setting == "misc.outputdir")
 		    {

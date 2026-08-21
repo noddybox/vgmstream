@@ -7,14 +7,14 @@ playlist.o: playlist.cpp playlist.h playlistentry.h config.h util.h log.h
 playlistentry.o: playlistentry.cpp playlistentry.h util.h log.h
 decoded.o: decoded.cpp decoded.h playlistentry.h
 thread.o: thread.cpp thread.h mtvar.h util.h
-sourcefile.o: sourcefile.cpp sourcefile.h
+sourcefile.o: sourcefile.cpp sourcefile.h util.h
 filetype.o: filetype.cpp filetype.h
 decoder.o: decoder.cpp decoder.h thread.h mtvar.h util.h playlist.h \
  playlistentry.h decoded.h queue.h gmeapi.h sidapi.h sourcefile.h \
  filetype.h log.h config.h
 gmeapi.o: gmeapi.cpp gmeapi.h decoded.h playlistentry.h config.h log.h
-sidapi.o: sidapi.cpp sidapi.h sourcefile.h decoded.h playlistentry.h \
- config.h log.h
+sidapi.o: sidapi.cpp sidapi.h sourcefile.h util.h decoded.h \
+ playlistentry.h config.h log.h
 mp3encoder.o: mp3encoder.cpp mp3encoder.h thread.h mtvar.h util.h \
  decoded.h playlistentry.h mp3file.h queue.h lameapi.h config.h
 streamer.o: streamer.cpp streamer.h thread.h mtvar.h util.h mp3file.h \

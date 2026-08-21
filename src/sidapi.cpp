@@ -16,61 +16,38 @@
 //
 // Interface to libgme
 //
-#include <sidplayfp/sidplayfp.h>
-#include <sidplayfp/SidTune.h>
-#include <sidplayfp/SidInfo.h>
-#include <sidplayfp/builders/sidlite.h>
+#include <sidplayfp/builders/residfp.h>
 
 #include "sidapi.h"
 #include "config.h"
 #include "log.h"
+#include "util.h"
 
 namespace vgmstream
 {
-    SourceFile	*SidApi::m_kernal;
-    SourceFile	*SidApi::m_chargen;
-    SourceFile	*SidApi::m_basic;
+    sidplayfp	SidApi::m_engine;
+    SidDatabase	SidApi::m_database;
+    bool	SidApi::m_static_setup = false;
 
-    SidApi::SidApi(const std::string& path, int track)
+    SidApi::SidApi(const std::string& path, int subtune)
+    					: m_tune(new SidTune(path.c_str())),
+					  m_initialised(false)
     {
-    	m_initialised = false;
-	m_track_count = 0;
-	m_default_track = 0;
-
-	const Config& config(Config::Instance());
-
-	if (config.SidKernalSet() && m_kernal == 0)
+	if (!m_static_setup)
 	{
-	    m_kernal = new SourceFile(config.SidKernal());
-
-	    if (!m_kernal->ReadOk())
-	    {
-	    	VGMLOG("Failed to read kernal ROM from %s",
-				config.SidKernal().c_str());
-	    }
+	    m_static_setup = true;
+	    SetStaticData();
 	}
 
-	if (config.SidChargenSet() && m_chargen == 0)
-	{
-	    m_chargen = new SourceFile(config.SidChargen());
+	m_tune.get()->selectSong(subtune);
 
-	    if (!m_chargen->ReadOk())
-	    {
-	    	VGMLOG("Failed to read chargen ROM from %s",
-				config.SidChargen().c_str());
-	    }
+	if (!m_tune.get()->getStatus())
+	{
+	    VGMLOG("Failed to load SID tune: %s", m_tune.get()->statusString());
+	    return;
 	}
 
-	if (config.SidBasicSet() && m_basic == 0)
-	{
-	    m_basic = new SourceFile(config.SidBasic());
-
-	    if (!m_basic->ReadOk())
-	    {
-	    	VGMLOG("Failed to read BASIC ROM from %s",
-				config.SidBasic().c_str());
-	    }
-	}
+	m_initialised = true;
     }
 
     SidApi::~SidApi()
@@ -82,18 +59,102 @@ namespace vgmstream
     	return m_initialised;
     }
 
-    int SidApi::DefaultTrack() const
-    {
-    	return m_default_track;
-    }
-
-    int SidApi::TrackCount() const
-    {
-    	return m_track_count;
-    }
-
     bool SidApi::Decode(Decoded& result)
     {
+	if (m_tune.get() == 0 || !m_tune.get()->getStatus())
+	{
+	    return false;
+	}
+
+	std::unique_ptr<ReSIDfpBuilder> builder(new ReSIDfpBuilder("SidApi"));
+	SidConfig sid_config;
+
+	sid_config.frequency = Decoded::DesiredFrequency();
+	sid_config.samplingMethod = SidConfig::INTERPOLATE;
+	sid_config.sidEmulation = builder.get();
+
+	if (!m_engine.config(sid_config))
+	{
+	    VGMLOG("Error configuring SID engine: %s", m_engine.error());
+	}
+
+	m_engine.initMixer(true);
+
+	const Config& config(Config::Instance());
+	const SidTuneInfo *info = m_tune->getInfo();
+
+	int length = m_database.length(*m_tune);
+
+	if (length < 1)
+	{
+	    length = config.DecoderDefaultLength();
+	}
+
     	return false;
+    }
+
+    void SidApi::SetStaticData()
+    {
+	const Config& config(Config::Instance());
+
+	if (config.SidKernalSet())
+	{
+	    SourceFile file(config.SidKernal());
+
+	    if (file.ReadOk())
+	    {
+		uint8_t *buffer = file.Buffer<uint8_t>();
+		m_engine.setKernal(buffer);
+		delete[] buffer;
+	    }
+	    else
+	    {
+		VGMLOG("Failed to read kernal ROM from %s",
+					config.SidKernal().c_str());
+	    }
+	}
+
+	if (config.SidChargenSet())
+	{
+	    SourceFile file(config.SidChargen());
+
+	    if (file.ReadOk())
+	    {
+		uint8_t *buffer = file.Buffer<uint8_t>();
+		m_engine.setChargen(buffer);
+		delete[] buffer;
+	    }
+	    else
+	    {
+		VGMLOG("Failed to read chargen ROM from %s",
+					config.SidChargen().c_str());
+	    }
+	}
+
+	if (config.SidBasicSet())
+	{
+	    SourceFile file(config.SidBasic());
+
+	    if (file.ReadOk())
+	    {
+		uint8_t *buffer = file.Buffer<uint8_t>();
+		m_engine.setBasic(buffer);
+		delete[] buffer;
+	    }
+	    else
+	    {
+		VGMLOG("Failed to read BASIC ROM from %s",
+					config.SidBasic().c_str());
+	    }
+	}
+
+	if (config.SidSonglengthSet())
+	{
+	    if (!m_database.open(config.SidSonglength().c_str()))
+	    {
+	    	VGMLOG("Error opening SID length database: %s",
+				m_database.error());
+	    }
+	}
     }
 };

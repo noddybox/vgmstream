@@ -20,6 +20,12 @@
 #define VGMSTREAM_SIDAPI_H
 
 #include <string>
+#include <memory>
+
+#include <sidplayfp/sidplayfp.h>
+#include <sidplayfp/SidTune.h>
+#include <sidplayfp/SidInfo.h>
+#include <sidplayfp/SidDatabase.h>
 
 #include "sourcefile.h"
 #include "decoded.h"
@@ -31,9 +37,9 @@ namespace vgmstream
     	public:
 
 	    // Construct an interface to libsidplyfp using the supplied file
-	    // and the picked subtune.  The default subtune will be used
-	    // if track is -1 if there is one, else the first is chosen.
-	    SidApi(const std::string& path, int track);
+	    // and subtune.  The subtune numbering starts from one, and zero
+	    // means the default subtune.
+	    SidApi(const std::string& path, int subtune);
 
 	    // Clean up
 	    ~SidApi();
@@ -41,24 +47,20 @@ namespace vgmstream
 	    // Whether the API was initialised OK
 	    bool Initialised() const;
 
-	    // Get the default track for the file
-	    int DefaultTrack() const;
-
-	    // Get the number of tracks in the file
-	    int TrackCount() const;
-
 	    // Get the result of decoding.  Returns true if decoding worked.
 	    bool Decode(Decoded& result);
 
 	private:
 
-	    bool		m_initialised;
-	    int			m_default_track;
-	    int			m_track_count;
+	    std::unique_ptr<SidTune>		m_tune;
 
-	    static SourceFile	*m_kernal;
-	    static SourceFile	*m_chargen;
-	    static SourceFile	*m_basic;
+	    bool				m_initialised;
+
+	    static sidplayfp			m_engine;
+	    static SidDatabase			m_database;
+	    static bool				m_static_setup;
+
+	    void				SetStaticData();
 
     };
 };

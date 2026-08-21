@@ -39,11 +39,11 @@ namespace vgmstream
 
 	    // Config items
 
-	    const std::string	IcecastUrl() const;
-	    const std::string	IcecastPassword() const;
+	    const std::string&	IcecastUrl() const;
+	    const std::string&	IcecastPassword() const;
 	    bool		IcecastPublic() const;
 
-	    const std::string	PlaylistFile() const;
+	    const std::string&	PlaylistFile() const;
 	    bool		PlaylistShuffle() const;
 	    bool		PlaylistRepeat() const;
 
@@ -53,11 +53,12 @@ namespace vgmstream
 	    bool		Mp3IsVBR() const;
 	    int			Mp3Bitrate() const;
 
-	    const std::string	SidKernal() const;
-	    const std::string	SidChargen() const;
-	    const std::string	SidBasic() const;
+	    const std::string&	SidKernal() const;
+	    const std::string&	SidChargen() const;
+	    const std::string&	SidBasic() const;
+	    const std::string&	SidSonglength() const;
 
-	    const std::string	MiscOutputDir() const;
+	    const std::string&	MiscOutputDir() const;
 
 	    bool		IcecastUrlSet() const;
 	    bool		IcecastPasswordSet() const;
@@ -65,6 +66,7 @@ namespace vgmstream
 	    bool		SidKernalSet () const;
 	    bool		SidChargenSet() const;
 	    bool		SidBasicSet() const;
+	    bool		SidSonglengthSet() const;
 
 	private:
 
@@ -89,6 +91,7 @@ namespace vgmstream
 	    std::string	m_sid_kernal;
 	    std::string	m_sid_chargen;
 	    std::string	m_sid_basic;
+	    std::string	m_sid_songlength;
 
 	    std::string	m_output_dir;
     };

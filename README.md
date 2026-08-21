@@ -66,13 +66,14 @@ Any flag setting support the following values:
 |`playlist.file`|N|The location of the playlist file, with each line being a path to a file # to stream.|
 |`playlist.shuffle`|Y|Whether to shuffle the entries in the file or not.  The default is to shuffle.|
 |`playlist.repeat`|Y|Whether to repeat the playlist.  It will be reshuffled if `playlist.shuffle` is enabled when the end is reached.  Default is to repeat.|
-|`decoder.default_length`|Y|The default number of seconds if the file has no length information.  Defaults to 120 seconds.|
+|`decoder.default_length`|Y|The default number of seconds if the file has no length information.  Defaults to 180 seconds.|
 |`decoder.loop`|Y|If the input defines a loop length, the number of times the looped section is played.  Defaults to 2.
 |`mp3.bitrate`|Y|The bitrate to encode MP3 as.  Default is `vbr` (variable bit rate).  Either specifiy `vbr` or the kbps value, e.g. `320`.|
 |`misc.outputdir`|Y|If set output generated MP3 files to this directory.  Files will be called the same as the source file, with it's extension replaced with .mp3|
 |`sid.kernal`|Y|If set defines the path to the C64 kernal ROM.  This improves the SID support.|
 |`sid.chargen`|Y|If set defines the path to the C64 chargen ROM.  This improves the SID support.|
 |`sid.basic`|Y|If set defines the path to the C64 BASIC ROM.  This improves the SID support.|
+|`sid.songlength`|Y|If set defines the path to the HVSC song length database.  If not set to a valid Songlengths.md5 file SID files will always play for decoder.default_length seconds.|
 
 # Playlist file
 
@@ -81,6 +82,6 @@ an optional number, e.g.
 
 `/path/to/file:2`
 
-This means play track 2 in the file.  If the track number is missing it will
-play the first track for formats that don't specify a default track, and the
-default track if one is specified.
+This means play track 3 in the file (numbering starts from zero).  If the track
+number is missing it will play the first track for formats that don't specify a
+default track, and the default track if one is specified.

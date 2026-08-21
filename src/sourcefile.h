@@ -21,6 +21,9 @@
 
 #include <vector>
 #include <string>
+#include <cstring>
+
+#include "util.h"
 
 namespace vgmstream
 {
@@ -39,6 +42,22 @@ namespace vgmstream
 
 	    // The contents of the file
 	    const unsigned char *Contents() const;
+
+	    // The contents of the file as an allocated memory block of
+	    // type T.  It is recommended that T has sizeof == 1.
+	    template <typename T> T *Buffer() const
+	    {
+		T *buffer = new T[m_size];
+
+		if (buffer == 0)
+		{
+		    Util::OSError(0);
+		}
+
+		std::memcpy(buffer, m_contents.data(), m_size);
+
+		return buffer;
+	    }
 
 	private:
 	    bool			m_readOk;
