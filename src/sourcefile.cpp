@@ -35,13 +35,13 @@ namespace vgmstream
 	    return;
 	}
 
-	unsigned char byte;
+	in.seekg(0, std::ios_base::end);
+	m_size = in.tellg();
+	in.seekg(0, std::ios_base::beg);
 
-	while(in >> byte)
-	{
-	    m_size++;
-	    m_contents.push_back(byte);
-	}
+	m_contents.reserve(m_size);
+
+	in.read(m_contents.data(), m_size);
 
 	in.close();
 
@@ -58,7 +58,7 @@ namespace vgmstream
     	return m_readOk;
     }
 
-    const unsigned char *SourceFile::Contents() const
+    const char *SourceFile::Contents() const
     {
     	return m_contents.data();
     }

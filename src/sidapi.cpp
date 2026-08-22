@@ -16,8 +16,6 @@
 //
 // Interface to libgme
 //
-#include <sidplayfp/builders/residfp.h>
-
 #include "sidapi.h"
 #include "config.h"
 #include "log.h"
@@ -25,12 +23,16 @@
 
 namespace vgmstream
 {
-    sidplayfp	SidApi::m_engine;
     SidDatabase	SidApi::m_database;
+    uint8_t	*SidApi::m_kernal = 0;
+    uint8_t	*SidApi::m_chargen = 0;
+    uint8_t	*SidApi::m_basic = 0;
     bool	SidApi::m_static_setup = false;
 
     SidApi::SidApi(const std::string& path, int subtune)
-    					: m_tune(new SidTune(path.c_str())),
+    					: m_engine(),
+					  m_builder("vgmstream"),
+					  m_tune(path.c_str()),
 					  m_initialised(false)
     {
 	if (!m_static_setup)
@@ -39,13 +41,35 @@ namespace vgmstream
 	    SetStaticData();
 	}
 
-	m_tune.get()->selectSong(subtune);
-
-	if (!m_tune.get()->getStatus())
+	if (!m_tune.getStatus())
 	{
-	    VGMLOG("Failed to load SID tune: %s", m_tune.get()->statusString());
+	    VGMLOG("Failed to load SID tune: %s", m_tune.statusString());
 	    return;
 	}
+
+	m_engine.setRoms(m_kernal, m_basic, m_chargen);
+
+	m_tune.selectSong(subtune);
+
+	SidConfig sid_config;
+
+	sid_config.frequency = Decoded::DesiredFrequency();
+	sid_config.samplingMethod = SidConfig::INTERPOLATE;
+	sid_config.sidEmulation = &m_builder;
+
+	if (!m_engine.config(sid_config))
+	{
+	    VGMLOG("Error configuring SID engine: %s", m_engine.error());
+	    return;
+	}
+
+	if (!m_engine.load(&m_tune))
+	{
+	    VGMLOG("Error loading SID tune into engine: %s", m_engine.error());
+	    return;
+	}
+
+	m_engine.initMixer(true);
 
 	m_initialised = true;
     }
@@ -61,29 +85,15 @@ namespace vgmstream
 
     bool SidApi::Decode(Decoded& result)
     {
-	if (m_tune.get() == 0 || !m_tune.get()->getStatus())
+	if (!m_initialised)
 	{
 	    return false;
 	}
 
-	std::unique_ptr<ReSIDfpBuilder> builder(new ReSIDfpBuilder("SidApi"));
-	SidConfig sid_config;
-
-	sid_config.frequency = Decoded::DesiredFrequency();
-	sid_config.samplingMethod = SidConfig::INTERPOLATE;
-	sid_config.sidEmulation = builder.get();
-
-	if (!m_engine.config(sid_config))
-	{
-	    VGMLOG("Error configuring SID engine: %s", m_engine.error());
-	}
-
-	m_engine.initMixer(true);
-
 	const Config& config(Config::Instance());
-	const SidTuneInfo *info = m_tune->getInfo();
+	const SidTuneInfo *info = m_tune.getInfo();
 
-	int length = m_database.length(*m_tune);
+	int length = m_database.length(m_tune);
 
 	if (length < 1)
 	{
@@ -103,9 +113,7 @@ namespace vgmstream
 
 	    if (file.ReadOk())
 	    {
-		uint8_t *buffer = file.Buffer<uint8_t>();
-		m_engine.setKernal(buffer);
-		delete[] buffer;
+		m_kernal = file.Buffer<uint8_t>();
 	    }
 	    else
 	    {
@@ -120,9 +128,7 @@ namespace vgmstream
 
 	    if (file.ReadOk())
 	    {
-		uint8_t *buffer = file.Buffer<uint8_t>();
-		m_engine.setChargen(buffer);
-		delete[] buffer;
+		m_chargen = file.Buffer<uint8_t>();
 	    }
 	    else
 	    {
@@ -137,9 +143,7 @@ namespace vgmstream
 
 	    if (file.ReadOk())
 	    {
-		uint8_t *buffer = file.Buffer<uint8_t>();
-		m_engine.setBasic(buffer);
-		delete[] buffer;
+		m_basic = file.Buffer<uint8_t>();
 	    }
 	    else
 	    {

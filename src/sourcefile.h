@@ -41,7 +41,7 @@ namespace vgmstream
 	    std::size_t Size() const;
 
 	    // The contents of the file
-	    const unsigned char *Contents() const;
+	    const char *Contents() const;
 
 	    // The contents of the file as an allocated memory block of
 	    // type T.  It is recommended that T has sizeof == 1.
@@ -60,9 +60,9 @@ namespace vgmstream
 	    }
 
 	private:
-	    bool			m_readOk;
-	    std::size_t			m_size;
-	    std::vector<unsigned char>	m_contents;
+	    bool		m_readOk;
+	    std::size_t		m_size;
+	    std::vector<char>	m_contents;
     };
 };
 

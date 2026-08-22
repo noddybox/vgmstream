@@ -20,12 +20,12 @@
 #define VGMSTREAM_SIDAPI_H
 
 #include <string>
-#include <memory>
 
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidTune.h>
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidDatabase.h>
+#include <sidplayfp/builders/residfp.h>
 
 #include "sourcefile.h"
 #include "decoded.h"
@@ -52,15 +52,19 @@ namespace vgmstream
 
 	private:
 
-	    std::unique_ptr<SidTune>		m_tune;
+	    sidplayfp		m_engine;
+	    ReSIDfpBuilder	m_builder;
+	    SidTune		m_tune;
 
-	    bool				m_initialised;
+	    bool		m_initialised;
 
-	    static sidplayfp			m_engine;
-	    static SidDatabase			m_database;
-	    static bool				m_static_setup;
+	    static SidDatabase	m_database;
+	    static uint8_t	*m_kernal;
+	    static uint8_t	*m_chargen;
+	    static uint8_t	*m_basic;
+	    static bool		m_static_setup;
 
-	    void				SetStaticData();
+	    void		SetStaticData();
 
     };
 };
