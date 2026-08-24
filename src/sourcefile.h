@@ -40,23 +40,10 @@ namespace vgmstream
 	    // The size of the file
 	    std::size_t Size() const;
 
-	    // The contents of the file
-	    const char *Contents() const;
-
-	    // The contents of the file as an allocated memory block of
-	    // type T.  It is recommended that T has sizeof == 1.
-	    template <typename T> T *Buffer() const
+	    // The contents of the file as a pointer to type T.
+	    template <typename T> const T* Contents() const
 	    {
-		T *buffer = new T[m_size];
-
-		if (buffer == 0)
-		{
-		    Util::OSError(0);
-		}
-
-		std::memcpy(buffer, m_contents.data(), m_size);
-
-		return buffer;
+		return reinterpret_cast<const T*>(m_contents.data());
 	    }
 
 	private:

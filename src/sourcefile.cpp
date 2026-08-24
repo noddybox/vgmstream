@@ -57,9 +57,4 @@ namespace vgmstream
     {
     	return m_readOk;
     }
-
-    const char *SourceFile::Contents() const
-    {
-    	return m_contents.data();
-    }
 };

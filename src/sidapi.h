@@ -59,9 +59,9 @@ namespace vgmstream
 	    bool		m_initialised;
 
 	    static SidDatabase	m_database;
-	    static uint8_t	*m_kernal;
-	    static uint8_t	*m_chargen;
-	    static uint8_t	*m_basic;
+	    static SourceFile	*m_kernal;
+	    static SourceFile	*m_chargen;
+	    static SourceFile	*m_basic;
 	    static bool		m_static_setup;
 
 	    void		SetStaticData();

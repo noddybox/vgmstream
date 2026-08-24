@@ -24,9 +24,9 @@
 namespace vgmstream
 {
     SidDatabase	SidApi::m_database;
-    uint8_t	*SidApi::m_kernal = 0;
-    uint8_t	*SidApi::m_chargen = 0;
-    uint8_t	*SidApi::m_basic = 0;
+    SourceFile	*SidApi::m_kernal = 0;
+    SourceFile	*SidApi::m_chargen = 0;
+    SourceFile	*SidApi::m_basic = 0;
     bool	SidApi::m_static_setup = false;
 
     SidApi::SidApi(const std::string& path, int subtune)
@@ -47,7 +47,20 @@ namespace vgmstream
 	    return;
 	}
 
-	m_engine.setRoms(m_kernal, m_basic, m_chargen);
+	if (m_kernal != 0)
+	{
+	    m_engine.setKernal(m_kernal->Contents<uint8_t>());
+	}
+
+	if (m_basic != 0)
+	{
+	    m_engine.setBasic(m_basic->Contents<uint8_t>());
+	}
+
+	if (m_chargen != 0)
+	{
+	    m_engine.setChargen(m_chargen->Contents<uint8_t>());
+	}
 
 	m_tune.selectSong(subtune);
 
@@ -109,46 +122,55 @@ namespace vgmstream
 
 	if (config.SidKernalSet())
 	{
-	    SourceFile file(config.SidKernal());
+	    m_kernal = new SourceFile(config.SidKernal());
 
-	    if (file.ReadOk())
+	    if (m_kernal == 0)
 	    {
-		m_kernal = file.Buffer<uint8_t>();
+	    	Util::OSError("new SourceFile");
 	    }
-	    else
+
+	    if (!m_kernal->ReadOk())
 	    {
 		VGMLOG("Failed to read kernal ROM from %s",
 					config.SidKernal().c_str());
+		delete m_kernal;
+		m_kernal = 0;
 	    }
 	}
 
 	if (config.SidChargenSet())
 	{
-	    SourceFile file(config.SidChargen());
+	    m_chargen = new SourceFile(config.SidChargen());
 
-	    if (file.ReadOk())
+	    if (m_chargen == 0)
 	    {
-		m_chargen = file.Buffer<uint8_t>();
+	    	Util::OSError("new SourceFile");
 	    }
-	    else
+
+	    if (!m_chargen->ReadOk())
 	    {
 		VGMLOG("Failed to read chargen ROM from %s",
 					config.SidChargen().c_str());
+		delete m_chargen;
+		m_chargen = 0;
 	    }
 	}
 
 	if (config.SidBasicSet())
 	{
-	    SourceFile file(config.SidBasic());
+	    m_basic = new SourceFile(config.SidBasic());
 
-	    if (file.ReadOk())
+	    if (m_basic == 0)
 	    {
-		m_basic = file.Buffer<uint8_t>();
+	    	Util::OSError("new SourceFile");
 	    }
-	    else
+
+	    if (!m_basic->ReadOk())
 	    {
 		VGMLOG("Failed to read BASIC ROM from %s",
 					config.SidBasic().c_str());
+		delete m_basic;
+		m_basic = 0;
 	    }
 	}
 
