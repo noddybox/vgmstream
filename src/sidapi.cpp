@@ -16,6 +16,8 @@
 //
 // Interface to libgme
 //
+#include <sidplayfp/SidTuneInfo.h>
+
 #include "sidapi.h"
 #include "config.h"
 #include "log.h"
