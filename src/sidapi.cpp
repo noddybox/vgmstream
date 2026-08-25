@@ -108,31 +108,36 @@ namespace vgmstream
 	const Config& config(Config::Instance());
 	const SidTuneInfo *info = m_tune.getInfo();
 
-	if (info && info->numberOfInfoStrings() > 2)
+	if (info != 0 && info->numberOfInfoStrings() > 2)
 	{
 	    result.Name(info->infoString(0));
 	    result.Composer(info->infoString(1));
 	    result.Year(info->infoString(2));
-	    result.Album("SidApi");
+	    result.Album(info->infoString(0));
 	}
 
-	int length = m_database.length(m_tune);
+	int length = m_database.lengthMs(m_tune);
 
 	if (length < 1)
 	{
-	    length = config.DecoderDefaultLength();
+	    length = config.DecoderDefaultLength() * 1000;
 	}
 
-	const int CYCLES = 1000;
+	// PAL cycles per 100 msec
+	int cycles = 98525;
 
-	int buffsize = m_engine.getBufSize(CYCLES);
+	if (info->songSpeed() == SidTuneInfo::CLOCK_NTSC)
+	{
+	    // NTSC cycles per 100 msec
+	    cycles = 102273;
+	}
+
+	int buffsize = m_engine.getBufSize(cycles);
 	std::vector<short> buffer(buffsize);
 
-	length *= 1000;
-
-	while(length)
+	while(m_engine.timeMs() < length)
 	{
-	    int played = m_engine.play(CYCLES);
+	    int played = m_engine.play(cycles);
 
 	    if (played < 0)
 	    {
@@ -142,8 +147,6 @@ namespace vgmstream
 
 	    int samples = m_engine.mix(buffer.data(), played);
 	    result.AddToData(buffer.data(), samples);
-
-	    length--;
 	}
 
     	return true;
