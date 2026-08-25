@@ -106,6 +106,14 @@ namespace vgmstream
 	const Config& config(Config::Instance());
 	const SidTuneInfo *info = m_tune.getInfo();
 
+	if (info && info->numberOfInfoStrings() > 2)
+	{
+	    result.Name(info->infoString(0));
+	    result.Composer(info->infoString(1));
+	    result.Year(info->infoString(2));
+	    result.Album("SidApi");
+	}
+
 	int length = m_database.length(m_tune);
 
 	if (length < 1)
@@ -113,7 +121,30 @@ namespace vgmstream
 	    length = config.DecoderDefaultLength();
 	}
 
-    	return false;
+	const int CYCLES = 1000;
+
+	int buffsize = m_engine.getBufSize(CYCLES);
+	std::vector<short> buffer(buffsize);
+
+	length *= 1000;
+
+	while(length)
+	{
+	    int played = m_engine.play(CYCLES);
+
+	    if (played < 0)
+	    {
+	    	VGMLOG("Error playing SID: %s", m_engine.error());
+		return false;
+	    }
+
+	    int samples = m_engine.mix(buffer.data(), played);
+	    result.AddToData(buffer.data(), samples);
+
+	    length--;
+	}
+
+    	return true;
     }
 
     void SidApi::SetStaticData()
