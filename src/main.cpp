@@ -109,19 +109,32 @@ int main(int argc, char *argv[])
 
     vgmstream::Decoder decoder(playlist, decoded_queue);
     vgmstream::MP3Encoder encoder(decoded_queue, stream_queue);
+
+    // If we're streaming, wait for a couple of MP3 files before starting
+    // the streamer.
+    if (!config.MiscOutputDirSet() && playlist.Size() > 2)
+    {
+    	VGMLOG("Waiting for MP3 streaming queue to seed");
+
+	while(decoder.Alive() &&
+	      encoder.Alive() &&
+	      stream_queue.Size() < 2)
+	{
+	    ::sleep(1);
+	}
+    }
+
     vgmstream::Streamer streamer(stream_queue);
 
-    while(decoder.Alive())
+    while(decoder.Alive() && encoder.Alive() && streamer.Alive())
     {
     	::sleep(1);
     }
 
-    // Wait for outputs once decoder has exited if we are saving MP3 files
-    if (config.MiscOutputDirSet())
-    {
+    // Wait for outputs once decoder has exited
 	VGMLOG("Waiting for decoded queue to empty");
 
-	while(decoded_queue.Size() > 0)
+	while(encoder.Alive() && decoded_queue.Size() > 0)
 	{
 	    ::sleep(1);
 	}
@@ -130,25 +143,16 @@ int main(int argc, char *argv[])
 	encoder.Cancel();
 	encoder.Join();
 
-	VGMLOG("Waiting for streaming queue to empty");
+    VGMLOG("Waiting for streaming queue to empty");
 
-	while(stream_queue.Size() > 0)
-	{
-	    ::sleep(1);
-	}
-
-	VGMLOG("Waiting for streamer to die");
-	streamer.Cancel();
-	streamer.Join();
-    }
-    else
+    while(streamer.Alive() && stream_queue.Size() > 0)
     {
-	VGMLOG("Waiting for threads to die");
-	encoder.Cancel();
-	streamer.Cancel();
-	encoder.Join();
-	streamer.Join();
+	::sleep(1);
     }
+
+    VGMLOG("Waiting for streamer to die");
+    streamer.Cancel();
+    streamer.Join();
 
     VGMLOG("Exiting");
     return 0;

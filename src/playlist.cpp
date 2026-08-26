@@ -54,6 +54,11 @@ namespace vgmstream
     	Read();
     }
 
+    size_t Playlist::Size() const
+    {
+    	return m_playlist.size();
+    }
+
     bool Playlist::Read()
     {
 	const Config& config = Config::Instance();
