@@ -21,6 +21,7 @@
 
 #include <pthread.h>
 
+#include "queuecancel.h"
 #include "mtvar.h"
 
 namespace vgmstream
@@ -35,11 +36,20 @@ namespace vgmstream
 	    // Destructor.
 	    virtual ~Thread();
 
-	    // Cancel the thread; waits for the thread to exit
+	    // Request that the thread exits
 	    void Cancel();
 
 	    // Is the thread alive
 	    bool Alive();
+
+	    // Has cancellation been requested?
+	    bool CancelRequested();
+
+	    // Wait for the thread to exit
+	    void Join();
+
+	    // Set the consuming queue for this thread
+	    void SetQueue(QueueCancel *queue);
 
 	protected:
 
@@ -53,6 +63,8 @@ namespace vgmstream
 	private:
 
 	    MTVar<bool>	m_alive;
+	    MTVar<bool>	m_cancel;
+	    QueueCancel	*m_queue_cancel;
 	    pthread_t	m_thread;
 
 	    static void *ThreadWrapper(void *object_pointer);

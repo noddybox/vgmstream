@@ -126,18 +126,29 @@ int main(int argc, char *argv[])
 	    ::sleep(1);
 	}
 
+	VGMLOG("Waiting for MP3 encoder to die");
+	encoder.Cancel();
+	encoder.Join();
+
 	VGMLOG("Waiting for streaming queue to empty");
 
 	while(stream_queue.Size() > 0)
 	{
 	    ::sleep(1);
 	}
+
+	VGMLOG("Waiting for streamer to die");
+	streamer.Cancel();
+	streamer.Join();
     }
-
-    VGMLOG("Cancelling encoder and streaming threads");
-
-    encoder.Cancel();
-    streamer.Cancel();
+    else
+    {
+	VGMLOG("Waiting for threads to die");
+	encoder.Cancel();
+	streamer.Cancel();
+	encoder.Join();
+	streamer.Join();
+    }
 
     VGMLOG("Exiting");
     return 0;

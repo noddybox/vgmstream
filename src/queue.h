@@ -22,17 +22,20 @@
 #include <queue>
 #include <pthread.h>
 
+#include "queuecancel.h"
 #include "util.h"
 
 namespace vgmstream
 {
-    template <typename T> class Queue
+    template <typename T> class Queue : public QueueCancel
     {
     	public:
 
 	    // Construct a queue.
 	    Queue()
 	    {
+		m_cancel = false;
+
 		if (pthread_mutex_init(&m_mutex, 0) != 0)
 		{
 		    Util::OSError("pthread_mutex_init");
@@ -51,9 +54,19 @@ namespace vgmstream
 	    {
 		pthread_mutex_lock(&m_mutex);
 
+		if (m_cancel)
+		{
+		    return false;
+		}
+
 		if (m_queue.size() == 0)
 		{
 		    pthread_cond_wait(&m_event, &m_mutex);
+
+		    if (m_cancel)
+		    {
+		    	return false;
+		    }
 		}
 
 		bool result = false;
@@ -87,11 +100,21 @@ namespace vgmstream
 		return size;
 	    }
 
+	    // Request cancellation
+	    void Cancel()
+	    {
+		pthread_mutex_lock(&m_mutex);
+		m_cancel = true;
+		pthread_cond_signal(&m_event);
+		pthread_mutex_unlock(&m_mutex);
+	    }
+
 	private:
 
 	    std::queue<T>	m_queue;
 	    pthread_mutex_t	m_mutex;
 	    pthread_cond_t	m_event;
+	    bool		m_cancel;
     };
 
 };

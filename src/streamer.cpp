@@ -32,14 +32,14 @@ namespace vgmstream
 						m_input(input)
     {
 	CreateThread();
+	SetQueue(&m_input);
     }
 
     void Streamer::ThreadCode()
     {
 	const Config& config = Config::Instance();
-	bool done = false;
 
-    	while(!done)
+    	while(!CancelRequested())
 	{
 	    Mp3File output;
 
@@ -69,10 +69,6 @@ namespace vgmstream
 		{
 		    VGMLOG("TODO: icecast output");
 		}
-	    }
-	    else
-	    {
-	    	done = true;
 	    }
 	}
     }

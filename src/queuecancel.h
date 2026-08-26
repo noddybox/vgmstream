@@ -14,46 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// MP3 encoding thread
+// Queue cancellation interface
 //
-#include <unistd.h>
+#ifndef VGMSTREAM_QUEUECANCEL_H
+#define VGMSTREAM_QUEUECANCEL_H
 
-#include <gme/gme.h>
+#include <queue>
+#include <pthread.h>
 
-#include "mp3encoder.h"
-#include "lameapi.h"
-#include "config.h"
+#include "queuecancel.h"
+#include "thread.h"
+#include "util.h"
 
 namespace vgmstream
 {
-    MP3Encoder::MP3Encoder(Queue<Decoded>& input,
-		           Queue<Mp3File>& output) : Thread(),
-						     m_input(input),
-						     m_output(output)
+    class QueueCancel
     {
-	CreateThread();
-	SetQueue(&m_input);
-    }
+    	public:
+	    virtual void Cancel() = 0;
+    };
 
-    void MP3Encoder::ThreadCode()
-    {
-	const Config& config = Config::Instance();
-
-    	while(!CancelRequested())
-	{
-	    Decoded decoded;
-
-	    if (m_input.Pop(decoded))
-	    {
-		LameApi lame(decoded);
-
-		if (lame.Initialised())
-		{
-		    Mp3File mp3(decoded.Entry(), lame.Data(), lame.Size());
-
-		    m_output.Push(mp3);
-		}
-	    }
-	}
-    }
 };
+
+#endif

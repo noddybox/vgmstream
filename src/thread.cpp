@@ -21,7 +21,7 @@
 
 namespace vgmstream
 {
-    Thread::Thread() : m_alive(false)
+    Thread::Thread() : m_alive(false), m_cancel(false), m_queue_cancel(0)
     {
     }
 
@@ -32,13 +32,32 @@ namespace vgmstream
 
     void Thread::Cancel()
     {
-    	pthread_cancel(m_thread);
-	pthread_join(m_thread, 0);
+    	m_cancel.Set(true);
+
+	if (m_queue_cancel !=0)
+	{
+	    m_queue_cancel->Cancel();
+	}
     }
 
     bool Thread::Alive()
     {
     	return m_alive.Get();
+    }
+
+    bool Thread::CancelRequested()
+    {
+    	return m_cancel.Get();
+    }
+
+    void Thread::Join()
+    {
+	pthread_join(m_thread, 0);
+    }
+
+    void Thread::SetQueue(QueueCancel *queue)
+    {
+	m_queue_cancel = queue;
     }
 
     void Thread::CreateThread()
