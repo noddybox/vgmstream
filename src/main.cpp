@@ -131,17 +131,25 @@ int main(int argc, char *argv[])
     	::sleep(1);
     }
 
+    // If one of the other threads died, cancel the decoder thread
+    if (decoder.Alive())
+    {
+	VGMLOG("Waiting for decoder to die");
+	decoder.Cancel();
+	decoder.Join();
+    }
+
     // Wait for outputs once decoder has exited
-	VGMLOG("Waiting for decoded queue to empty");
+    VGMLOG("Waiting for decoded queue to empty");
 
-	while(encoder.Alive() && decoded_queue.Size() > 0)
-	{
-	    ::sleep(1);
-	}
+    while(encoder.Alive() && decoded_queue.Size() > 0)
+    {
+	::sleep(1);
+    }
 
-	VGMLOG("Waiting for MP3 encoder to die");
-	encoder.Cancel();
-	encoder.Join();
+    VGMLOG("Waiting for MP3 encoder to die");
+    encoder.Cancel();
+    encoder.Join();
 
     VGMLOG("Waiting for streaming queue to empty");
 

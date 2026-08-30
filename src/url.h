@@ -14,40 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Stream output to Icecast 2 thread
+// URL parser
 //
-#ifndef VGMSTREAM_STREAMER_H
-#define VGMSTREAM_STREAMER_H
+#ifndef VGMSTREAM_URL_H
+#define VGMSTREAM_URL_H
 
-#include <vector>
 #include <string>
-
-#include "thread.h"
-#include "mp3file.h"
-#include "shoutapi.h"
-#include "queue.h"
 
 namespace vgmstream
 {
-    class Streamer : public Thread
+    class URL
     {
     	public:
 
-	    // Constructor
-	    Streamer(Queue<Mp3File>& input);
+	    // Construct a URL.
+	    URL(const std::string url);
 
-	protected:
+	    // Is the URL parsed?
+	    bool Valid() const;
 
-	    void ThreadCode();
+	    // Get a reason the URL is invalid
+	    const std::string& Error() const;
+
+	    // Get the protocol
+	    const std::string& Protocol() const;
+
+	    // Get the hostname
+	    const std::string& Hostname() const;
+
+	    // Get the port number
+	    int Port() const;
+
+	    // Get the path
+	    const std::string& Path() const;
 
 	private:
 
-	    Queue<Mp3File>&	m_input;
-
-	    void		FileOutputMode();
-	    void		StreamOutputMode();
-
+	    bool		m_valid;
+	    std::string		m_error;
+	    std::string		m_protocol;
+	    std::string		m_hostname;
+	    std::string		m_path;
+	    int			m_port;
     };
+
 };
 
 #endif

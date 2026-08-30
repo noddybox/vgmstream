@@ -24,16 +24,16 @@ namespace vgmstream
     {
     }
 
-    Mp3File::Mp3File(const PlaylistEntry& entry,
+    Mp3File::Mp3File(const std::string& filename,
 		     const char *memory,
-		     std::size_t size) : m_entry(entry), m_data()
+		     std::size_t size) : m_filename(filename), m_data()
     {
     	m_data.insert(m_data.end(), memory, memory + size);
     }
 
-    const PlaylistEntry& Mp3File::Entry() const
+    const std::string& Mp3File::Filename() const
     {
-    	return m_entry;
+    	return m_filename;
     }
 
     std::size_t Mp3File::Size() const

@@ -32,6 +32,11 @@ LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
 CFLAGS_GME	:=	$(shell pkgconf --cflags libgme)
 LIBS_GME	:=	$(shell pkgconf --libs libgme)
 
+# Switches for the libshout library
+#
+CFLAGS_SHOUT	:=	$(shell pkgconf --cflags shout)
+LIBS_SHOUT	:=	$(shell pkgconf --libs shout)
+
 # Switches for pthreads
 #
 CFLAGS_PTHREAD	:=	-pthread
@@ -44,9 +49,9 @@ LIBS_GENERAL	:=
 
 # Combines the flags
 CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) \
-			$(CFLAGS_PTHREAD) $(CFLAGS_GENERAL)
+			$(CFLAGS_SHOUT) $(CFLAGS_PTHREAD) $(CFLAGS_GENERAL)
 LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) \
-			$(LIBS_PTHREAD) $(LIBS_GENERAL)
+			$(LIBS_SHOUT) $(LIBS_PTHREAD) $(LIBS_GENERAL)
 
 # The target
 #
@@ -70,6 +75,8 @@ SOURCES		=	main.cpp		\
 			streamer.cpp		\
 			lameapi.cpp		\
 			mp3file.cpp		\
+			url.cpp			\
+			shoutapi.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -88,6 +95,10 @@ HEADERS		=	log.h			\
 			lameapi.h		\
 			mp3file.h		\
 			mtvar.h			\
+			queue.h			\
+			queuecancel.h		\
+			url.h			\
+			shoutapi.h		\
 			util.h
 
 # Objects

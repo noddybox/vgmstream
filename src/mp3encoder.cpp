@@ -49,7 +49,8 @@ namespace vgmstream
 
 		if (lame.Initialised())
 		{
-		    Mp3File mp3(decoded.Entry(), lame.Data(), lame.Size());
+		    Mp3File mp3(decoded.Entry().Mp3Name(),
+		    		lame.Data(), lame.Size());
 
 		    m_output.Push(mp3);
 		}

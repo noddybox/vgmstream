@@ -29,17 +29,17 @@ namespace vgmstream
     {
     	public:
 
-	    // Construct an empty MP3 file based on the passed playlist entry
-	    // and passed memory
-	    Mp3File(const PlaylistEntry& entry,
+	    // Construct an empty MP3 file based on the passed filename if the
+	    // file was written to disk and passed memory
+	    Mp3File(const std::string& filename,
 		    const char *memory,
 		    std::size_t size);
 
 	    // Construct an empty object
 	    Mp3File();
 
-	    // The originating playlist entry
-	    const PlaylistEntry& Entry() const;
+	    // The filename
+	    const std::string& Filename() const;
 
 	    // Get the size of the MP3 data
 	    std::size_t Size() const;
@@ -49,7 +49,7 @@ namespace vgmstream
 
 	private:
 
-	    PlaylistEntry	m_entry;
+	    std::string		m_filename;
 	    std::vector<char>	m_data;
     };
 };

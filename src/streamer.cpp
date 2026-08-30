@@ -23,6 +23,7 @@
 
 #include "streamer.h"
 #include "mp3file.h"
+#include "shoutapi.h"
 #include "config.h"
 #include "log.h"
 
@@ -39,36 +40,68 @@ namespace vgmstream
     {
 	const Config& config = Config::Instance();
 
+	if (config.MiscOutputDirSet())
+	{
+	    FileOutputMode();
+	}
+	else
+	{
+	    StreamOutputMode();
+	}
+    }
+
+    void Streamer::FileOutputMode()
+    {
+	const Config& config = Config::Instance();
+
     	while(!CancelRequested())
 	{
 	    Mp3File output;
 
 	    if (m_input.Pop(output))
 	    {
-		if (config.MiscOutputDirSet())
+		std::string filename =
+		    config.MiscOutputDir() + "/" + output.Filename();
+
+		VGMLOG("Saving MP3 to %s", filename.c_str());
+
+		std::ofstream file (filename, std::ios::out |
+					      std::ios::binary);
+
+		if (file)
 		{
-		    std::string filename =
-			config.MiscOutputDir() + "/" + output.Entry().Mp3Name();
-
-		    VGMLOG("Saving MP3 to %s", filename.c_str());
-
-		    std::ofstream file (filename, std::ios::out |
-		    				  std::ios::binary);
-
-		    if (file)
-		    {
-			file.write(output.Data(), output.Size());
-			file.close();
-		    }
-		    else
-		    {
-			VGMLOG("Failed to create %s", filename.c_str());
-		    }
+		    file.write(output.Data(), output.Size());
+		    file.close();
 		}
 		else
 		{
-		    VGMLOG("TODO: icecast output");
+		    VGMLOG("Failed to create %s", filename.c_str());
 		}
+	    }
+	}
+    }
+
+    void Streamer::StreamOutputMode()
+    {
+	const Config& config = Config::Instance();
+
+	ShoutApi shoutcast(URL(config.IcecastUrl()),
+			   config.IcecastPassword(),
+			   config.IcecastPublic());
+
+	if (!shoutcast.Initialised())
+	{
+	    VGMLOG("Failed to connect to server: %s",
+	    		shoutcast.Error().c_str());
+	    return;
+	}
+
+    	while(!CancelRequested())
+	{
+	    Mp3File output;
+
+	    if (m_input.Pop(output))
+	    {
 	    }
 	}
     }

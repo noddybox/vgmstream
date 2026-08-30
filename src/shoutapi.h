@@ -14,39 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Stream output to Icecast 2 thread
+// Interface to libshout
 //
-#ifndef VGMSTREAM_STREAMER_H
-#define VGMSTREAM_STREAMER_H
+#ifndef VGMSTREAM_SHOUTAPI_H
+#define VGMSTREAM_SHOUTAPI_H
 
-#include <vector>
 #include <string>
 
-#include "thread.h"
-#include "mp3file.h"
-#include "shoutapi.h"
-#include "queue.h"
+#include <shout/shout.h>
+
+#include "url.h"
 
 namespace vgmstream
 {
-    class Streamer : public Thread
+    class ShoutApi
     {
     	public:
 
 	    // Constructor
-	    Streamer(Queue<Mp3File>& input);
+	    ShoutApi(const URL& url,
+		     const std::string& password,
+		     bool public_stream);
 
-	protected:
+	    // Clean up
+	    ~ShoutApi();
 
-	    void ThreadCode();
+	    // Whether the API was initialised OK and connected
+	    bool Initialised() const;
+
+	    // Why there has been an error
+	    const std::string& Error() const;
+
+	    // Send a buffer to the icecast server.  Returns the number
+	    // of bytes written.
+	    std::size_t Write(const char *buffer, std::size_t size);
+
+	    // Say the streaming is interrupted, and to be started anew.
+	    void Interrupt();
 
 	private:
 
-	    Queue<Mp3File>&	m_input;
+	    shout_t	*m_shout;
+	    std::string	m_error;
 
-	    void		FileOutputMode();
-	    void		StreamOutputMode();
-
+	    bool	IsError(int status, const char *message);
     };
 };
 

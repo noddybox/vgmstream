@@ -65,6 +65,7 @@ namespace vgmstream
 
 		    if (m_cancel)
 		    {
+			pthread_mutex_unlock(&m_mutex);
 		    	return false;
 		    }
 		}
