@@ -45,7 +45,7 @@ namespace vgmstream
 
 	    if (m_input.Pop(decoded))
 	    {
-		LameApi lame(decoded);
+		LameApi lame(decoded, config.MiscOutputDirSet());
 
 		if (lame.Initialised())
 		{

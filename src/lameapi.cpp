@@ -27,7 +27,7 @@
 
 namespace vgmstream
 {
-    LameApi::LameApi(Decoded& pcm) : m_initialised(false), m_data()
+    LameApi::LameApi(Decoded& pcm, bool tags) : m_initialised(false), m_data()
     {
 	const Config& config(Config::Instance());
 
@@ -48,11 +48,14 @@ namespace vgmstream
 	    lame_set_brate(lame, config.Mp3Bitrate());
 	}
 
-	id3tag_init(lame);
-	id3tag_add_v2(lame);
-	id3tag_set_title(lame, pcm.Name().c_str());
-	id3tag_set_artist(lame, pcm.Composer().c_str());
-	id3tag_set_year(lame, pcm.Year().c_str());
+	if (tags)
+	{
+	    id3tag_init(lame);
+	    id3tag_add_v2(lame);
+	    id3tag_set_title(lame, pcm.Name().c_str());
+	    id3tag_set_artist(lame, pcm.Composer().c_str());
+	    id3tag_set_year(lame, pcm.Year().c_str());
+	}
 
 	lame_init_params(lame);
 

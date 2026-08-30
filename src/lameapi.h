@@ -31,8 +31,9 @@ namespace vgmstream
 
 	    // Construct an interface and do the encoding.
 	    // If it works Initialised() will return true and Data() will
-	    // return the encoded data.
-	    LameApi(Decoded& pcm);
+	    // return the encoded data.  ID3 tags will only be inlcuded if
+	    // tags is true.
+	    LameApi(Decoded& pcm, bool tags);
 
 	    // Whether the API was initialised OK
 	    bool Initialised() const;
