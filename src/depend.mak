@@ -4,7 +4,7 @@ main.o: main.cpp log.h config.h playlist.h playlistentry.h filetype.h \
 log.o: log.cpp log.h
 config.o: config.cpp config.h util.h log.h
 playlist.o: playlist.cpp playlist.h playlistentry.h filetype.h config.h \
- util.h log.h
+ util.h
 playlistentry.o: playlistentry.cpp playlistentry.h filetype.h util.h
 decoded.o: decoded.cpp decoded.h playlistentry.h filetype.h trackinfo.h
 thread.o: thread.cpp thread.h queuecancel.h util.h mtvar.h

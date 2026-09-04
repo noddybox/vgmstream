@@ -25,7 +25,6 @@
 #include "playlist.h"
 #include "config.h"
 #include "util.h"
-#include "log.h"
 
 namespace vgmstream
 {
@@ -34,6 +33,11 @@ namespace vgmstream
 			(std::chrono::system_clock::now()))
     {
     	ok = Read();
+    }
+
+    const std::string& Playlist::Error() const
+    {
+    	return m_error;
     }
 
     PlaylistEntry *Playlist::Next()
@@ -68,7 +72,7 @@ namespace vgmstream
 
 	if (!file)
 	{
-	    VGMLOG("Failed to open playlist file %s", path.c_str());
+	    m_error = "Failed to open playlist file " + path;
 	    return false;
 	}
 
@@ -86,7 +90,7 @@ namespace vgmstream
 
 	if (m_playlist.size() == 0)
 	{
-	    VGMLOG("Empty playlist file %s", path.c_str());
+	    m_error = "Empty playlist file " + path;
 	    return false;
 	}
 

@@ -35,6 +35,9 @@ namespace vgmstream
 	    // if the file is read OK.
 	    Playlist(bool& ok);
 
+	    // Reason for an error if not initialised OK
+	    const std::string& Error() const;
+
 	    // Get the next entry from the playlist if there is one.  Returns
 	    // a pointer if there is next one, null if we've reached the end of
 	    // the list.
@@ -50,6 +53,7 @@ namespace vgmstream
 
 	    std::default_random_engine m_rnd;
 	    std::vector<std::string> m_playlist;
+	    std::string m_error;
 
 	    bool Read();
     };

@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
 
     if (!playlist_ok)
     {
+	VGMLOG("%s", playlist.Error().c_str());
     	return 1;
     }
 
