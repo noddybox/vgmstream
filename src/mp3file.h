@@ -21,7 +21,7 @@
 
 #include <vector>
 
-#include "playlistentry.h"
+#include "trackinfo.h"
 
 namespace vgmstream
 {
@@ -31,15 +31,15 @@ namespace vgmstream
 
 	    // Construct an empty MP3 file based on the passed filename if the
 	    // file was written to disk and passed memory
-	    Mp3File(const std::string& filename,
-		    const char *memory,
-		    std::size_t size);
+	    Mp3File(const char *memory,
+		    std::size_t size,
+		    const TrackInfo& info);
 
 	    // Construct an empty object
 	    Mp3File();
 
-	    // The filename
-	    const std::string& Filename() const;
+	    // The track info
+	    const TrackInfo& Info() const;
 
 	    // Get the size of the MP3 data
 	    std::size_t Size() const;
@@ -49,8 +49,8 @@ namespace vgmstream
 
 	private:
 
-	    std::string		m_filename;
 	    std::vector<char>	m_data;
+	    TrackInfo		m_info;
     };
 };
 

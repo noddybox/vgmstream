@@ -89,13 +89,79 @@ namespace vgmstream
     	return m_error;
     }
 
-    std::size_t ShoutApi::Write(const char *buffer, std::size_t size)
+    bool ShoutApi::StartTrack(const std::string& album,
+	    		      const std::string& artist,
+			      const std::string& title,
+			      const std::string& year)
     {
-    	return 0;
+	shout_metadata_t *data = shout_metadata_new();
+
+	if (data == 0)
+	{
+	    m_error = "Failed to allocate metadata";
+	    return false;
+	}
+
+	bool status = true;
+	std::string info = title;
+
+	if (!artist.empty())
+	{
+	    info += " - " + artist;
+	}
+
+	if (!year.empty())
+	{
+	    info += " (" + year + ")";
+	}
+
+	if (shout_metadata_add(data, "song", info.c_str()))
+	{
+	    status = false;
+	    m_error = "Failed to set song title metadata";
+	}
+
+	shout_metadata_free(data);
+
+    	return status;
     }
 
-    void ShoutApi::Interrupt()
+    bool ShoutApi::Write(const char *buffer, std::size_t size)
     {
+	switch(shout_send(m_shout,
+			  reinterpret_cast<const unsigned char*>(buffer),
+			  size))
+	{
+	    case SHOUTERR_SUCCESS:
+	    	return true;
+
+	    case SHOUTERR_INSANE:
+	    	m_error = "Problem with shout object";
+		break;
+
+	    case SHOUTERR_UNCONNECTED:
+	    	m_error = "Not connected to server";
+		break;
+
+	    case SHOUTERR_MALLOC:
+	    	m_error = "Unable to allocate memory";
+		break;
+
+	    case SHOUTERR_SOCKET:
+	    	m_error = "Error talking to server";
+		break;
+
+	    default:
+	    	m_error = "Unknown error";
+		break;
+	}
+
+    	return false;
+    }
+
+    void ShoutApi::Sync()
+    {
+    	shout_sync(m_shout);
     }
 
     bool ShoutApi::IsError(int code, const char *message)

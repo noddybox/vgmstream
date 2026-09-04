@@ -36,9 +36,9 @@ namespace vgmstream
 	    Playlist(bool& ok);
 
 	    // Get the next entry from the playlist if there is one.  Returns
-	    // true if there is next one, false if we've reached the end of
+	    // a pointer if there is next one, null if we've reached the end of
 	    // the list.
-	    bool Next(PlaylistEntry& entry);
+	    PlaylistEntry *Next();
 
 	    // Current size of playlist
 	    std::size_t Size() const;

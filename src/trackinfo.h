@@ -14,52 +14,46 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Interface to libgme
+// Track info
 //
-#ifndef VGMSTREAM_GMEAPI_H
-#define VGMSTREAM_GMEAPI_H
+#ifndef VGMSTREAM_TRACKINFO_H
+#define VGMSTREAM_TRACKINFO_H
 
 #include <string>
 
-#include <gme/gme.h>
-
-#include "decoded.h"
-
 namespace vgmstream
 {
-    class GmeApi
+    class TrackInfo
     {
     	public:
 
-	    // Construct an interface to libgme using the supplied file.
-	    //
-	    GmeApi(const std::string& path, int track);
+	    // Construct
+	    TrackInfo();
 
-	    // Clean up
-	    ~GmeApi();
+	    // Get and set properties
 
-	    // Whether the decoder initialised OK
-	    bool Initialised() const;
+	    const std::string& Title() const; 
+	    void Title(const std::string& value); 
 
-	    // The reason for the last error
-	    const std::string& Error() const;
+	    const std::string& Artist() const; 
+	    void Artist(const std::string& value); 
 
-	    // Get the number of tracks in the file
-	    int TrackCount() const;
+	    const std::string& Album() const; 
+	    void Album(const std::string& value); 
 
-	    // Get the result of decoding.  Returns true if decoding worked.
-	    bool Decode(Decoded& result);
+	    const std::string& Year() const; 
+	    void Year(const std::string& value); 
+
+	    const std::string& Mp3Name() const; 
+	    void Mp3Name(const std::string& value); 
 
 	private:
 
-	    bool		m_initialised;
-	    Music_Emu		*m_emu;
-	    gme_info_t		*m_info;
-	    int			m_track_count;
-	    std::string		m_error;
-
-	    bool Error(const gme_err_t message);
-
+	    std::string		m_title;
+	    std::string		m_artist;
+	    std::string		m_album;
+	    std::string		m_year;
+	    std::string		m_mp3_name;
     };
 };
 

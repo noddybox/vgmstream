@@ -77,6 +77,7 @@ SOURCES		=	main.cpp		\
 			mp3file.cpp		\
 			url.cpp			\
 			shoutapi.cpp		\
+			trackinfo.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -99,6 +100,7 @@ HEADERS		=	log.h			\
 			queuecancel.h		\
 			url.h			\
 			shoutapi.h		\
+			trackinfo.h		\
 			util.h
 
 # Objects

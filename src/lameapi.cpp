@@ -52,9 +52,9 @@ namespace vgmstream
 	{
 	    id3tag_init(lame);
 	    id3tag_add_v2(lame);
-	    id3tag_set_title(lame, pcm.Name().c_str());
-	    id3tag_set_artist(lame, pcm.Composer().c_str());
-	    id3tag_set_year(lame, pcm.Year().c_str());
+	    id3tag_set_title(lame, pcm.Info().Title().c_str());
+	    id3tag_set_artist(lame, pcm.Info().Artist().c_str());
+	    id3tag_set_year(lame, pcm.Info().Year().c_str());
 	}
 
 	lame_init_params(lame);

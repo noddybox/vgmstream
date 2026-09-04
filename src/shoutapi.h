@@ -45,12 +45,19 @@ namespace vgmstream
 	    // Why there has been an error
 	    const std::string& Error() const;
 
-	    // Send a buffer to the icecast server.  Returns the number
-	    // of bytes written.
-	    std::size_t Write(const char *buffer, std::size_t size);
+	    // Start a new track.  Returns true if successful.
+	    bool StartTrack(const std::string& album,
+	    		    const std::string& artist,
+			    const std::string& title,
+			    const std::string& year);
 
-	    // Say the streaming is interrupted, and to be started anew.
-	    void Interrupt();
+
+	    // Send a buffer to the icecast server.  Returns true if the
+	    // buffer was sent.
+	    bool Write(const char *buffer, std::size_t size);
+
+	    // Wait for streaming to be available again
+	    void Sync();
 
 	private:
 

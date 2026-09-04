@@ -24,6 +24,7 @@
 #include <cstdlib>
 
 #include "playlistentry.h"
+#include "trackinfo.h"
 
 namespace vgmstream
 {
@@ -36,25 +37,8 @@ namespace vgmstream
 	    Decoded();
 	    Decoded(const PlaylistEntry& entry);
 
-	    // Get and set properties
-
-	    const PlaylistEntry& Entry() const; 
-	    void Entry(const PlaylistEntry& value); 
-
-	    const std::string& Name() const; 
-	    void Name(const std::string& value); 
-
-	    const std::string& Composer() const; 
-	    void Composer(const std::string& value); 
-
-	    const std::string& Album() const; 
-	    void Album(const std::string& value); 
-
-	    const std::string& Year() const; 
-	    void Year(const std::string& value); 
-
-	    unsigned int Frequency() const; 
-	    void Frequency(unsigned int value); 
+	    // Track info
+	    TrackInfo& Info();
 
 	    // Note this is the number of samples, not bytes
 	    std::size_t Size() const; 
@@ -68,16 +52,17 @@ namespace vgmstream
 	    // Add to the data
 	    void AddToData(const short *mem, std::size_t len); 
 
+	    // The frequency
+	    unsigned int Frequency() const;
+	    void Frequency(unsigned int value);
+
+
 	    // The desired default frequency
 	    static unsigned int DesiredFrequency();
 
 	private:
 
-	    PlaylistEntry	m_entry;
-	    std::string		m_name;
-	    std::string		m_composer;
-	    std::string		m_album;
-	    std::string		m_year;
+	    TrackInfo		m_info;
 	    unsigned int	m_freq;
 	    std::vector<short>	m_buff;
     };

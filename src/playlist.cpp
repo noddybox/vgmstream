@@ -36,17 +36,17 @@ namespace vgmstream
     	ok = Read();
     }
 
-    bool Playlist::Next(PlaylistEntry& entry)
+    PlaylistEntry *Playlist::Next()
     {
     	if (m_playlist.size() == 0)
 	{
-	    return false;
+	    return 0;
 	}
 
-	entry.Filename(m_playlist[0]);
+	std::string entry = m_playlist[0];
 	m_playlist.erase(m_playlist.begin());
 
-	return true;
+	return new PlaylistEntry(entry);
     }
 
     void Playlist::ReRead()

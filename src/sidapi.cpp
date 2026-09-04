@@ -110,10 +110,10 @@ namespace vgmstream
 
 	if (info != 0 && info->numberOfInfoStrings() > 2)
 	{
-	    result.Name(info->infoString(0));
-	    result.Composer(info->infoString(1));
-	    result.Year(info->infoString(2));
-	    result.Album(info->infoString(0));
+	    result.Info().Title(info->infoString(0));
+	    result.Info().Artist(info->infoString(1));
+	    result.Info().Year(info->infoString(2));
+	    result.Info().Album(info->infoString(0));
 	}
 
 	int length = m_database.lengthMs(m_tune);

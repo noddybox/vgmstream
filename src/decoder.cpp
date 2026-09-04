@@ -18,6 +18,8 @@
 //
 #include <gme/gme.h>
 
+#include <unistd.h>
+
 #include "decoder.h"
 #include "gmeapi.h"
 #include "sidapi.h"
@@ -43,9 +45,9 @@ namespace vgmstream
 
     	while(!done)
 	{
-	    PlaylistEntry entry;
+	    PlaylistEntry *entry = m_playlist.Next();
 
-	    if (!m_playlist.Next(entry))
+	    if (entry == 0)
 	    {
 	    	if (config.PlaylistRepeat() && !config.MiscOutputDirSet())
 		{
@@ -59,25 +61,22 @@ namespace vgmstream
 
 	    if (!done)
 	    {
-	    	FileType type(entry.Filename());
 		bool is_gme = false;
 		bool is_sid = false;
 
-		VGMLOG("Encoding %s", entry.Filename().c_str());
-
-		switch (type.Type())
+		switch (entry->Type()->Type())
 		{
 		    case FileType::eType::NotExist:
-			VGMLOG("Unable to open file %s",
-					entry.Filename().c_str());
+			VGMLOG("Unable to open file '%s'",
+					entry->Filename().c_str());
 			break;
 
 		    case FileType::eType::Unknown:
-			VGMLOG("Unable to determine filetype of %s",
-				    entry.Filename().c_str());
+			VGMLOG("Unable to determine filetype of '%s'",
+				    entry->Filename().c_str());
 			break;
 
-		    case FileType::eType::SID:
+		    case FileType::eType::Commodore64:
 		    	is_sid = true;
 			break;
 
@@ -88,40 +87,40 @@ namespace vgmstream
 
 		if (is_gme)
 		{
-		    GmeApi gme(entry.Filename(),
-			       entry.HasTrack() ? 0 : entry.Track());
+		    GmeApi gme(entry->Filename(),
+			       entry->HasTrack() ? 0 : entry->Track());
 
 		    if (gme.Initialised())
 		    {
-			Decoded decoded(entry);
+			Decoded decoded(*entry);
 
 			if (gme.Decode(decoded))
 			{
-			    VGMLOG("Saving decoded file %s",
-			    		entry.Filename().c_str());
 			    m_output.Push(decoded);
 			}
 			else
 			{
-			    VGMLOG("Failed to decode %s with GME",
-						    entry.Filename().c_str());
+			    VGMLOG("Failed to decode %s with GME - %s",
+						    entry->Filename().c_str(),
+						    gme.Error().c_str());
 			}
 		    }
 		    else
 		    {
-			VGMLOG("Failed to initialise GME for %s",
-						    entry.Filename().c_str());
+			VGMLOG("Failed to initialise GME for %s - %s",
+						    entry->Filename().c_str(),
+						    gme.Error().c_str());
 		    }
 		}
 
 		if (is_sid)
 		{
-		    SidApi sid(entry.Filename(),
-			       entry.HasTrack() ? entry.Track() + 1 : 0);
+		    SidApi sid(entry->Filename(),
+			       entry->HasTrack() ? entry->Track() + 1 : 0);
 
 		    if (sid.Initialised())
 		    {
-			Decoded decoded(entry);
+			Decoded decoded(*entry);
 
 			if (sid.Decode(decoded))
 			{
@@ -130,15 +129,34 @@ namespace vgmstream
 			else
 			{
 			    VGMLOG("Failed to decode %s with SID player",
-						    entry.Filename().c_str());
+						    entry->Filename().c_str());
 			}
 		    }
 		    else
 		    {
 			VGMLOG("Failed to initialise SID player for %s",
-						    entry.Filename().c_str());
+						    entry->Filename().c_str());
 		    }
 		}
+
+
+		if (m_output.Size() > 10)
+		{
+		    VGMLOG("Waiting for decoded output queue to reduce");
+
+		    while (!CancelRequested() && m_output.Size() > 10)
+		    {
+			::sleep(1);
+		    }
+
+		    VGMLOG("Resuming file decoding");
+		}
+	    }
+	    
+	    if (entry != 0)
+	    {
+	    	delete entry;
+		entry = 0;
 	    }
 	}
     }

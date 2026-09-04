@@ -20,7 +20,6 @@
 
 #include "gmeapi.h"
 #include "config.h"
-#include "log.h"
 
 namespace
 {
@@ -94,6 +93,11 @@ namespace vgmstream
     	return m_initialised;
     }
 
+    const std::string& GmeApi::Error() const
+    {
+    	return m_error;
+    }
+
     int GmeApi::TrackCount() const
     {
     	return m_track_count;
@@ -113,21 +117,22 @@ namespace vgmstream
 	    result.AddToData(buffer, BUFFER_SIZE);
 	}
 
-	result.Name(m_info->song);
-	result.Composer(m_info->author);
-	result.Album(m_info->game);
+	result.Info().Title(m_info->song);
+	result.Info().Artist(m_info->author);
+	result.Info().Album(m_info->game);
 
     	return true;
     }
 
-    bool GmeApi::Error(const gme_err_t message) const
+    bool GmeApi::Error(const gme_err_t message)
     {
     	if (message == 0)
 	{
 	    return false;
 	}
 
-	VGMLOG("Error returned by libgme: %s", message);
+	m_error = message;
+
 	return true;
     }
 };

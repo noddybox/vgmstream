@@ -18,6 +18,7 @@
 //
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 #include <unistd.h>
 
@@ -61,7 +62,7 @@ namespace vgmstream
 	    if (m_input.Pop(output))
 	    {
 		std::string filename =
-		    config.MiscOutputDir() + "/" + output.Filename();
+		    config.MiscOutputDir() + "/" + output.Info().Mp3Name();
 
 		VGMLOG("Saving MP3 to %s", filename.c_str());
 
@@ -86,8 +87,8 @@ namespace vgmstream
 	const Config& config = Config::Instance();
 
 	ShoutApi shoutcast(URL(config.IcecastUrl()),
-			   config.IcecastPassword(),
-			   config.IcecastPublic());
+			       config.IcecastPassword(),
+			       config.IcecastPublic());
 
 	if (!shoutcast.Initialised())
 	{
@@ -102,6 +103,24 @@ namespace vgmstream
 
 	    if (m_input.Pop(output))
 	    {
+		if (!shoutcast.StartTrack(output.Info().Album(),
+					  output.Info().Artist(),
+					  output.Info().Title(),
+					  output.Info().Year()))
+		{
+		    VGMLOG("Failed to set stream metadata: %s",
+		    			shoutcast.Error().c_str());
+		    return;
+		}
+
+		if (!shoutcast.Write(output.Data(), output.Size()))
+		{
+		    VGMLOG("Failed to stream output: %s",
+		    			shoutcast.Error().c_str());
+		    return;
+		}
+
+		shoutcast.Sync();
 	    }
 	}
     }

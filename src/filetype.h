@@ -41,7 +41,7 @@ namespace vgmstream
 		POKEY,
 		SNES,
 		MasterSystem,
-		SID
+		Commodore64
 	    };
 
 	    // Construct a file type for the passed file
@@ -51,12 +51,19 @@ namespace vgmstream
 	    // The type of file
 	    eType Type() const;
 
+	    // The system as a string
+	    const std::string& System() const;
+
 	private:
 
 	    typedef std::map<std::string, eType> StringTypeMap;
-	    static StringTypeMap ext_map;
+	    static StringTypeMap	m_ext_map;
+
+	    typedef std::map<eType, std::string> StringSystemMap;
+	    static StringSystemMap	m_system_map;
 
 	    eType			m_type;
+	    std::string			m_system;
 
 	    void ToUpper(std::string& s);
     };

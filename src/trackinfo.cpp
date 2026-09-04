@@ -14,63 +14,68 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// WAV file representation
+// Track info
 //
-#include <cstring>
-
-#include "decoded.h"
+#include "trackinfo.h"
 
 namespace vgmstream
 {
 
-    Decoded::Decoded() : m_freq(DesiredFrequency()),
-			 m_buff()
+    TrackInfo::TrackInfo() : m_title(""),
+		   m_artist(""),
+		   m_album(""),
+		   m_year(""),
+		   m_mp3_name("")
     {
     }
 
-    Decoded::Decoded(const PlaylistEntry& entry) : m_freq(DesiredFrequency()),
-						   m_buff()
+    const std::string& TrackInfo::Title() const
     {
-    	m_info.Mp3Name(entry.Mp3Name());
+    	return m_title;
     }
 
-    TrackInfo& Decoded::Info()
+    void TrackInfo::Title(const std::string& value)
     {
-    	return m_info;
+    	m_title = value;
     }
 
-    unsigned int Decoded::Frequency() const
+    const std::string& TrackInfo::Artist() const
     {
-    	return m_freq;
+    	return m_artist;
     }
 
-    void Decoded::Frequency(unsigned int value)
+    void TrackInfo::Artist(const std::string& value)
     {
-    	m_freq = value;
+    	m_artist = value;
     }
 
-    std::size_t Decoded::Size() const
+    const std::string& TrackInfo::Album() const
     {
-    	return m_buff.size();
+    	return m_album;
     }
 
-    std::size_t Decoded::ByteSize() const
+    void TrackInfo::Album(const std::string& value)
     {
-    	return m_buff.size() * sizeof(short);
+    	m_album = value;
     }
 
-    const short *Decoded::Data() const
+    const std::string& TrackInfo::Year() const
     {
-    	return m_buff.data();
+    	return m_year;
     }
 
-    void Decoded::AddToData(const short *mem, std::size_t len)
+    void TrackInfo::Year(const std::string& value)
     {
-	m_buff.insert(m_buff.end(), mem, mem + len);
+    	m_year = value;
     }
 
-    unsigned int Decoded::DesiredFrequency()
+    const std::string& TrackInfo::Mp3Name() const
     {
-    	return 44100u;
+    	return m_mp3_name;
+    }
+
+    void TrackInfo::Mp3Name(const std::string& value)
+    {
+    	m_mp3_name = value;
     }
 };

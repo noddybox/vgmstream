@@ -22,6 +22,7 @@
 
 #include "mp3encoder.h"
 #include "lameapi.h"
+#include "log.h"
 #include "config.h"
 
 namespace vgmstream
@@ -49,10 +50,21 @@ namespace vgmstream
 
 		if (lame.Initialised())
 		{
-		    Mp3File mp3(decoded.Entry().Mp3Name(),
-		    		lame.Data(), lame.Size());
+		    Mp3File mp3(lame.Data(), lame.Size(), decoded.Info());
 
 		    m_output.Push(mp3);
+
+		    if (m_output.Size() > 10)
+		    {
+		    	VGMLOG("Waiting for MP3 output queue to reduce");
+
+			while (!CancelRequested() && m_output.Size() > 10)
+			{
+			    ::sleep(1);
+			}
+
+		    	VGMLOG("Resuming MP3 encoding");
+		    }
 		}
 	    }
 	}

@@ -124,12 +124,18 @@ int main(int argc, char *argv[])
 	}
     }
 
+    VGMLOG("Starting streamer");
+
     vgmstream::Streamer streamer(stream_queue);
+
+    VGMLOG("Entering main loop");
 
     while(decoder.Alive() && encoder.Alive() && streamer.Alive())
     {
     	::sleep(1);
     }
+
+    VGMLOG("One or more threads dead -- exiting");
 
     // If one of the other threads died, cancel the decoder thread
     if (decoder.Alive())

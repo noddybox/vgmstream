@@ -21,6 +21,8 @@
 
 #include <string>
 
+#include "filetype.h"
+
 namespace vgmstream
 {
     class PlaylistEntry
@@ -28,12 +30,19 @@ namespace vgmstream
     	public:
 
 	    // Construct an entry.  If the filename ends in ":number" then
-	    // number will be used to set the track number.
-	    PlaylistEntry();
+	    // number will be used to set the track number.  If the file name
+	    // can't be parsed, or it's type can't be determined Initialised()
+	    // will return false.
+	    PlaylistEntry(const std::string& filename);
 
-	    // If the filename ends in ":number" then number will be used to
-	    // set the track number.
-	    void Filename(const std::string& filename);
+	    // Destructor
+	    ~PlaylistEntry();
+
+	    // Whether the entry is initialised
+	    bool Initialised() const;
+
+	    // The reason for failure
+	    const std::string& Error() const;
 
 	    // Get the filename component of the playlist entry.
 	    const std::string& Filename() const;
@@ -50,12 +59,22 @@ namespace vgmstream
 	    // will be "<filename without extension>.mp3"
 	    const std::string& Mp3Name() const;
 
+	    // The filetype
+	    const FileType *Type() const;
+
 	private:
 
+	    // Prevent object copy due to pointer
+	    PlaylistEntry(const PlaylistEntry& x) {}
+	    void operator=(const PlaylistEntry& x) {}
+
+	    bool		m_initialised;
+	    std::string		m_error;
 	    std::string		m_filename;
 	    bool		m_track_set;
 	    int			m_track;
 	    std::string		m_mp3_name;
+	    FileType		*m_file_type;
     };
 };
 

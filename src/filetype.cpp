@@ -23,7 +23,7 @@
 
 namespace vgmstream
 {
-    FileType::StringTypeMap FileType::ext_map =
+    FileType::StringTypeMap FileType::m_ext_map =
     {
 	{"AY",		eType::AY},
 	{"GBS",		eType::Gameboy},
@@ -36,8 +36,25 @@ namespace vgmstream
 	{"SPC",		eType::SNES},
 	{"VGM",		eType::MasterSystem},
 	{"VGZ",		eType::MasterSystem},
-	{"SID",		eType::SID},
-	{"PSID",	eType::SID}
+	{"SID",		eType::Commodore64},
+	{"PSID",	eType::Commodore64}
+    };
+
+    FileType::StringSystemMap FileType::m_system_map =
+    {
+	{eType::AY,		"AY Sound Chip"},
+	{eType::Gameboy,	"Gameboy"},
+	{eType::Genesis,	"Genesis"},
+	{eType::PCEngine,	"PC Engine"},
+	{eType::MSX,		"MSX"},
+	{eType::NES,		"Famicom"},
+	{eType::NES,		"Famicom"},
+	{eType::POKEY,		"Atari"},
+	{eType::SNES,		"Super Nintendo"},
+	{eType::MasterSystem,	"Master System"},
+	{eType::MasterSystem,	"Master System"},
+	{eType::Commodore64,	"Commodore 64"},
+	{eType::Commodore64,	"Commodore 64"}
     };
 
     FileType::FileType(const std::string& m_path)
@@ -62,19 +79,35 @@ namespace vgmstream
 	std::string ext = m_path.substr(pos + 1);
 	ToUpper(ext);
 
-	StringTypeMap::const_iterator iter = ext_map.find(ext);
+	StringTypeMap::const_iterator type_iter = m_ext_map.find(ext);
 
-	if (iter == ext_map.end())
+	if (type_iter == m_ext_map.end())
 	{
 	    return;
 	}
 
-	m_type = iter->second;
+	m_type = type_iter->second;
+
+	StringSystemMap::const_iterator sys_iter = m_system_map.find(m_type);
+
+	if (sys_iter != m_system_map.end())
+	{
+	    m_system = sys_iter->second;
+	}
+	else
+	{
+	    m_system = "Unknown system";
+	}
     }
 
     FileType::eType FileType::Type() const
     {
     	return m_type;
+    }
+
+    const std::string& FileType::System() const
+    {
+    	return m_system;
     }
 
     void FileType::ToUpper(std::string& s)
