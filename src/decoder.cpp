@@ -97,7 +97,8 @@ namespace vgmstream
 		if (is_gme)
 		{
 		    GmeApi gme(entry->Filename(),
-			       entry->HasTrack() ? 0 : entry->Track());
+			       entry->HasTrack() ? 0 : entry->Track(),
+			       entry->Type()->System());
 
 		    if (gme.Initialised())
 		    {
@@ -125,7 +126,8 @@ namespace vgmstream
 		if (is_sid)
 		{
 		    SidApi sid(entry->Filename(),
-			       entry->HasTrack() ? entry->Track() + 1 : 0);
+			       entry->HasTrack() ? entry->Track() + 1 : 0,
+			       entry->Type()->System());
 
 		    if (sid.Initialised())
 		    {

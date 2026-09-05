@@ -29,11 +29,14 @@ namespace
 
 namespace vgmstream
 {
-    GmeApi::GmeApi(const std::string& path, int track)
+    GmeApi::GmeApi(const std::string& path, int track,
+		   const std::string& system)
     {
 	const Config& config = Config::Instance();
 
     	m_initialised = false;
+
+	m_system = system;
 
 	if (Error(gme_open_file(path.c_str(),
 				&m_emu,
@@ -121,6 +124,7 @@ namespace vgmstream
 	result.Info().Title(m_info->song);
 	result.Info().Artist(m_info->author);
 	result.Info().Album(m_info->game);
+	result.Info().System(m_system);
 
     	return true;
     }

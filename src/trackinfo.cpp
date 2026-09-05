@@ -69,6 +69,16 @@ namespace vgmstream
     	m_year = value;
     }
 
+    const std::string& TrackInfo::System() const
+    {
+    	return m_system;
+    }
+
+    void TrackInfo::System(const std::string& value)
+    {
+    	m_system = value;
+    }
+
     const std::string& TrackInfo::Mp3Name() const
     {
     	return m_mp3_name;

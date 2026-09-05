@@ -44,6 +44,9 @@ namespace vgmstream
 	    const std::string& Year() const; 
 	    void Year(const std::string& value); 
 
+	    const std::string& System() const; 
+	    void System(const std::string& value); 
+
 	    const std::string& Mp3Name() const; 
 	    void Mp3Name(const std::string& value); 
 
@@ -53,6 +56,7 @@ namespace vgmstream
 	    std::string		m_artist;
 	    std::string		m_album;
 	    std::string		m_year;
+	    std::string		m_system;
 	    std::string		m_mp3_name;
     };
 };

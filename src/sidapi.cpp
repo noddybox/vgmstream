@@ -32,11 +32,13 @@ namespace vgmstream
     SourceFile	*SidApi::m_basic = 0;
     bool	SidApi::m_static_setup = false;
 
-    SidApi::SidApi(const std::string& path, int subtune)
+    SidApi::SidApi(const std::string& path, int subtune,
+		   const std::string& system)
     					: m_engine(),
 					  m_builder("vgmstream"),
 					  m_tune(path.c_str()),
-					  m_initialised(false)
+					  m_initialised(false),
+					  m_system(system)
     {
 	if (!m_static_setup)
 	{
@@ -116,6 +118,8 @@ namespace vgmstream
 	    result.Info().Year(info->infoString(2));
 	    result.Info().Album(info->infoString(0));
 	}
+
+	result.Info().System(m_system);
 
 	int length = m_database.lengthMs(m_tune);
 

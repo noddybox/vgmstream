@@ -110,10 +110,7 @@ namespace vgmstream
 
 	    if (m_input.Pop(output))
 	    {
-		if (!shoutcast.StartTrack(output.Info().Album(),
-					  output.Info().Artist(),
-					  output.Info().Title(),
-					  output.Info().Year()))
+		if (!shoutcast.StartTrack(output.Info()))
 		{
 		    VGMLOG("Failed to set stream metadata: %s",
 		    			shoutcast.Error().c_str());

@@ -28,7 +28,7 @@ lameapi.o: lameapi.cpp lameapi.h decoded.h playlistentry.h filetype.h \
  trackinfo.h config.h log.h
 mp3file.o: mp3file.cpp mp3file.h trackinfo.h
 url.o: url.cpp url.h util.h
-shoutapi.o: shoutapi.cpp shoutapi.h url.h
+shoutapi.o: shoutapi.cpp shoutapi.h url.h trackinfo.h
 trackinfo.o: trackinfo.cpp trackinfo.h
 constants.o: constants.cpp constants.h
 util.o: util.cpp util.h

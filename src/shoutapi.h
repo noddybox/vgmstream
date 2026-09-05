@@ -24,6 +24,7 @@
 #include <shout/shout.h>
 
 #include "url.h"
+#include "trackinfo.h"
 
 namespace vgmstream
 {
@@ -46,10 +47,7 @@ namespace vgmstream
 	    const std::string& Error() const;
 
 	    // Start a new track.  Returns true if successful.
-	    bool StartTrack(const std::string& album,
-	    		    const std::string& artist,
-			    const std::string& title,
-			    const std::string& year);
+	    bool StartTrack(const TrackInfo& info);
 
 
 	    // Send a buffer to the icecast server.  Returns true if the

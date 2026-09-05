@@ -39,7 +39,8 @@ namespace vgmstream
 	    // Construct an interface to libsidplyfp using the supplied file
 	    // and subtune.  The subtune numbering starts from one, and zero
 	    // means the default subtune.
-	    SidApi(const std::string& path, int subtune);
+	    SidApi(const std::string& path, int subtune,
+		   const std::string& system);
 
 	    // Clean up
 	    ~SidApi();
@@ -57,6 +58,7 @@ namespace vgmstream
 	    SidTune		m_tune;
 
 	    bool		m_initialised;
+	    std::string		m_system;
 
 	    static SidDatabase	m_database;
 	    static SourceFile	*m_kernal;

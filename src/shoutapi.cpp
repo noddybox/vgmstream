@@ -89,10 +89,7 @@ namespace vgmstream
     	return m_error;
     }
 
-    bool ShoutApi::StartTrack(const std::string& album,
-	    		      const std::string& artist,
-			      const std::string& title,
-			      const std::string& year)
+    bool ShoutApi::StartTrack(const TrackInfo& info)
     {
 	shout_metadata_t *data = shout_metadata_new();
 
@@ -103,22 +100,35 @@ namespace vgmstream
 	}
 
 	bool status = true;
-	std::string info = title;
+	std::string title;
 
-	if (!artist.empty())
+	if (!info.Artist().empty())
 	{
-	    info += " - " + artist;
+	    title += info.Artist() + " - ";
 	}
 
-	if (!year.empty())
+	title += info.Title();
+
+	if (!info.Year().empty())
 	{
-	    info += " (" + year + ")";
+	    title += " (" + info.Year() + ")";
 	}
 
-	if (shout_metadata_add(data, "song", info.c_str()))
+	title += " [" + info.System() + "]";
+
+	if (shout_metadata_add(data, "song", title.c_str()) != SHOUTERR_SUCCESS)
 	{
 	    status = false;
-	    m_error = "Failed to set song title metadata";
+	    m_error = "Failed to set track metadata";
+	}
+
+	if (status)
+	{
+	    if (shout_set_metadata_utf8(m_shout, data) != SHOUTERR_SUCCESS)
+	    {
+		status = false;
+		m_error = "Failed to set track metadata";
+	    }
 	}
 
 	shout_metadata_free(data);

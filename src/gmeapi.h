@@ -24,6 +24,7 @@
 #include <gme/gme.h>
 
 #include "decoded.h"
+#include "filetype.h"
 
 namespace vgmstream
 {
@@ -33,7 +34,8 @@ namespace vgmstream
 
 	    // Construct an interface to libgme using the supplied file.
 	    //
-	    GmeApi(const std::string& path, int track);
+	    GmeApi(const std::string& path, int track,
+		   const std::string& system);
 
 	    // Clean up
 	    ~GmeApi();
@@ -53,6 +55,7 @@ namespace vgmstream
 	private:
 
 	    bool		m_initialised;
+	    std::string		m_system;
 	    Music_Emu		*m_emu;
 	    gme_info_t		*m_info;
 	    int			m_track_count;
