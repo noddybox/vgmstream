@@ -37,13 +37,16 @@ namespace vgmstream
 	    virtual ~Thread();
 
 	    // Request that the thread exits
-	    void Cancel();
+	    void Cancel(bool force = false);
 
 	    // Is the thread alive
 	    bool Alive();
 
 	    // Has cancellation been requested?
 	    bool CancelRequested();
+
+	    // Has force cancellation been requested?
+	    bool ForceCancelRequested();
 
 	    // Wait for the thread to exit
 	    void Join();
@@ -64,6 +67,7 @@ namespace vgmstream
 
 	    MTVar<bool>	m_alive;
 	    MTVar<bool>	m_cancel;
+	    MTVar<bool>	m_force_cancel;
 	    QueueCancel	*m_queue_cancel;
 	    pthread_t	m_thread;
 

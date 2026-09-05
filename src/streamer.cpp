@@ -116,7 +116,7 @@ namespace vgmstream
 
 		std::size_t written = 0;
 
-		while (written < output.Size())
+		while (written < output.Size() && !ForceCancelRequested())
 		{
 		    std::size_t size = std::min(BUFFER_SIZE,
 		    				output.Size() - written);
