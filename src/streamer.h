@@ -26,6 +26,7 @@
 #include "mp3file.h"
 #include "shoutapi.h"
 #include "queue.h"
+#include "mtvar.h"
 
 namespace vgmstream
 {
@@ -36,6 +37,9 @@ namespace vgmstream
 	    // Constructor
 	    Streamer(Queue<Mp3File>& input);
 
+	    // Request skip of current song
+	    void Skip();
+
 	protected:
 
 	    void ThreadCode();
@@ -43,6 +47,7 @@ namespace vgmstream
 	private:
 
 	    Queue<Mp3File>&	m_input;
+	    MTVar<bool>		m_skip;
 
 	    void		FileOutputMode();
 	    void		StreamOutputMode();

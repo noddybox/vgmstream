@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <algorithm>
+#include <csignal>
 
 #include <unistd.h>
 
@@ -34,6 +35,22 @@
 #include "mp3file.h"
 #include "util.h"
 #include "constants.h"
+
+namespace
+{
+    volatile std::sig_atomic_t terminate_signal = 0;
+    volatile std::sig_atomic_t skip_signal = 0;
+
+    extern "C" void HandleTermination(int sig)
+    {
+    	terminate_signal = 1;
+    }
+
+    extern "C" void HandleSkip(int sig)
+    {
+    	skip_signal = 1;
+    }
+};
 
 int main(int argc, char *argv[])
 {
@@ -107,6 +124,16 @@ int main(int argc, char *argv[])
     	return 1;
     }
 
+    // As SIGPIPE can be caused if we've not streamed for a bit, ignore it
+    // so that we can degrade properly
+    std::signal(SIGPIPE, SIG_DFL);
+
+    // Handle termination and skip signals
+    std::signal(SIGINT, HandleTermination);
+    std::signal(SIGTERM, HandleTermination);
+    std::signal(SIGUSR1, HandleSkip);
+
+    // From here on in, we're entering the main processing loop
     vgmstream::Queue<vgmstream::Decoded> decoded_queue;
     vgmstream::Queue<vgmstream::Mp3File> stream_queue;
 
@@ -129,6 +156,7 @@ int main(int argc, char *argv[])
 
 	while(decoder.Alive() &&
 	      encoder.Alive() &&
+	      terminate_signal == 0 &&
 	      stream_queue.Size() < seed)
 	{
 	    ::sleep(1);
@@ -141,42 +169,64 @@ int main(int argc, char *argv[])
 
     VGMLOG("Entering main loop");
 
-    while(decoder.Alive() && encoder.Alive() && streamer.Alive())
+    while(decoder.Alive() &&
+    	  encoder.Alive() &&
+	  streamer.Alive() &&
+	  terminate_signal == 0)
     {
     	::sleep(1);
+
+	if (skip_signal == 1)
+	{
+	    streamer.Skip();
+	    skip_signal = 0;
+	}
     }
 
-    VGMLOG("One or more threads dead -- exiting");
+    if (terminate_signal == 1)
+    {
+	VGMLOG("Termination requested -- exiting");
+    }
+    else
+    {
+	VGMLOG("One or more threads dead -- exiting");
+    }
 
     // If one of the other threads died, cancel the decoder thread
     if (decoder.Alive())
     {
 	VGMLOG("Waiting for decoder to die");
-	decoder.Cancel();
+	decoder.Cancel(terminate_signal == 1);
 	decoder.Join();
     }
 
-    // Wait for outputs once decoder has exited
-    VGMLOG("Waiting for decoded queue to empty");
-
-    while(encoder.Alive() && decoded_queue.Size() > 0)
+    // Wait for outputs once decoder has exited and we're not terminating
+    if (terminate_signal == 0)
     {
-	::sleep(1);
+	VGMLOG("Waiting for decoded queue to empty");
+
+	while(encoder.Alive() && decoded_queue.Size() > 0)
+	{
+	    ::sleep(1);
+	}
     }
 
     VGMLOG("Waiting for MP3 encoder to die");
-    encoder.Cancel();
+    encoder.Cancel(terminate_signal == 1);
     encoder.Join();
 
-    VGMLOG("Waiting for streaming queue to empty");
-
-    while(streamer.Alive() && stream_queue.Size() > 0)
+    if (terminate_signal == 0)
     {
-	::sleep(1);
+	VGMLOG("Waiting for streaming queue to empty");
+
+	while(streamer.Alive() && stream_queue.Size() > 0)
+	{
+	    ::sleep(1);
+	}
     }
 
     VGMLOG("Waiting for streamer to die");
-    streamer.Cancel();
+    streamer.Cancel(terminate_signal == 1);
     streamer.Join();
 
     VGMLOG("Exiting");

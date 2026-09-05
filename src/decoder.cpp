@@ -44,7 +44,7 @@ namespace vgmstream
 	bool done = false;
 	const Config& config = Config::Instance();
 
-    	while(!done)
+    	while(!done && !CancelRequested())
 	{
 	    PlaylistEntry *entry = m_playlist.Next();
 

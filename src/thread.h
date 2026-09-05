@@ -36,8 +36,9 @@ namespace vgmstream
 	    // Destructor.
 	    virtual ~Thread();
 
-	    // Request that the thread exits
-	    void Cancel(bool force = false);
+	    // Request that the thread exits.  If force is true we request
+	    // that the thread exit quickly (it need not honour this).
+	    void Cancel(bool force);
 
 	    // Is the thread alive
 	    bool Alive();

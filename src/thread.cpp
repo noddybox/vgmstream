@@ -28,7 +28,7 @@ namespace vgmstream
 
     Thread::~Thread()
     {
-    	Cancel();
+    	Cancel(true);
     }
 
     void Thread::Cancel(bool force)

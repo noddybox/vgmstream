@@ -31,10 +31,16 @@
 namespace vgmstream
 {
     Streamer::Streamer(Queue<Mp3File>& input) : Thread(),
-						m_input(input)
+						m_input(input),
+						m_skip(false)
     {
 	CreateThread();
 	SetQueue(&m_input);
+    }
+
+    void Streamer::Skip()
+    {
+    	m_skip.Set(true);
     }
 
     void Streamer::ThreadCode()
@@ -116,7 +122,9 @@ namespace vgmstream
 
 		std::size_t written = 0;
 
-		while (written < output.Size() && !ForceCancelRequested())
+		while (written < output.Size() &&
+		       !m_skip.Get() &&
+		       !ForceCancelRequested())
 		{
 		    std::size_t size = std::min(BUFFER_SIZE,
 		    				output.Size() - written);
@@ -133,6 +141,8 @@ namespace vgmstream
 		    written += size;
 		}
 	    }
+
+	    m_skip.Set(false);
 	}
     }
 };
