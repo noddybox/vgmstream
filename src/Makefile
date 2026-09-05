@@ -78,6 +78,7 @@ SOURCES		=	main.cpp		\
 			url.cpp			\
 			shoutapi.cpp		\
 			trackinfo.cpp		\
+			constants.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -101,6 +102,7 @@ HEADERS		=	log.h			\
 			url.h			\
 			shoutapi.h		\
 			trackinfo.h		\
+			constants.h		\
 			util.h
 
 # Objects

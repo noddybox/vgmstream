@@ -84,11 +84,12 @@ namespace vgmstream
 
     void Streamer::StreamOutputMode()
     {
+	const std::size_t BUFFER_SIZE = 4096;
 	const Config& config = Config::Instance();
 
 	ShoutApi shoutcast(URL(config.IcecastUrl()),
-			       config.IcecastPassword(),
-			       config.IcecastPublic());
+			   config.IcecastPassword(),
+			   config.IcecastPublic());
 
 	if (!shoutcast.Initialised())
 	{
@@ -113,14 +114,24 @@ namespace vgmstream
 		    return;
 		}
 
-		if (!shoutcast.Write(output.Data(), output.Size()))
-		{
-		    VGMLOG("Failed to stream output: %s",
-		    			shoutcast.Error().c_str());
-		    return;
-		}
+		std::size_t written = 0;
 
-		shoutcast.Sync();
+		while (written < output.Size())
+		{
+		    std::size_t size = std::min(BUFFER_SIZE,
+		    				output.Size() - written);
+
+		    if (!shoutcast.Write(output.Data() + written, size))
+		    {
+			VGMLOG("Failed to stream output: %s",
+					    shoutcast.Error().c_str());
+			return;
+		    }
+
+		    shoutcast.Sync();
+
+		    written += size;
+		}
 	    }
 	}
     }

@@ -24,6 +24,7 @@
 #include "lameapi.h"
 #include "log.h"
 #include "config.h"
+#include "constants.h"
 
 namespace vgmstream
 {
@@ -54,11 +55,12 @@ namespace vgmstream
 
 		    m_output.Push(mp3);
 
-		    if (m_output.Size() > 10)
+		    if (m_output.Size() > Constants::MAX_QUEUE_SIZE)
 		    {
 		    	VGMLOG("Waiting for MP3 output queue to reduce");
 
-			while (!CancelRequested() && m_output.Size() > 10)
+			while (!CancelRequested() &&
+				    m_output.Size() > Constants::MAX_QUEUE_SIZE)
 			{
 			    ::sleep(1);
 			}

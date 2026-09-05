@@ -19,17 +19,17 @@
 #include <cstring>
 
 #include "decoded.h"
+#include "constants.h"
 
 namespace vgmstream
 {
 
-    Decoded::Decoded() : m_freq(DesiredFrequency()),
-			 m_buff()
+    Decoded::Decoded() : m_freq(Constants::DEFAULT_WAV_FREQUENCY), m_buff()
     {
     }
 
-    Decoded::Decoded(const PlaylistEntry& entry) : m_freq(DesiredFrequency()),
-						   m_buff()
+    Decoded::Decoded(const PlaylistEntry& entry)
+    		: m_freq(Constants::DEFAULT_WAV_FREQUENCY), m_buff()
     {
     	m_info.Mp3Name(entry.Mp3Name());
     }
@@ -67,10 +67,5 @@ namespace vgmstream
     void Decoded::AddToData(const short *mem, std::size_t len)
     {
 	m_buff.insert(m_buff.end(), mem, mem + len);
-    }
-
-    unsigned int Decoded::DesiredFrequency()
-    {
-    	return 44100u;
     }
 };

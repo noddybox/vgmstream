@@ -27,6 +27,7 @@
 #include "sourcefile.h"
 #include "log.h"
 #include "config.h"
+#include "constants.h"
 
 namespace vgmstream
 {
@@ -52,6 +53,14 @@ namespace vgmstream
 	    	if (config.PlaylistRepeat() && !config.MiscOutputDirSet())
 		{
 		    m_playlist.ReRead();
+
+		    entry = m_playlist.Next();
+
+		    if (entry == 0)
+		    {
+		    	VGMLOG("Failed to read next item from playlist");
+			done = true;
+		    }
 		}
 		else
 		{
@@ -140,11 +149,12 @@ namespace vgmstream
 		}
 
 
-		if (m_output.Size() > 10)
+		if (m_output.Size() > Constants::MAX_QUEUE_SIZE)
 		{
 		    VGMLOG("Waiting for decoded output queue to reduce");
 
-		    while (!CancelRequested() && m_output.Size() > 10)
+		    while (!CancelRequested() &&
+		    		m_output.Size() > Constants::MAX_QUEUE_SIZE)
 		    {
 			::sleep(1);
 		    }

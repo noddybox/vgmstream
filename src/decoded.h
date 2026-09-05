@@ -56,10 +56,6 @@ namespace vgmstream
 	    unsigned int Frequency() const;
 	    void Frequency(unsigned int value);
 
-
-	    // The desired default frequency
-	    static unsigned int DesiredFrequency();
-
 	private:
 
 	    TrackInfo		m_info;

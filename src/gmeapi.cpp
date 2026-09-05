@@ -20,6 +20,7 @@
 
 #include "gmeapi.h"
 #include "config.h"
+#include "constants.h"
 
 namespace
 {
@@ -36,7 +37,7 @@ namespace vgmstream
 
 	if (Error(gme_open_file(path.c_str(),
 				&m_emu,
-				Decoded::DesiredFrequency())))
+				Constants::DEFAULT_WAV_FREQUENCY)))
 	{
 	    return;
 	}

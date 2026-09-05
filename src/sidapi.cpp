@@ -22,6 +22,7 @@
 #include "config.h"
 #include "log.h"
 #include "util.h"
+#include "constants.h"
 
 namespace vgmstream
 {
@@ -68,7 +69,7 @@ namespace vgmstream
 
 	SidConfig sid_config;
 
-	sid_config.frequency = Decoded::DesiredFrequency();
+	sid_config.frequency = Constants::DEFAULT_WAV_FREQUENCY;
 	sid_config.samplingMethod = SidConfig::INTERPOLATE;
 	sid_config.sidEmulation = &m_builder;
 

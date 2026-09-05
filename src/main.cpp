@@ -18,6 +18,7 @@
 //
 #include <iostream>
 #include <cstdlib>
+#include <algorithm>
 
 #include <unistd.h>
 
@@ -32,6 +33,7 @@
 #include "streamer.h"
 #include "mp3file.h"
 #include "util.h"
+#include "constants.h"
 
 int main(int argc, char *argv[])
 {
@@ -112,14 +114,22 @@ int main(int argc, char *argv[])
     vgmstream::MP3Encoder encoder(decoded_queue, stream_queue);
 
     // If we're streaming, wait for a couple of MP3 files before starting
-    // the streamer.
-    if (!config.MiscOutputDirSet() && playlist.Size() > 2)
+    // the streamer.  Otherwise we get the chance of a SIGPIPE from the
+    // streamer as it connects to the server, but doesn't send for a while.
+    if (!config.MiscOutputDirSet())
     {
     	VGMLOG("Waiting for MP3 streaming queue to seed");
 
+	std::size_t seed = vgmstream::Constants::SEED_MP3;
+
+	if (!config.PlaylistRepeat())
+	{
+	    seed = std::min(playlist.Size(), seed);
+	}
+
 	while(decoder.Alive() &&
 	      encoder.Alive() &&
-	      stream_queue.Size() < 2)
+	      stream_queue.Size() < seed)
 	{
 	    ::sleep(1);
 	}
