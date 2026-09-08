@@ -18,7 +18,7 @@ decoder.o: decoder.cpp decoder.h thread.h queuecancel.h util.h mtvar.h \
 gmeapi.o: gmeapi.cpp gmeapi.h decoded.h playlistentry.h filetype.h \
  trackinfo.h config.h utf8.h constants.h
 sidapi.o: sidapi.cpp sidapi.h sourcefile.h util.h decoded.h \
- playlistentry.h filetype.h trackinfo.h config.h log.h constants.h
+ playlistentry.h filetype.h trackinfo.h config.h log.h utf8.h constants.h
 mp3encoder.o: mp3encoder.cpp mp3encoder.h thread.h queuecancel.h util.h \
  mtvar.h decoded.h playlistentry.h filetype.h trackinfo.h mp3file.h \
  queue.h lameapi.h log.h config.h constants.h

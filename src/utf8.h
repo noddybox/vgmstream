@@ -28,7 +28,7 @@ namespace vgmstream
     	public:
 
 	    // Return the passed Latin-1 string as UTF-8.  If the string is
-	    // already valid UTF-8, it is returned unchanged.
+	    // already valid UTF-8 or ASCII, it is returned unchanged.
 	    static std::string Convert(const std::string& from);
 
 	private:

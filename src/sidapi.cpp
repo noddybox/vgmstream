@@ -22,6 +22,7 @@
 #include "config.h"
 #include "log.h"
 #include "util.h"
+#include "utf8.h"
 #include "constants.h"
 
 namespace vgmstream
@@ -113,10 +114,10 @@ namespace vgmstream
 
 	if (info != 0 && info->numberOfInfoStrings() > 2)
 	{
-	    result.Info().Title(info->infoString(0));
-	    result.Info().Artist(info->infoString(1));
-	    result.Info().Year(info->infoString(2));
-	    result.Info().Album(info->infoString(0));
+	    result.Info().Title(UTF8::Convert(info->infoString(0)));
+	    result.Info().Artist(UTF8::Convert(info->infoString(1)));
+	    result.Info().Year(UTF8::Convert(info->infoString(2)));
+	    result.Info().Album(UTF8::Convert(info->infoString(0)));
 	}
 
 	result.Info().System(m_system);
