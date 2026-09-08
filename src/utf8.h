@@ -14,13 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Global constants
+// UTF8 conversion
 //
-#include "constants.h"
+#ifndef VGMSTREAM_UTF8_H
+#define VGMSTREAM_UTF8_H
+
+#include <string>
 
 namespace vgmstream
 {
-    const int Constants::SEED_MP3 = 2;
-    const int Constants::MAX_QUEUE_SIZE = 10;
-    const int Constants::DEFAULT_WAV_FREQUENCY = 44100;
+    class UTF8
+    {
+    	public:
+
+	    // Return the passed Latin-1 string as UTF-8.  If the string is
+	    // already valid UTF-8, it is returned unchanged.
+	    static std::string Convert(const std::string& from);
+
+	private:
+	    UTF8();
+
+	    static bool IsValid(const std::string& str);
+	    static void Append(std::string& to, unsigned char code);
+    };
 };
+
+#endif

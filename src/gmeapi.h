@@ -62,7 +62,6 @@ namespace vgmstream
 	    std::string		m_error;
 
 	    bool Error(const gme_err_t message);
-
     };
 };
 

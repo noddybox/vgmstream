@@ -18,8 +18,11 @@
 //
 #include <algorithm>
 
+#include <iconv.h>
+
 #include "gmeapi.h"
 #include "config.h"
+#include "utf8.h"
 #include "constants.h"
 
 namespace
@@ -121,10 +124,10 @@ namespace vgmstream
 	    result.AddToData(buffer, BUFFER_SIZE);
 	}
 
-	result.Info().Title(m_info->song);
-	result.Info().Artist(m_info->author);
-	result.Info().Album(m_info->game);
-	result.Info().System(m_system);
+	result.Info().Title(UTF8::Convert(m_info->song));
+	result.Info().Artist(UTF8::Convert(m_info->author));
+	result.Info().Album(UTF8::Convert(m_info->game));
+	result.Info().System(UTF8::Convert(m_system));
 
     	return true;
     }

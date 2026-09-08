@@ -25,15 +25,15 @@ namespace vgmstream
     {
     	public:
 
-	    // The number if MP£ files to seed before starting the streamer
-	    static const int SEED_MP3;
+	    // The number of MP3 files to seed before starting the streamer
+	    static constexpr int SEED_MP3 = 2;
 
 	    // The number of queue items to have before generation waits
 	    // for something to be consumed
-	    static const int MAX_QUEUE_SIZE;
+	    static constexpr int MAX_QUEUE_SIZE = 10;
 
 	    // The default frequency for WAV files
-	    static const int DEFAULT_WAV_FREQUENCY;
+	    static constexpr int DEFAULT_WAV_FREQUENCY = 44100;
 
 	private:
 

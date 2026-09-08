@@ -16,7 +16,7 @@ decoder.o: decoder.cpp decoder.h thread.h queuecancel.h util.h mtvar.h \
  playlist.h playlistentry.h filetype.h decoded.h trackinfo.h queue.h \
  gmeapi.h sidapi.h sourcefile.h log.h config.h constants.h
 gmeapi.o: gmeapi.cpp gmeapi.h decoded.h playlistentry.h filetype.h \
- trackinfo.h config.h constants.h
+ trackinfo.h config.h utf8.h constants.h
 sidapi.o: sidapi.cpp sidapi.h sourcefile.h util.h decoded.h \
  playlistentry.h filetype.h trackinfo.h config.h log.h constants.h
 mp3encoder.o: mp3encoder.cpp mp3encoder.h thread.h queuecancel.h util.h \
@@ -30,5 +30,5 @@ mp3file.o: mp3file.cpp mp3file.h trackinfo.h
 url.o: url.cpp url.h util.h
 shoutapi.o: shoutapi.cpp shoutapi.h url.h trackinfo.h
 trackinfo.o: trackinfo.cpp trackinfo.h
-constants.o: constants.cpp constants.h
+utf8.o: utf8.cpp utf8.h
 util.o: util.cpp util.h
