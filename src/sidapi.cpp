@@ -16,6 +16,7 @@
 //
 // Interface to libgme
 //
+#include <cstdint>
 #include <sidplayfp/SidTuneInfo.h>
 
 #include "sidapi.h"
@@ -55,17 +56,17 @@ namespace vgmstream
 
 	if (m_kernal != 0)
 	{
-	    m_engine.setKernal(m_kernal->Contents<uint8_t>());
+	    m_engine.setKernal(m_kernal->Contents<std::uint8_t>());
 	}
 
 	if (m_basic != 0)
 	{
-	    m_engine.setBasic(m_basic->Contents<uint8_t>());
+	    m_engine.setBasic(m_basic->Contents<std::uint8_t>());
 	}
 
 	if (m_chargen != 0)
 	{
-	    m_engine.setChargen(m_chargen->Contents<uint8_t>());
+	    m_engine.setChargen(m_chargen->Contents<std::uint8_t>());
 	}
 
 	m_tune.selectSong(subtune);
