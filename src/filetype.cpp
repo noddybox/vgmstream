@@ -21,6 +21,9 @@
 
 #include "filetype.h"
 
+#include "gmeapi.h"
+#include "sidapi.h"
+
 namespace vgmstream
 {
     FileType::StringTypeMap FileType::m_ext_map =
@@ -64,6 +67,7 @@ namespace vgmstream
 	if (!std::filesystem::exists(path))
 	{
 	    m_type = eType::NotExist;
+	    m_error = "File does not exist";
 	    return;
 	}
 
@@ -83,6 +87,7 @@ namespace vgmstream
 
 	if (type_iter == m_ext_map.end())
 	{
+	    m_error = "File type unknown";
 	    return;
 	}
 
@@ -100,14 +105,33 @@ namespace vgmstream
 	}
     }
 
-    FileType::eType FileType::Type() const
+    const std::string& FileType::Error() const
     {
-    	return m_type;
+    	return m_error;
     }
 
     const std::string& FileType::System() const
     {
     	return m_system;
+    }
+
+    FileDecoder *FileType::Decoder() const
+    {
+	switch(m_type)
+	{
+	    case eType::NotExist:
+	    case eType::Unknown:
+	    	break;
+
+	    case eType::Commodore64:
+	    	return new SidApi();
+
+	    default:
+	    	return new GmeApi();
+	}
+
+
+    	return 0;
     }
 
     void FileType::ToUpper(std::string& s)

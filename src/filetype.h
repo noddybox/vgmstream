@@ -22,11 +22,29 @@
 #include <map>
 #include <string>
 
+#include "filedecoder.h"
+
 namespace vgmstream
 {
     class FileType
     {
     	public:
+
+	    // Construct a file type for the passed file
+	    //
+	    FileType(const std::string& path);
+
+	    // The reason for failure
+	    const std::string& Error() const;
+
+	    // The system as a string
+	    const std::string& System() const;
+
+	    // The file decoder for this file.  If not applicable, null is
+	    // returned and Error() will return the reason why.
+	    FileDecoder *Decoder() const;
+
+	private:
 
 	    enum eType
 	    {
@@ -44,18 +62,6 @@ namespace vgmstream
 		Commodore64
 	    };
 
-	    // Construct a file type for the passed file
-	    //
-	    FileType(const std::string& path);
-
-	    // The type of file
-	    eType Type() const;
-
-	    // The system as a string
-	    const std::string& System() const;
-
-	private:
-
 	    typedef std::map<std::string, eType> StringTypeMap;
 	    static StringTypeMap	m_ext_map;
 
@@ -63,6 +69,7 @@ namespace vgmstream
 	    static StringSystemMap	m_system_map;
 
 	    eType			m_type;
+	    std::string			m_error;
 	    std::string			m_system;
 
 	    void ToUpper(std::string& s);

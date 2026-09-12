@@ -21,8 +21,6 @@
 
 #include <string>
 
-#include "filetype.h"
-
 namespace vgmstream
 {
     class PlaylistEntry
@@ -59,14 +57,7 @@ namespace vgmstream
 	    // will be "<filename without extension>.mp3"
 	    const std::string& Mp3Name() const;
 
-	    // The filetype
-	    const FileType *Type() const;
-
 	private:
-
-	    // Prevent object copy due to pointer
-	    PlaylistEntry(const PlaylistEntry& x) {}
-	    void operator=(const PlaylistEntry& x) {}
 
 	    bool		m_initialised;
 	    std::string		m_error;
@@ -74,7 +65,6 @@ namespace vgmstream
 	    bool		m_track_set;
 	    int			m_track;
 	    std::string		m_mp3_name;
-	    FileType		*m_file_type;
     };
 };
 

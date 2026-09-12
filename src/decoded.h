@@ -35,7 +35,6 @@ namespace vgmstream
 
 	    // Construct
 	    Decoded();
-	    Decoded(const PlaylistEntry& entry);
 
 	    // Track info
 	    TrackInfo& Info();

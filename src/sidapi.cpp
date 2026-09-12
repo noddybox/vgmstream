@@ -17,13 +17,14 @@
 // Interface to libgme
 //
 #include <cstdint>
+#include <sstream>
 #include <sidplayfp/SidTuneInfo.h>
 
 #include "sidapi.h"
 #include "config.h"
-#include "log.h"
 #include "util.h"
 #include "utf8.h"
+#include "log.h"
 #include "constants.h"
 
 namespace vgmstream
@@ -34,24 +35,45 @@ namespace vgmstream
     SourceFile	*SidApi::m_basic = 0;
     bool	SidApi::m_static_setup = false;
 
-    SidApi::SidApi(const std::string& path, int subtune,
-		   const std::string& system)
-    					: m_engine(),
-					  m_builder("vgmstream"),
-					  m_tune(path.c_str()),
-					  m_initialised(false),
-					  m_system(system)
+    SidApi::SidApi() : FileDecoder(),
+		       m_engine(),
+		       m_builder("vgmstream"),
+		       m_tune(0)
     {
 	if (!m_static_setup)
 	{
 	    m_static_setup = true;
 	    SetStaticData();
 	}
+    }
 
-	if (!m_tune.getStatus())
+    SidApi::~SidApi()
+    {
+    	if (m_tune != 0)
 	{
-	    VGMLOG("Failed to load SID tune: %s", m_tune.statusString());
-	    return;
+	    delete m_tune;
+	    m_tune = 0;
+	}
+    }
+
+    bool SidApi::InitialiseImpl(const PlaylistEntry& entry)
+    {
+	m_tune = new SidTune(entry.Filename().c_str());
+
+	if (m_tune == 0)
+	{
+	    SetErrorMessage("Failed to allocate SID tune");
+	    return false;
+	}
+
+	if (!m_tune->getStatus())
+	{
+	    std::ostringstream str;
+
+	    str << "Failed to load SID tune: " <<  m_tune->statusString();
+	    SetErrorMessage(str.str());
+
+	    return false;
 	}
 
 	if (m_kernal != 0)
@@ -69,7 +91,7 @@ namespace vgmstream
 	    m_engine.setChargen(m_chargen->Contents<std::uint8_t>());
 	}
 
-	m_tune.selectSong(subtune);
+	m_tune->selectSong(entry.HasTrack() ? entry.Track() + 1 : 0);
 
 	SidConfig sid_config;
 
@@ -79,39 +101,33 @@ namespace vgmstream
 
 	if (!m_engine.config(sid_config))
 	{
-	    VGMLOG("Error configuring SID engine: %s", m_engine.error());
-	    return;
+	    std::ostringstream str;
+
+	    str << "Error configuring SID engine: " << m_engine.error();
+	    SetErrorMessage(str.str());
+
+	    return false;
 	}
 
-	if (!m_engine.load(&m_tune))
+	if (!m_engine.load(m_tune))
 	{
-	    VGMLOG("Error loading SID tune into engine: %s", m_engine.error());
-	    return;
+	    std::ostringstream str;
+
+	    str << "Error loading SID tune into engine: " << m_engine.error();
+	    SetErrorMessage(str.str());
+
+	    return false;
 	}
 
 	m_engine.initMixer(true);
 
-	m_initialised = true;
-    }
-
-    SidApi::~SidApi()
-    {
-    }
-
-    bool SidApi::Initialised() const
-    {
-    	return m_initialised;
+	return true;
     }
 
     bool SidApi::Decode(Decoded& result)
     {
-	if (!m_initialised)
-	{
-	    return false;
-	}
-
 	const Config& config(Config::Instance());
-	const SidTuneInfo *info = m_tune.getInfo();
+	const SidTuneInfo *info = m_tune->getInfo();
 
 	if (info != 0 && info->numberOfInfoStrings() > 2)
 	{
@@ -121,9 +137,7 @@ namespace vgmstream
 	    result.Info().Album(UTF8::Convert(info->infoString(0)));
 	}
 
-	result.Info().System(m_system);
-
-	int length = m_database.lengthMs(m_tune);
+	int length = m_database.lengthMs(*m_tune);
 
 	if (length < 1)
 	{

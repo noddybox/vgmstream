@@ -14,47 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Interface to libgme
+// File decoder base class
 //
-#ifndef VGMSTREAM_GMEAPI_H
-#define VGMSTREAM_GMEAPI_H
-
-#include <string>
-
-#include <gme/gme.h>
-
 #include "filedecoder.h"
-#include "playlistentry.h"
-#include "decoded.h"
-#include "filetype.h"
 
 namespace vgmstream
 {
-    class GmeApi : public FileDecoder
+    FileDecoder::FileDecoder() : m_error()
     {
-    	public:
+    }
 
-	    // Construct an interface to libgme using the supplied file.
-	    //
-	    GmeApi();
+    FileDecoder::~FileDecoder()
+    {
+    }
 
-	    // Clean up
-	    ~GmeApi();
+    bool FileDecoder::Initialise(const PlaylistEntry& entry)
+    {
+    	return InitialiseImpl(entry);
+    }
 
-	    // Get the result of decoding.  Returns true if decoding worked.
-	    bool Decode(Decoded& result);
+    const std::string& FileDecoder::Error() const
+    {
+    	return m_error;
+    }
 
-	protected:
-
-	    bool InitialiseImpl(const PlaylistEntry& entry);
-
-	private:
-
-	    Music_Emu		*m_emu;
-	    gme_info_t		*m_info;
-
-	    bool Error(const gme_err_t message);
-    };
+    void FileDecoder::SetErrorMessage(const std::string& error)
+    {
+    	m_error = error;
+    }
 };
-
-#endif

@@ -32,52 +32,8 @@ namespace
 
 namespace vgmstream
 {
-    GmeApi::GmeApi(const std::string& path, int track,
-		   const std::string& system)
+    GmeApi::GmeApi() : FileDecoder()
     {
-	const Config& config = Config::Instance();
-
-    	m_initialised = false;
-
-	m_system = system;
-
-	if (Error(gme_open_file(path.c_str(),
-				&m_emu,
-				Constants::DEFAULT_WAV_FREQUENCY)))
-	{
-	    return;
-	}
-
-	m_track_count = gme_track_count(m_emu);
-
-	track = std::max(track, m_track_count - 1);
-
-	if (Error(gme_track_info(m_emu, &m_info, track)))
-	{
-	    return;
-	}
-
-	if (m_info->length <= 0)
-	{
-	    m_info->length = m_info->intro_length +
-	    			m_info->loop_length * config.DecoderLoop();
-	}
-
-	if (m_info->length <= 0)
-	{
-	    m_info->length = config.DecoderDefaultLength() * 1000;
-	}
-
-	gme_enable_accuracy(m_emu, 1);
-
-	if (Error(gme_start_track(m_emu, track)))
-	{
-	    return;
-	}
-
-	gme_set_fade(m_emu, m_info->length);
-
-	m_initialised = true;
     }
 
     GmeApi::~GmeApi()
@@ -95,19 +51,45 @@ namespace vgmstream
 	}
     }
 
-    bool GmeApi::Initialised() const
+    bool GmeApi::InitialiseImpl(const PlaylistEntry& entry)
     {
-    	return m_initialised;
-    }
+	const Config& config = Config::Instance();
 
-    const std::string& GmeApi::Error() const
-    {
-    	return m_error;
-    }
+	if (Error(gme_open_file(entry.Filename().c_str(),
+				&m_emu,
+				Constants::DEFAULT_WAV_FREQUENCY)))
+	{
+	    return false;
+	}
 
-    int GmeApi::TrackCount() const
-    {
-    	return m_track_count;
+	int track = entry.HasTrack() ? entry.Track() : 0;
+
+	if (Error(gme_track_info(m_emu, &m_info, track)))
+	{
+	    return false;
+	}
+
+	if (m_info->length <= 0)
+	{
+	    m_info->length = m_info->intro_length +
+	    			m_info->loop_length * config.DecoderLoop();
+	}
+
+	if (m_info->length <= 0)
+	{
+	    m_info->length = config.DecoderDefaultLength() * 1000;
+	}
+
+	gme_enable_accuracy(m_emu, 1);
+
+	if (Error(gme_start_track(m_emu, track)))
+	{
+	    return false;
+	}
+
+	gme_set_fade(m_emu, m_info->length);
+
+	return true;
     }
 
     bool GmeApi::Decode(Decoded& result)
@@ -127,7 +109,6 @@ namespace vgmstream
 	result.Info().Title(UTF8::Convert(m_info->song));
 	result.Info().Artist(UTF8::Convert(m_info->author));
 	result.Info().Album(UTF8::Convert(m_info->game));
-	result.Info().System(UTF8::Convert(m_system));
 
     	return true;
     }
@@ -139,7 +120,7 @@ namespace vgmstream
 	    return false;
 	}
 
-	m_error = message;
+	SetErrorMessage(message);
 
 	return true;
     }

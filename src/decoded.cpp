@@ -28,12 +28,6 @@ namespace vgmstream
     {
     }
 
-    Decoded::Decoded(const PlaylistEntry& entry)
-    		: m_freq(Constants::DEFAULT_WAV_FREQUENCY), m_buff()
-    {
-    	m_info.Mp3Name(entry.Mp3Name());
-    }
-
     TrackInfo& Decoded::Info()
     {
     	return m_info;

@@ -29,36 +29,33 @@
 
 #include "sourcefile.h"
 #include "decoded.h"
+#include "playlistentry.h"
+#include "filedecoder.h"
 
 namespace vgmstream
 {
-    class SidApi
+    class SidApi : public FileDecoder
     {
     	public:
 
-	    // Construct an interface to libsidplyfp using the supplied file
-	    // and subtune.  The subtune numbering starts from one, and zero
-	    // means the default subtune.
-	    SidApi(const std::string& path, int subtune,
-		   const std::string& system);
+	    // Construct 
+	    SidApi();
 
 	    // Clean up
 	    ~SidApi();
 
-	    // Whether the API was initialised OK
-	    bool Initialised() const;
-
 	    // Get the result of decoding.  Returns true if decoding worked.
 	    bool Decode(Decoded& result);
 
+	protected:
+
+	    bool InitialiseImpl(const PlaylistEntry& entry);
+	    
 	private:
 
 	    sidplayfp		m_engine;
 	    ReSIDfpBuilder	m_builder;
-	    SidTune		m_tune;
-
-	    bool		m_initialised;
-	    std::string		m_system;
+	    SidTune		*m_tune;
 
 	    static SidDatabase	m_database;
 	    static SourceFile	*m_kernal;

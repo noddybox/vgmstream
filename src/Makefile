@@ -79,6 +79,7 @@ SOURCES		=	main.cpp		\
 			shoutapi.cpp		\
 			trackinfo.cpp		\
 			utf8.cpp		\
+			filedecoder.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -104,6 +105,7 @@ HEADERS		=	log.h			\
 			trackinfo.h		\
 			constants.h		\
 			utf8.h			\
+			filedecoder.h		\
 			util.h
 
 # Objects

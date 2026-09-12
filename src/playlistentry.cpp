@@ -26,7 +26,6 @@ namespace vgmstream
 	m_initialised = false;
     	m_track_set = false;
 	m_track = -1;
-	m_file_type = 0;
 
 	std::size_t pos = filename.find_last_of(':');
 
@@ -64,38 +63,11 @@ namespace vgmstream
 
 	m_mp3_name = basename + ".mp3";
 
-	m_file_type = new FileType(filename);
-
-	if (m_file_type == 0)
-	{
-	    m_error = "Failed to create FileType object";
-	    return;
-	}
-
-	switch (m_file_type->Type())
-	{
-	    case FileType::Unknown:
-	    	m_error = "File type unknown";
-		return;
-
-	    case FileType::NotExist:
-	    	m_error = "File doesn't exist";
-		return;
-
-	    default:
-	    	break;
-	}
-
 	m_initialised = true;
     }
 
     PlaylistEntry::~PlaylistEntry()
     {
-    	if (m_file_type != 0)
-	{
-	    delete m_file_type;
-	    m_file_type = 0;
-	}
     }
 
     bool PlaylistEntry::Initialised() const
@@ -126,10 +98,5 @@ namespace vgmstream
     const std::string& PlaylistEntry::Mp3Name() const
     {
     	return m_mp3_name;
-    }
-
-    const FileType *PlaylistEntry::Type() const
-    {
-    	return m_file_type;
     }
 };
