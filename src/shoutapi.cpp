@@ -109,6 +109,11 @@ namespace vgmstream
 
 	title += info.Title();
 
+	if (!info.Album().empty())
+	{
+	    title += " (" + info.Album() + ")";
+	}
+
 	if (!info.Year().empty())
 	{
 	    title += " (" + info.Year() + ")";
