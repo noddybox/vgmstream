@@ -23,6 +23,7 @@
 
 #include "gmeapi.h"
 #include "sidapi.h"
+#include "mptapi.h"
 
 namespace vgmstream
 {
@@ -40,7 +41,10 @@ namespace vgmstream
 	{"VGM",		eType::MasterSystem},
 	{"VGZ",		eType::MasterSystem},
 	{"SID",		eType::Commodore64},
-	{"PSID",	eType::Commodore64}
+	{"MOD",		eType::MOD},
+	{"S3M",		eType::MOD},
+	{"XM",		eType::MOD},
+	{"IT",		eType::MOD}
     };
 
     FileType::StringSystemMap FileType::m_system_map =
@@ -57,7 +61,8 @@ namespace vgmstream
 	{eType::MasterSystem,	"Master System"},
 	{eType::MasterSystem,	"Master System"},
 	{eType::Commodore64,	"Commodore 64"},
-	{eType::Commodore64,	"Commodore 64"}
+	{eType::Commodore64,	"Commodore 64"},
+	{eType::MOD,		"PC/Amiga/ST"}
     };
 
     FileType::FileType(const std::string& m_path)
@@ -121,15 +126,17 @@ namespace vgmstream
 	{
 	    case eType::NotExist:
 	    case eType::Unknown:
-	    	break;
+		break;
 
 	    case eType::Commodore64:
 	    	return new SidApi();
 
+	    case eType::MOD:
+	    	return new MptApi();
+
 	    default:
 	    	return new GmeApi();
 	}
-
 
     	return 0;
     }

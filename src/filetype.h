@@ -59,7 +59,8 @@ namespace vgmstream
 		POKEY,
 		SNES,
 		MasterSystem,
-		Commodore64
+		Commodore64,
+		MOD
 	    };
 
 	    typedef std::map<std::string, eType> StringTypeMap;

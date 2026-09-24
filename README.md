@@ -5,6 +5,9 @@ thought it would be nice to support other video game formats, of the older
 variety.  Hence I decided to see if I could write a streamer that transcoded
 video game music files to MP3 to be consumed by Icecast 2.
 
+It has since been extended to decode MOD files and cautiously enters the
+16-bit computer era.
+
 # Thanks        
 
 `vgmstream` couldn't have been written without these libraries:
@@ -16,6 +19,7 @@ https://github.com/libsidplayfp/libsidplayfp
 the SNES is 8-bit): https://github.com/libgme/game-music-emu
 * libshout, a library for streaming to an Icecast 2 server:
 https://gitlab.xiph.org/xiph/icecast-libshout
+* libopenmpt, a library for decoding tracker files (MOD files): https://lib.openmpt.org/libopenmpt/
 
 # License
 
@@ -63,7 +67,7 @@ Any flag setting support the following values:
 |`icecast.url`|Depends|The URL of the endpoint on Icecast 2 to connect to.  Can be missing if `misc.outputdir` is set.|
 |`icecast.password`|Depends|The password to connect as a **source**  in Icecast 2.  Can be missing if `misc.outputdir` is set.|
 |`icecast.public`|Y|Flag to say whether to make the stream public.  The default is to not.|
-|`playlist.file`|N|The location of the playlist file, with each line being a path to a file # to stream.|
+|`playlist.file`|N|The location of the playlist file, with each line being a path to a file to stream.  See the following section for details on the format of the playlist.|
 |`playlist.shuffle`|Y|Whether to shuffle the entries in the file or not.  The default is to shuffle.|
 |`playlist.repeat`|Y|Whether to repeat the playlist.  It will be reshuffled if `playlist.shuffle` is enabled when the end is reached.  Default is to repeat.|
 |`decoder.default_length`|Y|The default number of seconds if the file has no length information.  Defaults to 180 seconds.|

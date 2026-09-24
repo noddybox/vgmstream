@@ -14,14 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Interface to libgme
+// Interface to libopenmpt
 //
-#ifndef VGMSTREAM_GMEAPI_H
-#define VGMSTREAM_GMEAPI_H
+#ifndef VGMSTREAM_MPTAPI_H
+#define VGMSTREAM_MPTAPI_H
 
 #include <string>
+#include <memory>
 
-#include <gme/gme.h>
+#include <libopenmpt/libopenmpt.hpp>
 
 #include "filedecoder.h"
 #include "playlistentry.h"
@@ -30,16 +31,16 @@
 
 namespace vgmstream
 {
-    class GmeApi : public FileDecoder
+    class MptApi : public FileDecoder
     {
     	public:
 
-	    // Construct an interface to libgme
+	    // Construct an interface to openmpt
 	    //
-	    GmeApi();
+	    MptApi();
 
 	    // Clean up
-	    ~GmeApi();
+	    ~MptApi();
 
 	    // Get the result of decoding.  Returns true if decoding worked.
 	    bool Decode(Decoded& result);
@@ -50,10 +51,7 @@ namespace vgmstream
 
 	private:
 
-	    Music_Emu		*m_emu;
-	    gme_info_t		*m_info;
-
-	    bool Error(const gme_err_t message);
+	    std::unique_ptr<openmpt::module> m_mod;
     };
 };
 

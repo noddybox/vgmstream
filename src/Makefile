@@ -37,6 +37,11 @@ LIBS_GME	:=	$(shell pkgconf --libs libgme)
 CFLAGS_SHOUT	:=	$(shell pkgconf --cflags shout)
 LIBS_SHOUT	:=	$(shell pkgconf --libs shout)
 
+# Switches for the libopenmpt library
+#
+CFLAGS_OPENMPT	:=	$(shell pkgconf --cflags libopenmpt)
+LIBS_OPENMPT	:=	$(shell pkgconf --libs libopenmpt)
+
 # Switches for pthreads
 #
 CFLAGS_PTHREAD	:=	-pthread
@@ -49,9 +54,11 @@ LIBS_GENERAL	:=
 
 # Combines the flags
 CFLAGS_VGM	:=	$(CFLAGS_LAME) $(CFLAGS_SIDPLAY) $(CFLAGS_GME) \
-			$(CFLAGS_SHOUT) $(CFLAGS_PTHREAD) $(CFLAGS_GENERAL)
+			$(CFLAGS_SHOUT) $(CFLAGS_OPENMPT) \
+			$(CFLAGS_PTHREAD) $(CFLAGS_GENERAL)
 LIBS_VGM	:=	$(LIBS_LAME) $(LIBS_SIDPLAY) $(LIBS_GME) \
-			$(LIBS_SHOUT) $(LIBS_PTHREAD) $(LIBS_GENERAL)
+			$(LIBS_SHOUT) $(LIBS_OPENMPT) \
+			$(LIBS_PTHREAD) $(LIBS_GENERAL)
 
 # The target
 #
@@ -80,6 +87,7 @@ SOURCES		=	main.cpp		\
 			trackinfo.cpp		\
 			utf8.cpp		\
 			filedecoder.cpp		\
+			mptapi.cpp		\
 			util.cpp
 
 HEADERS		=	log.h			\
@@ -106,6 +114,7 @@ HEADERS		=	log.h			\
 			constants.h		\
 			utf8.h			\
 			filedecoder.h		\
+			mptapi.h		\
 			util.h
 
 # Objects
