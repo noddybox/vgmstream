@@ -124,7 +124,7 @@ namespace vgmstream
 	return true;
     }
 
-    bool SidApi::Decode(Decoded& result)
+    bool SidApi::DecodeImpl(Decoded& result)
     {
 	const Config& config(Config::Instance());
 	const SidTuneInfo *info = m_tune->getInfo();

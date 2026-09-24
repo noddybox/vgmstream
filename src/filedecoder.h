@@ -39,12 +39,9 @@ namespace vgmstream
 	    // Error() will return the reason.
 	    bool Initialise(const PlaylistEntry& entry);
 
-	    // Implementors must implement this to do the actual decoding
-	    // to a PCM.  It should return true if the file is decoded,
-	    // filling in result and info with the contents of the decoded file.
-	    // If false is returned the error message should be filled in with
-	    // the reason.
-	    virtual bool Decode(Decoded& result) = 0;
+	    // Decode the file into the result WAV file.  Returns true if
+	    // decoded ok.  If false, Error() will return the reason.
+	    bool Decode(Decoded &result);
 
 	    // The reason for the last error
 	    const std::string& Error() const;
@@ -57,9 +54,18 @@ namespace vgmstream
 	    // Implementers must implement this to initialise the decoder
 	    virtual bool InitialiseImpl(const PlaylistEntry& entry) = 0;
 
+	    // Implementors must implement this to do the actual decoding
+	    // to a PCM.  It should return true if the file is decoded,
+	    // filling in result and info with the contents of the decoded file.
+	    // If false is returned the error message should be filled in with
+	    // the reason.  The MP3 name in the result will be set for the
+	    // decoder.
+	    virtual bool DecodeImpl(Decoded& result) = 0;
+
 	private:
 
 	    std::string			m_error;
+	    std::string			m_mp3_name;
     };
 };
 

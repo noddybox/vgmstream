@@ -32,7 +32,7 @@ namespace vgmstream
     {
     }
 
-    bool MptApi::Decode(Decoded& result)
+    bool MptApi::DecodeImpl(Decoded& result)
     {
 	try
 	{

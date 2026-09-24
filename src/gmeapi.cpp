@@ -92,7 +92,7 @@ namespace vgmstream
 	return true;
     }
 
-    bool GmeApi::Decode(Decoded& result)
+    bool GmeApi::DecodeImpl(Decoded& result)
     {
 	while(!gme_track_ended(m_emu))
 	{

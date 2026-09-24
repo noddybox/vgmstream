@@ -30,9 +30,15 @@ namespace vgmstream
 
     bool FileDecoder::Initialise(const PlaylistEntry& entry)
     {
+	m_mp3_name = entry.Mp3Name();
     	return InitialiseImpl(entry);
     }
 
+    bool FileDecoder::Decode(Decoded& result)
+    {
+    	result.Info().Mp3Name(m_mp3_name);
+	return DecodeImpl(result);
+    }
     const std::string& FileDecoder::Error() const
     {
     	return m_error;

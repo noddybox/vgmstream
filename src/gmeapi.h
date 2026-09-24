@@ -41,12 +41,11 @@ namespace vgmstream
 	    // Clean up
 	    ~GmeApi();
 
-	    // Get the result of decoding.  Returns true if decoding worked.
-	    bool Decode(Decoded& result);
-
 	protected:
 
 	    bool InitialiseImpl(const PlaylistEntry& entry);
+
+	    bool DecodeImpl(Decoded& result);
 
 	private:
 
