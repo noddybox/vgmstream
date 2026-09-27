@@ -19,3 +19,10 @@ files and outputs the info extracted from the files e.g.
 ```
 $ sidinfo /path/to/HVSC-song-database.md5 /path/file.sid
 ```
+
+Alternatively, like `nfstracks` it can output in a form suitable for the
+playlist, trimming subtunes which are below a `max_msec` milliseconds in length:
+
+```
+$ sidinfo [-p max_msec] /path/to/HVSC-song-database.md5 /path/file.sid
+```

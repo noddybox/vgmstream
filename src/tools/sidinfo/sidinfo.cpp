@@ -21,6 +21,9 @@
 */
 #include <iostream>
 #include <string>
+#include <vector>
+#include <cstdint>
+#include <cstdio>
 
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidTune.h>
@@ -32,13 +35,134 @@ namespace
     std::string name;
     SidDatabase database;
 
-    unsigned int NumSubTunes(const char *path)
+    class UTF8
     {
-    	return 1;
+    	public:
+
+	    // Return the passed Latin-1 string as UTF-8.  If the string is
+	    // already valid UTF-8 or ASCII, it is returned unchanged.
+	    static std::string Convert(const std::string& from);
+
+	private:
+	    UTF8();
+
+	    static bool IsValid(const std::string& str);
+	    static void Append(std::string& to, unsigned char code);
+    };
+
+    std::string UTF8::Convert(const std::string& from)
+    {
+	if (IsValid(from))
+	{
+	    return from;
+	}
+
+    	std::string result;
+
+	for(std::string::const_iterator i = from.begin(); i != from.end(); ++i)
+	{
+	    // C-style cast as we want just the bits as is, so just in case
+	    // reinterpret_cast, well, reinterprets
+	    Append(result, (unsigned char)*i);
+	}
+
+	return result;
     }
 
-    void ProcessFile(const char *path)
+    bool UTF8::IsValid(const std::string& str)
     {
+	int len = 0;
+
+    	for(std::string::const_iterator i = str.begin(); i != str.end(); ++i)
+	{
+	    // C-style cast as we want just the bits as is, so just in case
+	    // reinterpret_cast, well, reinterprets
+	    unsigned char c = (unsigned char)*i;
+
+	    if (len)
+	    {
+	    	if ((c & 0xc0) != 0x80)
+		{
+		    return false;
+		}
+
+		len--;
+	    }
+	    else
+	    {
+		if (c > 0x7f)
+		{
+		    if ((c & 0xe0) == 0xc0)
+		    {
+		    	len = 1;
+		    }
+		    else if ((c & 0xf0) == 0xe0)
+		    {
+		    	len = 2;
+		    }
+		    else if ((c & 0xf8) == 0xf0)
+		    {
+		    	len = 3;
+		    }
+		    else
+		    {
+		    	return false;
+		    }
+		}
+	    }
+	}
+
+	return true;
+    }
+
+    void UTF8::Append(std::string& to, unsigned char code)
+    {
+    	if (code < 0x80)
+	{
+	    to.push_back(code);
+	    return;
+	}
+
+	to.push_back(0xc0 | code >> 6);
+	to.push_back(0x80 | (code & 0x3f));
+    }
+
+    void ProcessFile(const char *path, int trim)
+    {
+	// Using stdio rather than ifstream as it's a pain to use explicitly
+	// unsigned type
+	std::FILE *fp = fopen(path, "rb");
+
+	if (fp == 0)
+	{
+	    std::cerr << name << ": Failed to open " << path << std::endl;
+	    return;
+	}
+
+	std::vector<std::uint8_t> data;
+	uint8_t buffer[1024];
+	std::size_t count;
+
+	while((count = std::fread(buffer, 1, sizeof buffer, fp)) > 0)
+	{
+	    data.insert(data.end(), buffer, buffer + count);
+	}
+
+	std::fclose(fp);
+
+	if (data.size() < 0x77 ||
+	    data[1] != 'S'||
+	    data[2] != 'I' ||
+	    data[3] != 'D')
+	{
+	    std::cerr << name << ": " << path
+		      << " does not appear to be a SID file" << std::endl;
+	    return;
+	}
+
+	unsigned int num_sub_tunes = 
+		((unsigned int)data[0x0e]) << 8 | data[0x0f];
+
     	SidTune sid(path);
 
 	if (!sid.getStatus())
@@ -47,7 +171,43 @@ namespace
 	    return;
 	}
 
-	unsigned int num_subtunes = NumSubTunes(path);
+	if (trim == 0)
+	{
+	    std::cout << "File: " << path << std::endl;
+	    std::cout << "Number of subtunes: " << num_sub_tunes << std::endl;
+
+	    const SidTuneInfo *info = sid.getInfo();
+
+	    if (info != 0 && info->numberOfInfoStrings() > 2)
+	    {
+		std::cout << "Title: " << UTF8::Convert((info->infoString(0)))
+			  << std::endl;
+		std::cout << "Artist: " << UTF8::Convert((info->infoString(1))) 
+			  << std::endl;
+		std::cout << "Year: " << UTF8::Convert((info->infoString(2))) 
+			  << std::endl;
+	    }
+	}
+
+	for(unsigned int f = 1; f <= num_sub_tunes; f++)
+	{
+	    sid.selectSong(f);
+
+	    int length = database.lengthMs(sid);
+
+	    if (trim == 0)
+	    {
+		std::cout << "Subtune #" << f << ": "
+			  << length << " msec" << std::endl;
+	    }
+	    else
+	    {
+	    	if (length > trim)
+		{
+		    std::cout << path << ":" << (f - 1) << std::endl;
+		}
+	    }
+	}
     }
 
     void Usage()
@@ -63,6 +223,7 @@ int main(int argc, char *argv[])
 {
     std::size_t last;
     int base = 1;
+    int trim = 0;
 
     name = argv[0];
 
@@ -78,7 +239,28 @@ int main(int argc, char *argv[])
     	name = name.substr(last + 1);
     }
 
-    if (argc < 3)
+    while(base < argc && argv[base][0] == '-')
+    {
+    	switch(argv[base][1])
+	{
+	    case 'p':
+		if (++base < argc)
+		{
+		    trim = std::atoi(argv[base++]);
+		}
+		else
+		{
+		    Usage();
+		}
+		break;
+
+	    default:
+	    	Usage();
+		break;
+	}
+    }
+
+    if (argc - base < 2)
     {
     	Usage();
     }
@@ -91,9 +273,9 @@ int main(int argc, char *argv[])
 	return EXIT_FAILURE;
     }
 
-    for(int f = 2; f < argc; f++)
+    for(int f = base + 1; f < argc; f++)
     {
-    	ProcessFile(argv[f]);
+    	ProcessFile(argv[f], trim);
     }
 
     return EXIT_SUCCESS;
