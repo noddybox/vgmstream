@@ -212,7 +212,7 @@ namespace
 
     void Usage()
     {
-    	std::cerr << name << ": usage " << name << " "
+    	std::cerr << name << ": usage " << name << " [-p max_msec] "
 		  << "HVSC_song_md5 file [...file]" << std::endl;
     	std::exit(EXIT_FAILURE);
     }
