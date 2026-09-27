@@ -89,3 +89,8 @@ an optional number, e.g.
 This means play track 3 in the file (numbering starts from zero).  If the track
 number is missing it will play the first track for formats that don't specify a
 default track, and the default track if one is specified.
+
+# Tools
+
+There are some tools in the `src\tools` directory, each of which has their
+own README.md wit instructions.
