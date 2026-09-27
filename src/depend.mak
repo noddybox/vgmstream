@@ -1,7 +1,7 @@
 main.o: main.cpp log.h config.h playlist.h playlistentry.h decoder.h \
  thread.h queuecancel.h util.h mtvar.h decoded.h trackinfo.h queue.h \
  sourcefile.h mp3encoder.h mp3file.h streamer.h shoutapi.h url.h \
- constants.h
+ constants.h version.h
 log.o: log.cpp log.h
 config.o: config.cpp config.h util.h log.h
 playlist.o: playlist.cpp playlist.h playlistentry.h config.h util.h

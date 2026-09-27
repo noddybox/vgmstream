@@ -35,6 +35,7 @@
 #include "mp3file.h"
 #include "util.h"
 #include "constants.h"
+#include "version.h"
 
 namespace
 {
@@ -106,6 +107,8 @@ int main(int argc, char *argv[])
     }
 
     vgmstream::Log::SetLog(name, make_daemon);
+
+    VGMLOG("vgmstream %s starting", vgmstream::Version::STRING);
 
     if (!vgmstream::Config::Open(config_file))
     {

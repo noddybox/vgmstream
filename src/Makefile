@@ -115,6 +115,7 @@ HEADERS		=	log.h			\
 			utf8.h			\
 			filedecoder.h		\
 			mptapi.h		\
+			version.h		\
 			util.h
 
 # Objects
