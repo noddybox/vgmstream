@@ -27,6 +27,7 @@
 
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidTune.h>
+#include <sidplayfp/SidTuneInfo.h>
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidDatabase.h>
 

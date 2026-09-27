@@ -1,5 +1,5 @@
 core
 *.o
 vgmstream
-src/tools/nfstracks/nfstracks
 src/tools/sidinfo/sidinfo
+src/tools/nsftracks/nsftracks
