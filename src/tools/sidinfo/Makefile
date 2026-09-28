@@ -19,8 +19,8 @@
 
 # Switches for the libsidplayfp library
 #
-CFLAGS_SIDPLAY	:=	$(shell pkgconf --cflags libsidplayfp)
-LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
+CFLAGS_SIDPLAY	:=	$(shell pkg-config --cflags libsidplayfp)
+LIBS_SIDPLAY	:=	$(shell pkg-config --libs libsidplayfp)
 
 sidinfo: sidinfo.cpp
 	$(CXX) $(CFLAGS_SIDPLAY) -g -o sidinfo sidinfo.cpp $(LIBS_SIDPLAY)
