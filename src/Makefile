@@ -19,28 +19,28 @@
 
 # Switches for the LAME library
 #
-CFLAGS_LAME	:=	$(shell pkgconf --cflags lame)
-LIBS_LAME	:=	$(shell pkgconf --libs lame)
+CFLAGS_LAME	:=	$(shell pkg-config --cflags lame)
+LIBS_LAME	:=	$(shell pkg-config --libs lame)
 
 # Switches for the libsidplayfp library
 #
-CFLAGS_SIDPLAY	:=	$(shell pkgconf --cflags libsidplayfp)
-LIBS_SIDPLAY	:=	$(shell pkgconf --libs libsidplayfp)
+CFLAGS_SIDPLAY	:=	$(shell pkg-config --cflags libsidplayfp)
+LIBS_SIDPLAY	:=	$(shell pkg-config --libs libsidplayfp)
 
 # Switches for the libgme library
 #
-CFLAGS_GME	:=	$(shell pkgconf --cflags libgme)
-LIBS_GME	:=	$(shell pkgconf --libs libgme)
+CFLAGS_GME	:=	$(shell pkg-config --cflags libgme)
+LIBS_GME	:=	$(shell pkg-config --libs libgme)
 
 # Switches for the libshout library
 #
-CFLAGS_SHOUT	:=	$(shell pkgconf --cflags shout)
-LIBS_SHOUT	:=	$(shell pkgconf --libs shout)
+CFLAGS_SHOUT	:=	$(shell pkg-config --cflags shout)
+LIBS_SHOUT	:=	$(shell pkg-config --libs shout)
 
 # Switches for the libopenmpt library
 #
-CFLAGS_OPENMPT	:=	$(shell pkgconf --cflags libopenmpt)
-LIBS_OPENMPT	:=	$(shell pkgconf --libs libopenmpt)
+CFLAGS_OPENMPT	:=	$(shell pkg-config --cflags libopenmpt)
+LIBS_OPENMPT	:=	$(shell pkg-config --libs libopenmpt)
 
 # Switches for pthreads
 #
@@ -127,7 +127,7 @@ $(TARGET): $(OBJECTS)
 	$(CXX) -o $(TARGET) $(OBJECTS) $(LIBS_VGM)
 
 depend.mak: $(SOURCES) $(HEADERS) Makefile
-	$(CXX) -MM $(SOURCES) > depend.mak
+	$(CXX) -MM $(SOURCES) > depend.mak && true
 
 clean:
 	rm -f $(TARGET) core $(OBJECTS) depend.mak
