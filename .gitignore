@@ -1,3 +1,6 @@
 core
 *.o
 vgmstream
+src/tools/sidinfo/sidinfo
+src/tools/nsftracks/nsftracks
+*.dSYM

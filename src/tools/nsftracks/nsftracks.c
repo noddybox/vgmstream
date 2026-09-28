@@ -40,7 +40,7 @@ static void Error(const char *p)
     exit(EXIT_FAILURE);
 }
 
-static char *ReadChunk(FILE *fp, const char *name)
+static unsigned char *ReadChunk(FILE *fp, const char *name)
 {
     while(TRUE)
     {
