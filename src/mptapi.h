@@ -21,6 +21,7 @@
 
 #include <string>
 #include <memory>
+#include <cstddef>
 
 #include <libopenmpt/libopenmpt.hpp>
 

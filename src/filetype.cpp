@@ -21,9 +21,9 @@
 
 #include "filetype.h"
 
+#include "mptapi.h"
 #include "gmeapi.h"
 #include "sidapi.h"
-#include "mptapi.h"
 
 namespace vgmstream
 {
