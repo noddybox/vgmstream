@@ -19,6 +19,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
+#include <fstream>
+#include <iostream>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -51,7 +53,7 @@ namespace vgmstream
 	std::exit(1);
     }
 
-    void Util::MakeDaemon()
+    void Util::MakeDaemon(const std::string& pidfile)
     {
 	// First fork
 	//
@@ -88,6 +90,16 @@ namespace vgmstream
 	    	std::exit(0);
 		break;
 	}
+
+	std::ofstream file (pidfile, std::ios::out);
+
+	if (!file)
+	{
+	    OSError(pidfile.c_str());
+	}
+
+	file << getpid() << std::endl;
+	file.close();
 
 	// Environment
 	//

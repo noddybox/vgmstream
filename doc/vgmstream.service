@@ -1,0 +1,12 @@
+[Unit]
+Description=Service to stream video game music to an Icecast2 server
+Documentation=https://github.com/noddybox/vgmstream/blob/main/README.md
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/vgmstream -d /var/run/vgmstream.pid
+PIDFile=/var/run/vgmstream.pid
+
+[Install]
+WantedBy=multi-user.target

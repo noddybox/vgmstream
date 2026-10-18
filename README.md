@@ -44,7 +44,7 @@ configuration is done via the configuration file detailed below.
 |**Switch**|**Description**|
 |-|-|
 |`-c file`|Configuration file to read.  Defaults to `/etc/vgmstream/config`.|
-|`-d`|Make the process a daemon.  Defaults to a normal foreground process.|
+|`-d file`|Make the process a daemon, storing the running PID in the passed file.  Defaults to a normal foreground process.|
 
 If `vgmstream` is run in the foreground it logs to stdout.  If the `-d` switch
 is given logs are sent to `syslog()`.
@@ -78,6 +78,10 @@ Any flag setting support the following values:
 |`sid.chargen`|Y|If set defines the path to the C64 chargen ROM.  This improves the SID support.|
 |`sid.basic`|Y|If set defines the path to the C64 BASIC ROM.  This improves the SID support.|
 |`sid.songlength`|Y|If set defines the path to the HVSC song length database.  If not set to a valid Songlengths.md5 file SID files will always play for decoder.default_length seconds.|
+
+# Installation as a service
+
+If your system uses systemd there is an example unit file in the doc directory.
 
 # Playlist file
 

@@ -39,7 +39,7 @@ namespace vgmstream
 	    static void OSError(const char *function);
 
 	    // Make the process a daemon.
-	    static void MakeDaemon();
+	    static void MakeDaemon(const std::string& pidfile);
 
 	    // Convert the passed string into a number.  Returns false if the
 	    // number cannot be parsed.

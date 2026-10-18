@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     std::string name(vgmstream::Util::Basename(argv[0]));
     bool make_daemon = false;
     std::string config_file("/etc/vgmstream/config");
+    std::string pid_file;
 
     int arg = 1;
 
@@ -80,6 +81,15 @@ int main(int argc, char *argv[])
 
 	    case 'd':
 		make_daemon = true;
+
+		if (++arg < argc)
+		{
+		    pid_file = argv[arg];
+		}
+		else
+		{
+		    display_usage = true;
+		}
 	    	break;
 
 	    default:
@@ -92,7 +102,7 @@ int main(int argc, char *argv[])
 	    std::cerr << name
 		      << ": usage "
 		      << name
-		      << " [-c file] [-d]"
+		      << " [-c file] [-d file]"
 		      << std::endl;
 
 	    return 1;
@@ -103,7 +113,7 @@ int main(int argc, char *argv[])
 
     if (make_daemon)
     {
-	vgmstream::Util::MakeDaemon();
+	vgmstream::Util::MakeDaemon(pid_file);
     }
 
     vgmstream::Log::SetLog(name, make_daemon);
