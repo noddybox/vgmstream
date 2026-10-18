@@ -56,6 +56,7 @@ namespace vgmstream
 	    std::string m_error;
 
 	    bool Read();
+	    bool Read(const std::string& filename);
     };
 };
 

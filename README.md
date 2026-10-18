@@ -90,6 +90,9 @@ This means play track 3 in the file (numbering starts from zero).  If the track
 number is missing it will play the first track for formats that don't specify a
 default track, and the default track if one is specified.
 
+As an addition, if a line starts with `!` then the remainder of the line is
+taken as a filename containing further playlist entries.
+
 # Tools
 
 There are some tools in the `src\tools` directory, each of which has their

@@ -27,7 +27,8 @@ icecast.public		off
 #
 
 # The location of the playlist file, with each line being a path to a file
-# to stream.
+# to stream, or !/path/to/anotherfile.  Blank lines and lines starting with '#'
+# are ignored.
 playlist.file		/path/to/filelist
 
 # Optional.  Whether to shuffle the entries in the file or not.  The default is

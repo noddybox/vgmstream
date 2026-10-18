@@ -66,31 +66,15 @@ namespace vgmstream
     bool Playlist::Read()
     {
 	const Config& config = Config::Instance();
-	std::string path(config.PlaylistFile());
 
-    	std::ifstream file(path);
-
-	if (!file)
+	if (!Read(config.PlaylistFile()))
 	{
-	    m_error = "Failed to open playlist file " + path;
 	    return false;
 	}
 
-	std::string line;
-
-	while(std::getline(file, line))
-	{
-	    if (!line.empty() && line[0] != '#')
-	    {
-	    	m_playlist.push_back(line);
-	    }
-	}
-
-	file.close();
-
 	if (m_playlist.size() == 0)
 	{
-	    m_error = "Empty playlist file " + path;
+	    m_error = "Empty playlist file";
 	    return false;
 	}
 
@@ -100,6 +84,41 @@ namespace vgmstream
 			 m_playlist.end(),
 			 m_rnd);
 	}
+
+	return true;
+    }
+
+    bool Playlist::Read(const std::string& filename)
+    {
+    	std::ifstream file(filename);
+
+	if (!file)
+	{
+	    m_error = "Failed to open playlist file " + filename;
+	    return false;
+	}
+
+	std::string line;
+
+	while(std::getline(file, line))
+	{
+	    if (!line.empty() && line[0] != '#')
+	    {
+		if (line[0] == '!')
+		{
+		    if (!Read(line.substr(1)))
+		    {
+		    	return false;
+		    }
+		}
+		else
+		{
+		    m_playlist.push_back(line);
+		}
+	    }
+	}
+
+	file.close();
 
 	return true;
     }
