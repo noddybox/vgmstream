@@ -127,8 +127,8 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $(TARGET) $(OBJECTS) $(LIBS_VGM)
 
-depend.mak: $(SOURCES) $(HEADERS) Makefile
-	$(CXX) -MM $(SOURCES) > depend.mak && true
+depend.mak: $(SOURCES) Makefile
+	$(CXX) $(CFLAGS_VGM) -MM $(SOURCES) > depend.mak
 
 clean:
 	rm -f $(TARGET) core $(OBJECTS) depend.mak
