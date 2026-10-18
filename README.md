@@ -43,7 +43,7 @@ configuration is done via the configuration file detailed below.
 
 |**Switch**|**Description**|
 |-|-|
-|`-c file`|Configuration file to read.  Defaults to `/etc/vgmstreamrc`.|
+|`-c file`|Configuration file to read.  Defaults to `/etc/vgmstream/config`.|
 |`-d`|Make the process a daemon.  Defaults to a normal foreground process.|
 
 If `vgmstream` is run in the foreground it logs to stdout.  If the `-d` switch

@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 {
     std::string name(vgmstream::Util::Basename(argv[0]));
     bool make_daemon = false;
-    std::string config_file("/etc/vgmstreamrc");
+    std::string config_file("/etc/vgmstream/config");
 
     int arg = 1;
 
