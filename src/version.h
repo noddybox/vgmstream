@@ -26,7 +26,7 @@ namespace vgmstream
     	public:
 
 	    // The string version of the version number
-	    static constexpr const char *STRING = "V1.0-dev";
+	    static constexpr const char *STRING = "V1.0-rc1";
 
 	    // The major version of the version
 	    static constexpr int MAJOR = 1;
