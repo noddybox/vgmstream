@@ -41,6 +41,7 @@ namespace
 {
     volatile std::sig_atomic_t terminate_signal = 0;
     volatile std::sig_atomic_t skip_signal = 0;
+    volatile std::sig_atomic_t reread_playlist_signal = 0;
 
     extern "C" void HandleTermination(int sig)
     {
@@ -50,6 +51,11 @@ namespace
     extern "C" void HandleSkip(int sig)
     {
     	skip_signal = 1;
+    }
+
+    extern "C" void HandleRereadPlaylist(int sig)
+    {
+    	reread_playlist_signal = 1;
     }
 };
 
@@ -145,6 +151,7 @@ int main(int argc, char *argv[])
     std::signal(SIGINT, HandleTermination);
     std::signal(SIGTERM, HandleTermination);
     std::signal(SIGUSR1, HandleSkip);
+    std::signal(SIGUSR2, HandleRereadPlaylist);
 
     // From here on in, we're entering the main processing loop
     vgmstream::Queue<vgmstream::Decoded> decoded_queue;
@@ -193,6 +200,12 @@ int main(int argc, char *argv[])
 	{
 	    streamer.Skip();
 	    skip_signal = 0;
+	}
+
+	if (reread_playlist_signal)
+	{
+	    decoder.RereadPlaylist();
+	    reread_playlist_signal = 0;
 	}
     }
 

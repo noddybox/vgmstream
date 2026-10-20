@@ -33,9 +33,15 @@ namespace vgmstream
     Decoder::Decoder(Playlist& playlist,
 		     Queue<Decoded>& output) : Thread(),
     						  m_playlist(playlist),
-						  m_output(output)
+						  m_output(output),
+						  m_reread(false)
     {
 	CreateThread();
+    }
+
+    void Decoder::RereadPlaylist()
+    {
+    	m_reread.Set(true);
     }
 
     void Decoder::ThreadCode()
@@ -45,6 +51,13 @@ namespace vgmstream
 
     	while(!done && !CancelRequested())
 	{
+	    if (m_reread.Get())
+	    {
+		VGMLOG("Rereading playlist");
+		m_playlist.ReRead();
+	    	m_reread.Set(false);
+	    }
+
 	    PlaylistEntry *entry = m_playlist.Next();
 
 	    if (entry == 0)

@@ -25,6 +25,7 @@
 #include "playlist.h"
 #include "decoded.h"
 #include "queue.h"
+#include "mtvar.h"
 
 namespace vgmstream
 {
@@ -35,6 +36,9 @@ namespace vgmstream
 	    // Constructor
 	    Decoder(Playlist& playlist, Queue<Decoded>& output);
 
+	    // Request reread of playlist, and shuffle if set
+	    void RereadPlaylist();
+
 	protected:
 
 	    void ThreadCode();
@@ -43,6 +47,7 @@ namespace vgmstream
 
 	    Playlist		m_playlist;
 	    Queue<Decoded>&	m_output;
+	    MTVar<bool>		m_reread;
 
     };
 };
